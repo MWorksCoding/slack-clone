@@ -1,0 +1,39 @@
+h1 {
+    font-size: 48px;
+}
+
+.recommendation-email-usage {
+    font-size: 18px;
+}
+
+.logo-and-slack-container {
+    font-size: 32px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+}
+
+.sign-up-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.new-to-slack {
+    color: gray;
+}
+
+.sign-up-a-tag {
+    display: inline-block;
+    color: #1264a3;
+    font-weight: 600;
+    width: max-content;
+    text-decoration: none;
+    transition: all 0.1s ease-in-out;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

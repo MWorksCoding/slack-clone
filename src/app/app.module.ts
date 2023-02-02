@@ -5,11 +5,13 @@ import { AppComponent } from './app.component';
 import { SignInOverviewComponent } from './sign-in-overview/sign-in-overview.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
+import { SignUpOverviewComponent } from './sign-up-overview/sign-up-overview.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignInOverviewComponent
+    SignInOverviewComponent,
+    SignUpOverviewComponent
   ],
   imports: [
     BrowserModule,
