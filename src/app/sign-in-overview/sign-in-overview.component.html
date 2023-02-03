@@ -1,13 +1,29 @@
-<div class="logo-and-slack-container">
-    <img src="" alt="">
-    <span>slack</span>
+<div class="sign-in-whole-container">
+    <div class="logo-and-slack-container">
+        <img src="" alt="">
+        <span>slack</span>
+    </div>
+
+    <div class="sign-up-container">
+        <span class="new-to-slack">New To Slack-Clone?</span>
+        <a class="sign-up-a-tag" routerLink="/signup">Sign up</a>
+    </div>
+
+
+    <h1>Sign in to Slack-Clone</h1>
+
+    <span class="recommendation-email-usage">We recommend <strong> you use the email address you use at
+            work.</strong>
+    </span>
+
+
+
 </div>
 
-<div class="sign-up-container">
-    <span class="new-to-slack">New To Slack-Clone?</span>
-    <a class="sign-up-a-tag" routerLink="/signup">Sign up</a>
+<div class="example-container">
+    <mat-form-field appearance="fill">
+        <mat-label>Enter your email</mat-label>
+        <input matInput placeholder="pat@example.com" required>
+        <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
 </div>
-
-<h1>Sign in to Slack-Clone</h1>
-<span class="recommendation-email-usage">We recommend <strong> you use the email address you use at
-        work.</strong></span>

@@ -6,6 +6,10 @@ import { SignInOverviewComponent } from './sign-in-overview/sign-in-overview.com
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import { SignUpOverviewComponent } from './sign-up-overview/sign-up-overview.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -16,7 +20,11 @@ import { SignUpOverviewComponent } from './sign-up-overview/sign-up-overview.com
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    BrowserAnimationsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatFormFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]
