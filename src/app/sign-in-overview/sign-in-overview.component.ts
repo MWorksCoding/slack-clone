@@ -12,14 +12,14 @@ import firebase from "firebase/compat/app";
 export class SignInOverviewComponent {
   constructor(private router: Router, public afAuth: AngularFireAuth) { }
   email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl(2, Validators.min(3));
+  password = new FormControl('', [Validators.required, Validators.minLength(8)]);
   hide = true;
 
   signIn() {
     const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
     this.afAuth.signInWithPopup(googleAuthProvider)
       .then(res => {
-        this.router.navigate(['/signup']);
+        this.router.navigate(['/mainpage']);
       }, err => {
         alert(err.message);
       })
@@ -41,8 +41,7 @@ export class SignInOverviewComponent {
     if (this.password.hasError('required')) {
       return 'You must enter your Password';
     }
-
-    return this.password.hasError('password') ? 'Not a valid password' : '';
+    return this.password.hasError('minlength') ? 'Not a valid password' : '';
   }
 
 
