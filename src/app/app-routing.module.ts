@@ -5,7 +5,7 @@ import { SignUpOverviewComponent } from './sign-up-overview/sign-up-overview.com
 import { MainpageComponent } from './mainpage/mainpage.component';
 
 const routes: Routes = [
-  { path: '', component: MainpageComponent}, //ggf. auskommentieren, um wieder auf "signin" zu kommen
+  // { path: '', component: MainpageComponent}, //ggf. auskommentieren, um wieder auf "signin" zu kommen
   { path: 'signin', component: SignInOverviewComponent },
   { path: 'signup', component: SignUpOverviewComponent },
   { path: '', redirectTo: 'signin', pathMatch: 'full' }
