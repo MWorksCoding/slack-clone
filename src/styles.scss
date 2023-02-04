@@ -1,7 +1,17 @@
 @import 'fonts.scss';
 
+// body {
+//     font-family: 'Roboto', 'sans-serif';
+// }
+
+html,
 body {
-    font-family: 'Roboto', 'sans-serif';
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 
