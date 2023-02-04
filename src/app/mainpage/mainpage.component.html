@@ -1,19 +1,18 @@
 <mat-toolbar color="primary">
-    <button type="button" mat-button (click)="drawer.toggle()">
-        <mat-icon>menu</mat-icon>
-    </button>
-    <span class="pl-16">Slack-Clone</span>
-    <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-        <mat-icon>favorite</mat-icon>
-    </button>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-        <mat-icon>share</mat-icon>
-    </button>
+    <div class="toolbar-icons">
+        <mat-icon mat-button (click)="drawer.toggle()">menu</mat-icon>
+        <span class="pl-16">Slack-Clone</span>
+    </div>
+    <div class="toolbar-icons">
+        <input onkeyup="" placeholder="Search ..." autocomplete="off">
+    </div>
+    <div class="toolbar-icons">
+        <mat-icon class="user-icon">person</mat-icon>
+    </div>
 </mat-toolbar>
 
 <mat-drawer-container class="mat-drawer-container" autosize>
-    <mat-drawer #drawer class="mat-drawer-sidenav" mode="side">
+    <mat-drawer #drawer opened="true" class="mat-drawer-sidenav" mode="side">
         <p>Thead 1</p>
         <p>Thead 2</p>
         <p>Thead 3</p>
@@ -21,8 +20,8 @@
         <p>Thead 5</p>
     </mat-drawer>
 
-    <div class="mat-drawer-sidenav-content">
-        Inhalt
+    <div class="mat-drawer-sidenav-content pt-16 pl-16">
+        <h1>Inhalt</h1>
     </div>
 
 </mat-drawer-container>

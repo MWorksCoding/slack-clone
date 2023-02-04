@@ -15,8 +15,41 @@
 
 mat-toolbar {
     background-color: #360C36 !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+mat-icon {
+    height: 30px;
+    width: 30px;
+    font-size: 30px !important;
+}
+
+.toolbar-icons {
+    display: flex;
+    align-items: center;
+
+    input {
+        padding: 2%;
+        color: black;
+        font-size: 18px;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 8px;
+        height: 18px;
+        width: 300px;
+    }
 }
 
 mat-drawer-sidenav-content {
     background-color: #FAFAFA;
+    font-size: 32px;
+}
+
+mat-drawer {
+    p {
+        margin-left: 16px;
+        margin-top: 16px;
+    }
 }
