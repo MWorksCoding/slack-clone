@@ -1,0 +1,22 @@
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.mat-drawer-container {
+    height: 100vh;
+
+}
+
+.mat-drawer-sidenav {
+    width: 300px;
+    background-color: #3F0D40;
+    color: white;
+}
+
+mat-toolbar {
+    background-color: #360C36 !important;
+}
+
+mat-drawer-sidenav-content {
+    background-color: #FAFAFA;
+}
