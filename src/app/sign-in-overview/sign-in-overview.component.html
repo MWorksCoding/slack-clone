@@ -8,6 +8,45 @@
     <a class="sign-up-a-tag" routerLink="/signup">Sign up</a>
 </div>
 
-<h1>Sign in to Slack-Clone</h1>
-<span class="recommendation-email-usage">We recommend <strong> you use the email address you use at
-        work.</strong></span>
+<div class="sign-in-whole-container">
+    <h1>Sign in to Slack-Clone</h1>
+
+    <span class="recommendation-email-usage">We recommend you use the email address you use at
+        work.
+    </span>
+
+
+    <button class="google-btn" *ngIf="(afAuth.authState | async) === null" (click)="signIn()">Sign in with
+        Google</button>
+
+    <div class="or-container">
+        <span class="or">OR</span>
+    </div>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Email" [formControl]="email" required>
+        <mat-error *ngIf="email.invalid">{{getErrorMessageEmail()}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" [formControl]="password" required>
+        <mat-error *ngIf="password.invalid">{{getErrorMessagePassword()}}</mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="fill">
+        <mat-label>Enter your password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'">
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+    </mat-form-field>
+
+
+
+
+
+</div>

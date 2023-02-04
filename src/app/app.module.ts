@@ -6,11 +6,16 @@ import { SignInOverviewComponent } from './sign-in-overview/sign-in-overview.com
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../environments/environment';
 import { SignUpOverviewComponent } from './sign-up-overview/sign-up-overview.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon'
+import { MatInputModule } from '@angular/material/input';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -22,11 +27,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    MatToolbarModule,
-    MatIconModule,
-    MatSidenavModule,
-    BrowserAnimationsModule
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [],
   bootstrap: [AppComponent]
