@@ -11,36 +11,37 @@
     </span>
 
     <div class="sign-up-options">
-        <mat-form-field appearance="outline">
-            <mat-label>Username</mat-label>
-            <input matInput placeholder="Username" [formControl]="username" required>
-            <mat-error *ngIf="username.invalid">{{getErrorMessageUsername()}}</mat-error>
-        </mat-form-field>
+        <form>
+            <mat-form-field appearance="outline">
+                <mat-label>Username</mat-label>
+                <input matInput placeholder="Username" [formControl]="usernameForm" required>
+                <mat-error *ngIf="usernameForm.invalid">{{getErrorMessageUsername()}}</mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input matInput placeholder="Email" [formControl]="email" required>
-            <mat-error *ngIf="email.invalid">{{getErrorMessageEmail()}}</mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="Email" [formControl]="emailForm" required name="email" [(ngModel)]="email">
+                <mat-error *ngIf="emailForm.invalid">{{getErrorMessageEmail()}}</mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="outline">
-            <mat-label>Password</mat-label>
-            <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" [formControl]="password"
-                required>
-            <mat-error *ngIf="password.invalid">{{getErrorMessagePassword()}}</mat-error>
-        </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" [formControl]="passwordForm"
+                    required name="password" [(ngModel)]="password">
+                <mat-error *ngIf="passwordForm.invalid">{{getErrorMessagePassword()}}</mat-error>
+            </mat-form-field>
 
-        <div class="sign-up-btn-container">
-            <button class="sign-up-btn" mat-raised-button>Sign up</button>
-        </div>
-
+            <div class="sign-up-btn-container">
+                <button class="sign-up-btn" mat-raised-button (click)="signUp()">Sign up</button>
+            </div>
+        </form>
 
         <div class="or-container">
             <span class="or">OR</span>
         </div>
 
-        <button class="google-btn" *ngIf="(afAuth.authState | async) === null" (click)="signIn()">Sign in with
-            Google</button>
+        <!-- <button class="google-btn" *ngIf="(afAuth.authState | async) === null" (click)="signIn()">Sign in with
+            Google</button> -->
 
         <div class="sign-in-container">
             <span class="already-using">Already using Slack?</span>

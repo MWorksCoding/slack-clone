@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import firebase from "firebase/compat/app";
+import { AuthService } from '../shared/auth.service';
 
 @Component({
   selector: 'app-sign-up-overview',
@@ -10,42 +11,75 @@ import firebase from "firebase/compat/app";
   styleUrls: ['./sign-up-overview.component.scss']
 })
 export class SignUpOverviewComponent {
-  constructor(private router: Router, public afAuth: AngularFireAuth) { }
-  username = new FormControl('', [Validators.required, Validators.minLength(1)]);
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [Validators.required, Validators.minLength(8)]);
+
+
+  constructor(private router: Router, private auth: AuthService) { }
+
+
+  email: string = '';
+  password: string = '';
+  usernameForm = new FormControl('', [Validators.required, Validators.minLength(1)]);
+  emailForm = new FormControl('', [Validators.required, Validators.email]);
+  passwordForm = new FormControl('', [Validators.required, Validators.minLength(8)]);
   hide = true;
 
-  signIn() {
-    const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-    this.afAuth.signInWithPopup(googleAuthProvider)
-      .then(res => {
-        this.router.navigate(['/mainpage']);
-      }, err => {
-        alert(err.message);
-      })
+  // signInGoogle() {
+  //   const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+  //   this.afAuth.signInWithPopup(googleAuthProvider)
+  //     .then(res => {
+  //       this.router.navigate(['/mainpage']);
+  //     }, err => {
+  //       alert(err.message);
+  //     })
+  // }
+
+
+  signUp() {
+    if (this.usernameForm.hasError('required') || this.usernameForm.hasError('minglength')) {
+      alert('Please enter username');
+      return;
+    }
+
+    if (this.emailForm.hasError('required') || this.emailForm.hasError('email')) {
+      alert('Please enter email');
+      return;
+    }
+
+    if (this.passwordForm.hasError('required') || this.passwordForm.hasError('minlength')) {
+      alert('Please enter password');
+      return;
+    }
+
+    this.auth.signUp(this.email, this.password);
+    this.email = '';
+    this.password = '';
   }
 
+
   getErrorMessageUsername() {
-    if (this.username.hasError('required')) {
+    if (this.usernameForm.hasError('required')) {
       return 'You must enter a Username'
     }
 
-    return this.username.hasError('minlength') ? 'Not a valid username' : '';
+    return this.usernameForm.hasError('minlength') ? 'Not a valid username' : '';
   }
+
 
   getErrorMessageEmail() {
-    if (this.email.hasError('required')) {
-      return 'You must enter a Email';
+    if (this.emailForm.hasError('required')) {
+      return 'You must enter your Email';
     }
 
-    return this.email.hasError('email') ? 'Not a valid email' : '';
+    return this.emailForm.hasError('email') ? 'Not a valid email' : '';
   }
+
 
   getErrorMessagePassword() {
-    if (this.password.hasError('required')) {
-      return 'You must enter a Password';
+    if (this.passwordForm.hasError('required')) {
+      return 'You must enter your Password';
     }
-    return this.password.hasError('minlength') ? 'Not a valid password' : '';
+    return this.passwordForm.hasError('minlength') ? 'Not a valid password' : '';
   }
+
+
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../shared/auth.service';
 
 @Component({
   selector: 'app-mainpage',
@@ -6,9 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./mainpage.component.scss']
 })
 export class MainpageComponent {
-  constructor() 
-    
-    { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+  constructor(private auth: AuthService) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
 
   }
+
+  signOut() {
+    this.auth.signOut();
+  }
+
 }

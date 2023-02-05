@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from "firebase/compat/app";
+import { AuthService } from '../shared/auth.service';
 
 @Component({
   selector: 'app-sign-in-overview',
@@ -10,42 +11,61 @@ import firebase from "firebase/compat/app";
   styleUrls: ['./sign-in-overview.component.scss']
 })
 export class SignInOverviewComponent {
-  constructor(private router: Router, public afAuth: AngularFireAuth) { }
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [Validators.required, Validators.minLength(8)]);
+
+
+  constructor(private router: Router, private auth: AuthService) { }
+
+  email: string = '';
+  password: string = '';
+  emailForm = new FormControl('', [Validators.required, Validators.email]);
+  passwordForm = new FormControl('', [Validators.required, Validators.minLength(8)]);
   hide = true;
 
+
   signIn() {
-    const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-    this.afAuth.signInWithPopup(googleAuthProvider)
-      .then(res => {
-        this.router.navigate(['/mainpage']);
-      }, err => {
-        alert(err.message);
-      })
+    if (this.emailForm.hasError('required') || this.emailForm.hasError('email')) {
+      alert('Please enter email');
+      return;
+    }
+
+    if (this.passwordForm.hasError('required') || this.passwordForm.hasError('minlength')) {
+      alert('Please enter password');
+      return;
+    }
+
+    this.auth.signIn(this.email, this.password);
+    this.email = '';
+    this.password = '';
   }
 
-  signOut() {
-    this.afAuth.signOut();
-  }
+
+  // signInGoogle() {
+  //   const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+  //   this.afAuth.signInWithPopup(googleAuthProvider)
+  //     .then(res => {
+  //       this.router.navigate(['/mainpage']);
+  //     }, err => {
+  //       alert(err.message);
+  //     })
+  // }
+
+
 
   getErrorMessageEmail() {
-    if (this.email.hasError('required')) {
+    if (this.emailForm.hasError('required')) {
       return 'You must enter your Email';
     }
 
-    return this.email.hasError('email') ? 'Not a valid email' : '';
+    return this.emailForm.hasError('email') ? 'Not a valid email' : '';
   }
+
 
   getErrorMessagePassword() {
-    if (this.password.hasError('required')) {
+    if (this.passwordForm.hasError('required')) {
       return 'You must enter your Password';
     }
-    return this.password.hasError('minlength') ? 'Not a valid password' : '';
+    return this.passwordForm.hasError('minlength') ? 'Not a valid password' : '';
   }
-
-
-
 }
 
 

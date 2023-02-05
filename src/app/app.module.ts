@@ -15,6 +15,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { VarifyEmailComponent } from './varify-email/varify-email.component';
+
 
 
 @NgModule({
@@ -22,7 +25,9 @@ import { MatButtonModule } from '@angular/material/button';
     AppComponent,
     SignInOverviewComponent,
     SignUpOverviewComponent,
-    MainpageComponent
+    MainpageComponent,
+    ForgotPasswordComponent,
+    VarifyEmailComponent
   ],
   imports: [
     BrowserModule,
