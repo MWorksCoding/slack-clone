@@ -12,7 +12,6 @@ const routes: Routes = [
   { path: 'signin', component: SignInOverviewComponent },
   { path: 'signup', component: SignUpOverviewComponent },
   { path: '', redirectTo: 'signin', pathMatch: 'full' },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'varify-email', component: VarifyEmailComponent }
 ];
 

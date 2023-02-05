@@ -4,6 +4,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from "firebase/compat/app";
 import { AuthService } from '../shared/auth.service';
+import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sign-in-overview',
@@ -13,7 +15,8 @@ import { AuthService } from '../shared/auth.service';
 export class SignInOverviewComponent {
 
 
-  constructor(private router: Router, private auth: AuthService) { }
+  constructor(private router: Router, private auth: AuthService, public dialog: MatDialog) { }
+
 
   email: string = '';
   password: string = '';
@@ -39,16 +42,9 @@ export class SignInOverviewComponent {
   }
 
 
-  // signInGoogle() {
-  //   const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-  //   this.afAuth.signInWithPopup(googleAuthProvider)
-  //     .then(res => {
-  //       this.router.navigate(['/mainpage']);
-  //     }, err => {
-  //       alert(err.message);
-  //     })
-  // }
-
+  signInWithGoogle() {
+    this.auth.signInWithGoogle();
+  }
 
 
   getErrorMessageEmail() {
@@ -66,6 +62,14 @@ export class SignInOverviewComponent {
     }
     return this.passwordForm.hasError('minlength') ? 'Not a valid password' : '';
   }
+
+
+  openForgotPassword() {
+    const dialog = this.dialog.open(ForgotPasswordComponent);
+  }
 }
+
+
+
 
 

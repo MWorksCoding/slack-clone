@@ -15,8 +15,7 @@
     </span>
 
     <div class="login-options">
-        <!-- <button class="google-btn" *ngIf="(afAuth.authState | async) === null" (click)="signInGoogle()">Sign in with
-            Google</button> -->
+        <button class="google-btn" (click)="signInWithGoogle()">Sign in with Google</button>
 
         <div class="or-container">
             <span class="or">OR</span>
@@ -41,7 +40,7 @@
                 <button class="login-guest-btn" mat-raised-button>Login as Guest</button>
             </div>
 
-            <a class="forgot-password" routerLink="/forgot-password">Forgot Password ?</a>
+            <a class="forgot-password" (click)="openForgotPassword()">Forgot Password ?</a>
         </form>
     </div>
 </div>

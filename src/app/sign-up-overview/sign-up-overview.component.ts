@@ -23,16 +23,9 @@ export class SignUpOverviewComponent {
   passwordForm = new FormControl('', [Validators.required, Validators.minLength(8)]);
   hide = true;
 
-  // signInGoogle() {
-  //   const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-  //   this.afAuth.signInWithPopup(googleAuthProvider)
-  //     .then(res => {
-  //       this.router.navigate(['/mainpage']);
-  //     }, err => {
-  //       alert(err.message);
-  //     })
-  // }
-
+  signInWithGoogle() {
+    this.auth.signInWithGoogle();
+  }
 
   signUp() {
     if (this.usernameForm.hasError('required') || this.usernameForm.hasError('minglength')) {
