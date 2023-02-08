@@ -2,21 +2,38 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GoogleAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { getAuth } from "firebase/auth";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  user: any;
+  createUserWithEmailAndPassword(email: any, arg1: string) {
+    throw new Error('Method not implemented.');
+  }
+  authState: any;
+  currentUser: any;
 
 
   constructor(private fireauth: AngularFireAuth, private router: Router) { }
+
+  resendVerificationMail() {
+    return this.fireauth.currentUser
+      .then((u: any) => {
+        u.sendEmailVerification()
+        alert('success');
+      }, err => {
+        alert(err.message)
+      });
+  }
+
 
 
   signIn(email: string, password: string) {
     this.fireauth.signInWithEmailAndPassword(email, password)
       .then(res => {
         localStorage.setItem('token', 'true');
-
 
         if (res.user?.emailVerified == true) {
           this.router.navigate(['/mainpage']);
@@ -35,16 +52,17 @@ export class AuthService {
     return this.fireauth.signInWithPopup(new GoogleAuthProvider)
       .then(res => {
         this.router.navigate(['/mainpage']);
-        localStorage.setItem('token', JSON.stringify(res.user?.uid));
+        localStorage.setItem('user', JSON.stringify(res.user?.uid));
       }, err => {
         alert(err.message);
       })
   }
 
 
-  signUp(email: string, password: string) {
+  async signUp(email: string, password: string) {
     this.fireauth.createUserWithEmailAndPassword(email, password)
       .then(res => {
+        localStorage.setItem('user', JSON.stringify(res.user));
         alert('registration successful');
         this.router.navigate(['/signin']);
         this.sendEmailForVarification(res.user);
@@ -68,7 +86,7 @@ export class AuthService {
   signOut() {
     this.fireauth.signOut()
       .then(() => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         this.router.navigate(['/signin']);
       }, err => {
         alert(err.message);

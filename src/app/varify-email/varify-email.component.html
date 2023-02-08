@@ -1,9 +1,12 @@
-<h1>Thank you for registration</h1>
+<div class="varify-container">
+    <h1>Thank you for your registration</h1>
 
-<span>We have send a confirmation email to .</span>
-<span>Please check your email and click on the link to verify your email address.</span>
+    <span class="info-text">We have send a confirmation email to . <br>
+        Please check your email and click on the link to verify your email address.</span>
 
-<button>Resend verification mail</button>
+    <button class="resend-btn" mat-raised-button (click)="resendVerificationEmail()">Resend verification mail</button>
 
 
-<a routerLink="/signin">Go back to Login</a>
+
+    <a class="back-to-login" routerLink="/signin">Go back to Login</a>
+</div>
