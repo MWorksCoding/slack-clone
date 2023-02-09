@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../shared/auth.service';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-varify-email',
@@ -9,24 +8,15 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 })
 export class VarifyEmailComponent {
 
-  user = this.afAuth.user;
+  verifiedEmail: string = '';
 
-  constructor(private auth: AuthService, public afAuth: AngularFireAuth) {
-
+  constructor(private auth: AuthService) {
+    this.verifiedEmail = JSON.parse(localStorage['user']).email;
   }
 
 
   resendVerificationEmail() {
     this.auth.resendVerificationMail()
   }
-
-
-  // sendVerificationEmail() {
-  //   console.log(this.auth.currentUser);
-  //   return this.auth.currentUser
-  //     .then((user: any) => {
-  //       return user.sendEmailVerification();
-  //     });
-  // }
 }
 

@@ -9,31 +9,17 @@ import { getAuth } from "firebase/auth";
 })
 export class AuthService {
   user: any;
-  createUserWithEmailAndPassword(email: any, arg1: string) {
-    throw new Error('Method not implemented.');
-  }
   authState: any;
   currentUser: any;
 
 
   constructor(private fireauth: AngularFireAuth, private router: Router) { }
 
-  resendVerificationMail() {
-    return this.fireauth.currentUser
-      .then((u: any) => {
-        u.sendEmailVerification()
-        alert('success');
-      }, err => {
-        alert(err.message)
-      });
-  }
-
-
 
   signIn(email: string, password: string) {
     this.fireauth.signInWithEmailAndPassword(email, password)
       .then(res => {
-        localStorage.setItem('token', 'true');
+        localStorage.setItem('user', JSON.stringify(res.user));
 
         if (res.user?.emailVerified == true) {
           this.router.navigate(['/mainpage']);
@@ -52,7 +38,18 @@ export class AuthService {
     return this.fireauth.signInWithPopup(new GoogleAuthProvider)
       .then(res => {
         this.router.navigate(['/mainpage']);
-        localStorage.setItem('user', JSON.stringify(res.user?.uid));
+        localStorage.setItem('user', JSON.stringify(res.user));
+      }, err => {
+        alert(err.message);
+      })
+  }
+
+
+  signInAsGuest() {
+    this.fireauth.signInAnonymously()
+      .then(res => {
+        this.router.navigate(['/mainpage']);
+        localStorage.setItem('user', JSON.stringify(res.user));
       }, err => {
         alert(err.message);
       })
@@ -83,6 +80,17 @@ export class AuthService {
   }
 
 
+  resendVerificationMail() {
+    return this.fireauth.currentUser
+      .then((u: any) => {
+        u.sendEmailVerification()
+        alert('success');
+      }, err => {
+        alert(err.message)
+      });
+  }
+
+
   signOut() {
     this.fireauth.signOut()
       .then(() => {
@@ -102,6 +110,4 @@ export class AuthService {
         alert('Something went wrong');
       })
   }
-
-
 }
