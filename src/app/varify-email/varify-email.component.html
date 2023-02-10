@@ -1,1 +1,12 @@
-<p>varify-email works!</p>
+<div class="varify-container">
+    <h1>Thank you for your registration</h1>
+
+    <span class="info-text">We have send a confirmation email to <strong>{{verifiedEmail}}</strong>. <br>
+        Please check your email and click on the link to verify your email address.</span>
+
+    <button class="resend-btn" mat-raised-button (click)="resendVerificationEmail()">Resend verification mail</button>
+
+
+
+    <a class="back-to-login" routerLink="/signin">Go back to Login</a>
+</div>

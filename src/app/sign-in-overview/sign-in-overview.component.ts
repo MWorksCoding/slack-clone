@@ -47,6 +47,11 @@ export class SignInOverviewComponent {
   }
 
 
+  signInAsGuest() {
+    this.auth.signInAsGuest();
+  }
+
+
   getErrorMessageEmail() {
     if (this.emailForm.hasError('required')) {
       return 'You must enter your Email';

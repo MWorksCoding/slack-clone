@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../shared/auth.service';
 
 @Component({
   selector: 'app-varify-email',
@@ -7,4 +8,15 @@ import { Component } from '@angular/core';
 })
 export class VarifyEmailComponent {
 
+  verifiedEmail: string = '';
+
+  constructor(private auth: AuthService) {
+    this.verifiedEmail = JSON.parse(localStorage['user']).email;
+  }
+
+
+  resendVerificationEmail() {
+    this.auth.resendVerificationMail()
+  }
 }
+

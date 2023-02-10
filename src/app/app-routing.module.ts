@@ -5,7 +5,6 @@ import { SignInOverviewComponent } from './sign-in-overview/sign-in-overview.com
 import { SignUpOverviewComponent } from './sign-up-overview/sign-up-overview.component';
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { VarifyEmailComponent } from './varify-email/varify-email.component';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ImprintComponent } from './imprint/imprint.component';
 
 const routes: Routes = [
@@ -14,7 +13,7 @@ const routes: Routes = [
   { path: 'signin', component: SignInOverviewComponent },
   { path: 'signup', component: SignUpOverviewComponent },
   { path: '', redirectTo: 'signin', pathMatch: 'full' },
-  { path: 'varify-email', component: VarifyEmailComponent },
+  { path: 'varify-email', component: VarifyEmailComponent, canActivate: [AuthGuard] },
   { path: 'imprint', component: ImprintComponent },
 ];
 
