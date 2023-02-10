@@ -18,7 +18,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { VarifyEmailComponent } from './varify-email/varify-email.component';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import { DialogCreateChannelComponent } from './dialog-create-channel/dialog-create-channel.component';
+import { DialogCreateChatComponent } from './dialog-create-chat/dialog-create-chat.component';
+import { MatLabel } from '@angular/material/form-field';
+import { MatOption } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { ImprintComponent } from './imprint/imprint.component';
 
 
 @NgModule({
@@ -28,7 +34,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     SignUpOverviewComponent,
     MainpageComponent,
     ForgotPasswordComponent,
-    VarifyEmailComponent
+    VarifyEmailComponent,
+    DialogCreateChannelComponent,
+    DialogCreateChatComponent,
+    ImprintComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +53,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     ReactiveFormsModule,
     MatButtonModule,
     MatDialogModule,
+    MatSelectModule,
+    MatChipsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

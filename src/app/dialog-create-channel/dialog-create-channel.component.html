@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Create a new channel</h1>
+<div mat-dialog-content>
+    <mat-form-field appearance="outline" class="pt-16">
+        <mat-label>Enter a channel name</mat-label>
+        <input matInput [(ngModel)]="channel.channelName" required>
+    </mat-form-field><br>
+    <mat-form-field appearance="outline">
+        <mat-label>Enter a description</mat-label>
+        <input matInput [(ngModel)]="channel.description" required>
+    </mat-form-field>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close (click)="dialogRef.close()">Abort</button>
+        <button mat-button mat-dialog-close cdkFocusInitial (click)="save()">Ok</button>
+    </div>
+</div>

@@ -44,5 +44,13 @@ $violet-color: rgb(74, 21, 75);
 }
 
 .pb-16 {
-    padding-bottom: 16px;
+    padding-bottom: 16px !important;
+}
+
+.d-f {
+    display: flex;
+}
+
+.d-n {
+    display: none;
 }

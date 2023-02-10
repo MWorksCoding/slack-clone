@@ -4,13 +4,16 @@
 
 .mat-drawer-container {
     height: 100vh;
-
+    h3{
+        cursor: pointer;
+    }
 }
 
 .mat-drawer-sidenav {
     width: 300px;
     background-color: #3F0D40;
     color: white;
+    height: 100vh;
 }
 
 mat-toolbar {
@@ -24,12 +27,13 @@ mat-icon {
     height: 30px;
     width: 30px;
     font-size: 30px !important;
+    cursor: pointer;
 }
 
 .toolbar-icons {
     display: flex;
     align-items: center;
-
+    cursor: pointer;
     input {
         padding: 2%;
         color: black;
@@ -40,7 +44,13 @@ mat-icon {
         height: 18px;
         width: 300px;
     }
+    img{
+        height: 30px;
+        width: 30px;
+    }
 }
+
+
 
 mat-drawer-sidenav-content {
     background-color: #FAFAFA;
@@ -51,5 +61,39 @@ mat-drawer {
     p {
         margin-left: 16px;
         margin-top: 16px;
+    }
+}
+
+.sidenav-header {
+    border-top: #512752 1px solid;
+    border-bottom: #512752 1px solid;
+}
+
+.df-ai_c {
+    display: flex;
+    align-items: center;
+}
+
+.df-ai_c-jc_sb{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.single-chatroom {
+    span {
+        cursor: pointer;
+        &:hover{
+            color: #da91dc!important;
+        }
+    }
+}
+
+.imprint {
+    h3 {
+        cursor: pointer;
+        &:hover{
+            color: #da91dc!important;
+        }
     }
 }
