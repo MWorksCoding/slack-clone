@@ -6,6 +6,8 @@ import { SignUpOverviewComponent } from './sign-up-overview/sign-up-overview.com
 import { MainpageComponent } from './mainpage/mainpage.component';
 import { VarifyEmailComponent } from './varify-email/varify-email.component';
 import { ImprintComponent } from './imprint/imprint.component';
+import { ThreadsComponent } from './threads/threads.component';
+import { ChannelComponent } from './channel/channel.component';
 
 const routes: Routes = [
   { path: 'mainpage', component: MainpageComponent}, //ggf. auskommentieren, um wieder auf "signin" zu kommen
@@ -15,6 +17,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'signin', pathMatch: 'full' },
   { path: 'varify-email', component: VarifyEmailComponent, canActivate: [AuthGuard] },
   { path: 'imprint', component: ImprintComponent },
+  { path: 'threads', component: ThreadsComponent },
+  { path: 'channel/:id', component: ChannelComponent}
 ];
 
 @NgModule({

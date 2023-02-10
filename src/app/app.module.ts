@@ -25,6 +25,8 @@ import { MatOption } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { ImprintComponent } from './imprint/imprint.component';
+import { ThreadsComponent } from './threads/threads.component';
+import { ChannelComponent } from './channel/channel.component'
 
 
 @NgModule({
@@ -37,7 +39,8 @@ import { ImprintComponent } from './imprint/imprint.component';
     VarifyEmailComponent,
     DialogCreateChannelComponent,
     DialogCreateChatComponent,
-    ImprintComponent
+    ImprintComponent,
+    ThreadsComponent,
   ],
   imports: [
     BrowserModule,

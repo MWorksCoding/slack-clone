@@ -1,80 +1,85 @@
-<mat-toolbar color="primary">
-    <div class="toolbar-icons" (click)="drawer.toggle()">
-        <mat-icon mat-button>menu</mat-icon>
-        <img class="pl-16" src="../../assets/img/Icon.png">
-        <span class="pl-16">Slack-Clone</span>
-    </div>
-    <div class="toolbar-icons">
-        <input onkeyup="" placeholder="Search ..." autocomplete="off" matInput>
-    </div>
-    <div class="toolbar-icons">
-        <mat-icon class="user-icon">person</mat-icon>
-    </div>
-</mat-toolbar>
+<div class="mainpage">
+    <mat-toolbar color="primary">
+        <div class="toolbar-icons" (click)="drawer.toggle()">
+            <mat-icon mat-button>menu</mat-icon>
+            <img class="pl-16" src="../../assets/img/Icon.png">
+            <span class="pl-16">Slack-Clone</span>
+        </div>
+        <div class="toolbar-icons">
+            <input onkeyup="" placeholder="Search ..." autocomplete="off" matInput>
+        </div>
+        <div class="toolbar-icons">
+            <mat-icon class="user-icon">person</mat-icon>
+        </div>
+    </mat-toolbar>
 
-<mat-drawer-container class="mat-drawer-container" autosize>
-    <mat-drawer #drawer opened="true" class="mat-drawer-sidenav" mode="side">
+    <mat-drawer-container class="mat-drawer-container" autosize>
+        <mat-drawer #drawer opened="true" class="mat-drawer-sidenav" mode="side">
 
-        <div class="pl-16 sidenav-header">
-            <h2>Developer Akademie</h2>
-        </div>
-        <div class="pl-16 df-ai_c">
-            <mat-icon class="user-icon">speaker_notes</mat-icon>
-            <h3 class="pl-16">Threads</h3>
-        </div>
-        <div class="df-ai_c-jc_sb pr-16 sidenav-header" (click)="toggleChannelMenu()">
-            <div class="pl-16 df-ai_c">
-                <mat-icon *ngIf="ChannelMenuIsOpen">arrow_drop_down</mat-icon>
-                <mat-icon *ngIf="!ChannelMenuIsOpen">arrow_right</mat-icon>
-                <mat-icon class="user-icon">forum</mat-icon>
-                <h3 class="pl-16">Channels</h3>
+            <div class="pl-16 sidenav-header">
+                <h2>Developer Akademie</h2>
             </div>
-            <div>
-                <mat-icon (click)="openDialogCreateChannel()">add</mat-icon>
+            <div class="pl-16 df-ai_c" (click)="openThreads()">
+                <mat-icon class="user-icon">speaker_notes</mat-icon>
+                <h3 class="pl-16">Threads</h3>
             </div>
-        </div>
-        <div *ngIf="ChannelMenuIsOpen">
-            <div *ngFor="let channel of channels, let i = index" class="single-chatroom pl-16 pb-16 pt-16">
-                <div [ngClass]="{'single-chatroom' : allChatChannel == ('channel' + i) }">
-                    <span class=""># {{ channel['channelName'] }}</span>
+            <div class="df-ai_c-jc_sb pr-16 sidenav-header" (click)="toggleChannelMenu()">
+                <div class="pl-16 df-ai_c">
+                    <mat-icon *ngIf="ChannelMenuIsOpen">arrow_drop_down</mat-icon>
+                    <mat-icon *ngIf="!ChannelMenuIsOpen">arrow_right</mat-icon>
+                    <mat-icon class="user-icon">forum</mat-icon>
+                    <h3 class="pl-16">Channels</h3>
+                </div>
+                <div>
+                    <mat-icon (click)="openDialogCreateChannel()">add</mat-icon>
+                </div>
+           0 </div>
+            <div *ngIf="ChannelMenuIsOpen">
+                <div *ngFor="let channel of channels, let i = index" class="single-chatroom pl-16 pb-16 pt-16">
+                    <div [ngClass]="{'single-chatroom' : allChatChannel == ('channel' + i) }" 
+                    routerLink="/imprint" >
+                    <!-- routerLink="['/channel/' + channel.channelId]"> -->
+                        <span class=""># {{ channel['channelName'] }}</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
 
 
-
-
-        <div class="df-ai_c-jc_sb pr-16 sidenav-header">
-            <div class="pl-16 df-ai_c" (click)="toggleDirectMessagesMenu()">
-                <mat-icon *ngIf="DirectMessagesMenuIsOpen" fontIcon="arrow_drop_down"></mat-icon>
-                <mat-icon *ngIf="!DirectMessagesMenuIsOpen" fontIcon="arrow_right"></mat-icon>
-                <mat-icon class="user-icon">chat</mat-icon>
-                <h3 class="pl-16">Direct messages</h3>
+            <div class="df-ai_c-jc_sb pr-16 sidenav-header">
+                <div class="pl-16 df-ai_c" (click)="toggleDirectMessagesMenu()">
+                    <mat-icon *ngIf="DirectMessagesMenuIsOpen" fontIcon="arrow_drop_down"></mat-icon>
+                    <mat-icon *ngIf="!DirectMessagesMenuIsOpen" fontIcon="arrow_right"></mat-icon>
+                    <mat-icon class="user-icon">chat</mat-icon>
+                    <h3 class="pl-16">Direct messages</h3>
+                </div>
+                <div>
+                    <mat-icon (click)="openDialogCreateChat()">add</mat-icon>
+                </div>
             </div>
-            <div>
-                <mat-icon (click)="openDialogCreateChat()">add</mat-icon>
+            <div *ngIf="DirectMessagesMenuIsOpen">
+                <p>Chat 1</p>
+                <p>Chat 2</p>
+                <p>Chat 3</p>
+                <p>Chat 4</p>
+                <p>Chat 5</p>
+            </div>
+
+            <div class="sidenav-header pl-16 imprint" (click)="openImprint()">
+                <!-- routerLink="/imprint" -->
+                <h4>Imprint & Data protection</h4>
+            </div>
+
+        </mat-drawer>
+
+        <div class="mat-drawer-sidenav-content pt-16 pl-16" #content>
+            <div *ngIf="imprint">
+                <app-imprint></app-imprint>
+            </div>
+            <div *ngIf="threads">
+                <app-threads></app-threads>
             </div>
         </div>
-        <div *ngIf="DirectMessagesMenuIsOpen">
-            <p>Conversation 1</p>
-            <p>Conversation 2</p>
-            <p>Conversation 3</p>
-            <p>Conversation 4</p>
-            <p>Conversation 5</p>
-        </div>
 
-        <div class="sidenav-header pl-16 imprint" (click)="openImprint()">
-            <!-- routerLink="/imprint" -->
-            <h3>Imprint</h3>
-        </div>
-
-    </mat-drawer>
-
-    <div class="mat-drawer-sidenav-content pt-16 pl-16" #content>
-        <div *ngIf="imprint">
-            <app-imprint></app-imprint>
-        </div>
-    </div>
-
-</mat-drawer-container>
+    </mat-drawer-container>
+</div>

@@ -1,3 +1,11 @@
+.mainpage {
+    height: calc(100vh - 64px);
+}
+
+mat-drawer-container {
+    height: calc(100vh - 64px) !important;
+}
+
 .example-spacer {
     flex: 1 1 auto;
 }
@@ -90,7 +98,12 @@ mat-drawer {
 }
 
 .imprint {
-    h3 {
+    position: fixed;
+    bottom: 0px;
+    width: 284px;
+    z-index: 1;
+    background-color: #512752;
+    h4 {
         cursor: pointer;
         &:hover{
             color: #da91dc!important;
