@@ -33,12 +33,11 @@
                 <div>
                     <mat-icon (click)="openDialogCreateChannel()">add</mat-icon>
                 </div>
-           0 </div>
+            </div>
             <div *ngIf="ChannelMenuIsOpen">
                 <div *ngFor="let channel of channels, let i = index" class="single-chatroom pl-16 pb-16 pt-16">
-                    <div [ngClass]="{'single-chatroom' : allChatChannel == ('channel' + i) }" 
-                    routerLink="/imprint" >
-                    <!-- routerLink="['/channel/' + channel.channelId]"> -->
+                    <div [ngClass]="{'single-chatroom' : allChatChannel == ('channel' + i) }" routerLink="/imprint">
+                        <!-- routerLink="['/channel/' + channel.channelId]"> -->
                         <span class=""># {{ channel['channelName'] }}</span>
                     </div>
                 </div>
