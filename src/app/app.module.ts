@@ -26,7 +26,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { ImprintComponent } from './imprint/imprint.component';
 import { ThreadsComponent } from './threads/threads.component';
-import { ChannelComponent } from './channel/channel.component'
+import { ChannelComponent } from './channel/channel.component';
+import { DialogResetPasswordInfoComponent } from './dialog-reset-password-info/dialog-reset-password-info.component';
+import { DialogErrorComponent } from './dialog-error/dialog-error.component'
 
 
 @NgModule({
@@ -41,6 +43,8 @@ import { ChannelComponent } from './channel/channel.component'
     DialogCreateChatComponent,
     ImprintComponent,
     ThreadsComponent,
+    DialogResetPasswordInfoComponent,
+    DialogErrorComponent,
   ],
   imports: [
     BrowserModule,

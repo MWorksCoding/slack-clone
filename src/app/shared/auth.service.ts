@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { GoogleAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { getAuth } from "firebase/auth";
+import { MatDialog } from '@angular/material/dialog';
+import { DialogResetPasswordInfoComponent } from '../dialog-reset-password-info/dialog-reset-password-info.component';
+import { DialogErrorComponent } from '../dialog-error/dialog-error.component';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +13,10 @@ export class AuthService {
   user: any;
   authState: any;
   currentUser: any;
+  currentEmail: any;
 
 
-  constructor(private fireauth: AngularFireAuth, private router: Router) { }
+  constructor(private fireauth: AngularFireAuth, private router: Router, public dialog: MatDialog) { }
 
 
   signIn(email: string, password: string) {
@@ -29,6 +32,7 @@ export class AuthService {
 
       }, err => {
         alert(err.message);
+        this.dialog.open(DialogErrorComponent);
         this.router.navigate(['/signin']);
       });
   }
@@ -40,6 +44,7 @@ export class AuthService {
         this.router.navigate(['/mainpage']);
         localStorage.setItem('user', JSON.stringify(res.user));
       }, err => {
+        this.dialog.open(DialogErrorComponent);
         alert(err.message);
       })
   }
@@ -51,6 +56,7 @@ export class AuthService {
         this.router.navigate(['/mainpage']);
         localStorage.setItem('user', JSON.stringify(res.user));
       }, err => {
+        this.dialog.open(DialogErrorComponent);
         alert(err.message);
       })
   }
@@ -60,11 +66,13 @@ export class AuthService {
     this.fireauth.createUserWithEmailAndPassword(email, password)
       .then(res => {
         localStorage.setItem('user', JSON.stringify(res.user));
+        this.currentEmail = email;
         alert('registration successful');
         this.router.navigate(['/signin']);
         this.sendEmailForVarification(res.user);
       }, err => {
         alert(err.message);
+        this.dialog.open(DialogErrorComponent);
         this.router.navigate(['/signup']);
       })
   }
@@ -75,6 +83,7 @@ export class AuthService {
       .then((res: any) => {
         this.router.navigate(['/varify-email']);
       }, (err: any) => {
+        this.dialog.open(DialogErrorComponent);
         alert('Something went wrong. Not able to send mail to your email');
       });
   }
@@ -86,6 +95,7 @@ export class AuthService {
         u.sendEmailVerification()
         alert('success');
       }, err => {
+        this.dialog.open(DialogErrorComponent);
         alert(err.message)
       });
   }
@@ -97,6 +107,7 @@ export class AuthService {
         localStorage.removeItem('user');
         this.router.navigate(['/signin']);
       }, err => {
+        this.dialog.open(DialogErrorComponent);
         alert(err.message);
       })
   }
@@ -105,8 +116,9 @@ export class AuthService {
   forgotPassword(email: string) {
     this.fireauth.sendPasswordResetEmail(email)
       .then(() => {
-        this.router.navigate(['/varify-email']);
+        this.dialog.open(DialogResetPasswordInfoComponent);
       }, err => {
+        this.dialog.open(DialogErrorComponent);
         alert('Something went wrong');
       })
   }

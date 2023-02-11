@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import firebase from "firebase/compat/app";
 import { AuthService } from '../shared/auth.service';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
