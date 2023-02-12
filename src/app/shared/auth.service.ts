@@ -23,18 +23,20 @@ export class AuthService {
     this.fireauth.signInWithEmailAndPassword(email, password)
       .then(res => {
         localStorage.setItem('user', JSON.stringify(res.user));
-
-        if (res.user?.emailVerified == true) {
-          this.router.navigate(['/mainpage']);
-        } else {
-          this.router.navigate(['/varify-email']);
-        }
-
+        this.checkEmailVerified(res);
       }, err => {
-        alert(err.message);
-        this.dialog.open(DialogErrorComponent);
+        this.openErrorDialog(err);
         this.router.navigate(['/signin']);
       });
+  }
+
+
+  checkEmailVerified(res: any) {
+    if (res.user?.emailVerified == true) {
+      this.router.navigate(['/mainpage']);
+    } else {
+      this.router.navigate(['/varify-email']);
+    }
   }
 
 
@@ -44,8 +46,7 @@ export class AuthService {
         this.router.navigate(['/mainpage']);
         localStorage.setItem('user', JSON.stringify(res.user));
       }, err => {
-        this.dialog.open(DialogErrorComponent);
-        alert(err.message);
+        this.openErrorDialog(err);
       })
   }
 
@@ -56,8 +57,7 @@ export class AuthService {
         this.router.navigate(['/mainpage']);
         localStorage.setItem('user', JSON.stringify(res.user));
       }, err => {
-        this.dialog.open(DialogErrorComponent);
-        alert(err.message);
+        this.openErrorDialog(err);
       })
   }
 
@@ -67,12 +67,10 @@ export class AuthService {
       .then(res => {
         localStorage.setItem('user', JSON.stringify(res.user));
         this.currentEmail = email;
-        alert('registration successful');
         this.router.navigate(['/signin']);
         this.sendEmailForVarification(res.user);
       }, err => {
-        alert(err.message);
-        this.dialog.open(DialogErrorComponent);
+        this.openErrorDialog(err);
         this.router.navigate(['/signup']);
       })
   }
@@ -83,8 +81,7 @@ export class AuthService {
       .then((res: any) => {
         this.router.navigate(['/varify-email']);
       }, (err: any) => {
-        this.dialog.open(DialogErrorComponent);
-        alert('Something went wrong. Not able to send mail to your email');
+        this.openErrorDialog(err);
       });
   }
 
@@ -95,8 +92,7 @@ export class AuthService {
         u.sendEmailVerification()
         alert('success');
       }, err => {
-        this.dialog.open(DialogErrorComponent);
-        alert(err.message)
+        this.openErrorDialog(err);
       });
   }
 
@@ -107,8 +103,7 @@ export class AuthService {
         localStorage.removeItem('user');
         this.router.navigate(['/signin']);
       }, err => {
-        this.dialog.open(DialogErrorComponent);
-        alert(err.message);
+        this.openErrorDialog(err);
       })
   }
 
@@ -118,8 +113,20 @@ export class AuthService {
       .then(() => {
         this.dialog.open(DialogResetPasswordInfoComponent);
       }, err => {
-        this.dialog.open(DialogErrorComponent);
-        alert('Something went wrong');
+        this.openErrorDialog(err);
       })
   }
+
+
+  openErrorDialog(err: { message: string; code: string; }) {
+    this.dialog.open(DialogErrorComponent,
+      {
+        data:
+        {
+          message: err.message,
+          code: err.code
+        }
+      });
+  }
+
 }

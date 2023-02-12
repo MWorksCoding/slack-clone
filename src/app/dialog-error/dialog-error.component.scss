@@ -38,12 +38,18 @@
 .errors-container {
     display: flex;
     flex-direction: column;
+    gap: 12px;
 }
 
 .error-description {
     display: flex;
     align-items: center;
     padding-left: 24px;
+    padding-right: 24px;
+}
+
+.error-strong {
+    margin-right: 8px;
 }
 
 .error-text {

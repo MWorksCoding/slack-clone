@@ -20,15 +20,14 @@ import { VarifyEmailComponent } from './varify-email/varify-email.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from './dialog-create-channel/dialog-create-channel.component';
 import { DialogCreateChatComponent } from './dialog-create-chat/dialog-create-chat.component';
-import { MatLabel } from '@angular/material/form-field';
-import { MatOption } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { ImprintComponent } from './imprint/imprint.component';
 import { ThreadsComponent } from './threads/threads.component';
-import { ChannelComponent } from './channel/channel.component';
 import { DialogResetPasswordInfoComponent } from './dialog-reset-password-info/dialog-reset-password-info.component';
-import { DialogErrorComponent } from './dialog-error/dialog-error.component'
+import { DialogErrorComponent } from './dialog-error/dialog-error.component';
+import { DialogUserInfoComponent } from './dialog-user-info/dialog-user-info.component'
+import { MatMenuModule } from '@angular/material/menu';
 
 
 @NgModule({
@@ -45,6 +44,7 @@ import { DialogErrorComponent } from './dialog-error/dialog-error.component'
     ThreadsComponent,
     DialogResetPasswordInfoComponent,
     DialogErrorComponent,
+    DialogUserInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,6 +62,7 @@ import { DialogErrorComponent } from './dialog-error/dialog-error.component'
     MatDialogModule,
     MatSelectModule,
     MatChipsModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -12,7 +12,8 @@ mat-drawer-container {
 
 .mat-drawer-container {
     height: 100vh;
-    h3{
+
+    h3 {
         cursor: pointer;
     }
 }
@@ -42,6 +43,7 @@ mat-icon {
     display: flex;
     align-items: center;
     cursor: pointer;
+
     input {
         padding: 2%;
         color: black;
@@ -52,9 +54,20 @@ mat-icon {
         height: 18px;
         width: 300px;
     }
-    img{
+
+    img {
         height: 30px;
         width: 30px;
+    }
+}
+
+.dialog-icon-and-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .menu-icon {
+        color: #0000008a;
     }
 }
 
@@ -82,7 +95,7 @@ mat-drawer {
     align-items: center;
 }
 
-.df-ai_c-jc_sb{
+.df-ai_c-jc_sb {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -91,8 +104,9 @@ mat-drawer {
 .single-chatroom {
     span {
         cursor: pointer;
-        &:hover{
-            color: #da91dc!important;
+
+        &:hover {
+            color: #da91dc !important;
         }
     }
 }
@@ -103,10 +117,12 @@ mat-drawer {
     width: 284px;
     z-index: 1;
     background-color: #512752;
+
     h4 {
         cursor: pointer;
-        &:hover{
-            color: #da91dc!important;
+
+        &:hover {
+            color: #da91dc !important;
         }
     }
 }

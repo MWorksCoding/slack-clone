@@ -10,13 +10,11 @@
 
     <div class="errors-container">
         <div class="error-description">
-            <span>Error Message:</span>
-            <div mat-dialog-content class="error-text">This dialog showcases the title, close, content and actions
-                elements.</div>
+            <span><strong class="error-strong">Error Message:</strong>{{data.message}}</span>
         </div>
+
         <div class="error-description">
-            <span>Error Code:</span>
-            <div mat-dialog-content class="error-text">auth/user-not-found</div>
+            <span><strong class="error-strong">Error Code:</strong>{{data.code}}</span>
         </div>
     </div>
 </div>
