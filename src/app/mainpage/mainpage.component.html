@@ -1,7 +1,7 @@
 <div class="mainpage">
     <mat-toolbar color="primary">
         <div class="toolbar-icons" (click)="drawer.toggle()">
-            <mat-icon mat-button>menu</mat-icon>
+            <mat-icon mat-button class="mainpage-icons">menu</mat-icon>
             <img class="pl-16" src="../../assets/img/Icon.png">
             <span class="pl-16">Slack-Clone</span>
         </div>
@@ -20,14 +20,14 @@
                 <h2>Developer Akademie</h2>
             </div>
             <div class="pl-16 df-ai_c" (click)="openThreads()">
-                <mat-icon class="user-icon">speaker_notes</mat-icon>
+                <mat-icon class="mainpage-icons">speaker_notes</mat-icon>
                 <h3 class="pl-16">Threads</h3>
             </div>
             <div class="df-ai_c-jc_sb pr-16 sidenav-header" (click)="toggleChannelMenu()">
                 <div class="pl-16 df-ai_c">
                     <mat-icon *ngIf="ChannelMenuIsOpen">arrow_drop_down</mat-icon>
                     <mat-icon *ngIf="!ChannelMenuIsOpen">arrow_right</mat-icon>
-                    <mat-icon class="user-icon">forum</mat-icon>
+                    <mat-icon class="mainpage-icons">forum</mat-icon>
                     <h3 class="pl-16">Channels</h3>
                 </div>
                 <div>
