@@ -1,0 +1,24 @@
+<div class="padding-without-btn">
+    <div class="info-headline-container">
+        <div class="img-container">
+            <img src="assets/img/info-icon.svg" alt="info-icon">
+        </div>
+        <span class="attention">Attention</span>
+    </div>
+
+    <h1 mat-dialog-title class="error-occured">An error has occured.</h1>
+
+    <div class="errors-container">
+        <div class="error-description">
+            <span><strong class="error-strong">Error Message:</strong>{{data.message}}</span>
+        </div>
+
+        <div class="error-description">
+            <span><strong class="error-strong">Error Code:</strong>{{data.code}}</span>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+</div>

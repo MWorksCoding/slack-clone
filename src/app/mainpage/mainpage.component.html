@@ -9,7 +9,18 @@
             <input onkeyup="" placeholder="Search ..." autocomplete="off" matInput>
         </div>
         <div class="toolbar-icons">
-            <mat-icon class="user-icon">person</mat-icon>
+            <button mat-button [matMenuTriggerFor]="menu" #menuTrigger>Menu</button>
+            <mat-menu #menu="matMenu">
+                <div mat-menu-item class="dialog-icon-and-button" (click)="openDialog()">
+                    <mat-icon class="menu-icon" fontIcon="edit"></mat-icon>
+                    <span>Edit user</span>
+                </div>
+
+                <div mat-menu-item class="dialog-icon-and-button" (click)="logout()">
+                    <mat-icon class="menu-icon" fontIcon="logout"></mat-icon>
+                    <span>Log out</span>
+                </div>
+            </mat-menu>
         </div>
     </mat-toolbar>
 

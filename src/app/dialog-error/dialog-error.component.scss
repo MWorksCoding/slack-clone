@@ -1,0 +1,57 @@
+.whole-dialog-field {
+    width: 900px;
+}
+
+.padding-without-btn {
+    padding: 16px 0px;
+}
+
+.info-headline-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 24px;
+    padding-top: 8px;
+}
+
+.img-container {
+    background-color: rgb(255, 163, 0);
+    border-radius: 100%;
+
+    img {
+        height: 22px;
+        width: 26px;
+        padding: 5px;
+        filter: invert(100%);
+    }
+}
+
+.attention {
+    font-size: 26px;
+}
+
+.error-occured {
+    display: flex;
+    justify-content: center;
+}
+
+.errors-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.error-description {
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.error-strong {
+    margin-right: 8px;
+}
+
+.error-text {
+    padding: 10px 24px 10px 5px !important;
+}

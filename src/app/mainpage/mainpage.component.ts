@@ -4,6 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 import { DialogCreateChatComponent } from '../dialog-create-chat/dialog-create-chat.component';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
+import { DialogUserInfoComponent } from '../dialog-user-info/dialog-user-info.component';
 
 @Component({
   selector: 'app-mainpage',
@@ -14,6 +17,7 @@ export class MainpageComponent {
   constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore,) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
+  @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
 
   channelId = '';
@@ -21,6 +25,7 @@ export class MainpageComponent {
   allChatChannel = '';
   imprint = false;
   threads = false;
+
 
   ngOnInit(): void {
     this.loadChannels();
@@ -31,8 +36,10 @@ export class MainpageComponent {
     this.auth.signOut();
   }
 
+
   ChannelMenuIsOpen = true;
   DirectMessagesMenuIsOpen = true;
+
 
   toggleChannelMenu() {
     if (this.ChannelMenuIsOpen) {
@@ -43,6 +50,7 @@ export class MainpageComponent {
     }
   }
 
+
   toggleDirectMessagesMenu() {
     if (this.DirectMessagesMenuIsOpen) {
       this.DirectMessagesMenuIsOpen = false;
@@ -52,13 +60,16 @@ export class MainpageComponent {
     }
   }
 
+
   openDialogCreateChannel() {
     this.dialog.open(DialogCreateChannelComponent);
   }
 
+
   openDialogCreateChat() {
     this.dialog.open(DialogCreateChatComponent);
   }
+
 
   loadChannels() {
     this.firestore
@@ -69,6 +80,7 @@ export class MainpageComponent {
       })
   }
 
+
   openImprint() {  // Route einbauen°!°
     // this.content.nativeElement.innerHTML = 'Impressum'
     // window.document.getElementById('imprint')!.classList.remove('d-n');
@@ -77,8 +89,25 @@ export class MainpageComponent {
 
   }
 
+
   openThreads() {
     this.imprint = false;
     this.threads = !this.threads;
   }
+
+
+  openDialog() {
+    const dialogRef = this.dialog.open(DialogUserInfoComponent, { restoreFocus: false });
+
+    // Manually restore focus to the menu trigger since the element that
+    // opens the dialog won't be in the DOM any more when the dialog closes.
+    dialogRef.afterClosed().subscribe(() => this.menuTrigger?.focus());
+  }
+
+
+
+  logout() {
+    this.auth.signOut();
+  }
+
 }

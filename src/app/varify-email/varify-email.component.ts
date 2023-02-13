@@ -11,7 +11,7 @@ export class VarifyEmailComponent {
   verifiedEmail: string = '';
 
   constructor(private auth: AuthService) {
-    this.verifiedEmail = JSON.parse(localStorage['user']).email;
+    this.verifiedEmail = this.auth.currentEmail;
   }
 
 
