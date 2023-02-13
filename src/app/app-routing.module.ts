@@ -8,6 +8,7 @@ import { VarifyEmailComponent } from './varify-email/varify-email.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { ThreadsComponent } from './threads/threads.component';
 import { ChannelComponent } from './channel/channel.component';
+import { ChatComponent } from './chat/chat.component';
 
 const routes: Routes = [
   { path: 'mainpage', component: MainpageComponent}, //ggf. auskommentieren, um wieder auf "signin" zu kommen
@@ -18,7 +19,9 @@ const routes: Routes = [
   { path: 'varify-email', component: VarifyEmailComponent, canActivate: [AuthGuard] },
   { path: 'imprint', component: ImprintComponent },
   { path: 'threads', component: ThreadsComponent },
-  { path: 'channel/:id', component: ChannelComponent}
+  { path: 'channel/:id', component: ChannelComponent},
+  // { path: 'channel', component: ChannelComponent},
+  { path: 'chat', component: ChatComponent}
 ];
 
 @NgModule({

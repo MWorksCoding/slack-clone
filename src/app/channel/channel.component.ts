@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../shared/auth.service';
 import { Channel } from 'src/models/channel.class';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-channel',
@@ -11,7 +12,7 @@ import { Channel } from 'src/models/channel.class';
 })
 export class ChannelComponent {
 
-  constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore,) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+  constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
   channels = [];
@@ -22,10 +23,13 @@ export class ChannelComponent {
     this.loadChannel();
   }
 
-  loadChannel() {  
+  loadChannel() {
+    // this.route.params.subscribe((params) => {
+    //   console.log(params);
+    // });
     this.firestore
       .collection('channels')
-      .doc(this.channelId)
+      // .doc(this.channelId)
       .valueChanges()
       .subscribe((channel: any) => {
         this.channel = new Channel(channel);

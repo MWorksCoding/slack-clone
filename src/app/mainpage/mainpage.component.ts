@@ -7,6 +7,9 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatMenuModule } from '@angular/material/menu';
 import { DialogUserInfoComponent } from '../dialog-user-info/dialog-user-info.component';
+import { Channel } from 'src/models/channel.class';
+import { ChannelComponent } from '../channel/channel.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-mainpage',
@@ -14,7 +17,7 @@ import { DialogUserInfoComponent } from '../dialog-user-info/dialog-user-info.co
   styleUrls: ['./mainpage.component.scss']
 })
 export class MainpageComponent {
-  constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore,) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+  constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
@@ -23,22 +26,23 @@ export class MainpageComponent {
   channelId = '';
   channels = [];
   allChatChannel = '';
-  imprint = false;
-  threads = false;
+  ChannelMenuIsOpen = true;
+  DirectMessagesMenuIsOpen = true;
+
 
 
   ngOnInit(): void {
     this.loadChannels();
+    this.openThreads();
+    this.route.params.subscribe((params) => {
+      console.log(params);
+    });
   }
 
 
   signOut() {
     this.auth.signOut();
   }
-
-
-  ChannelMenuIsOpen = true;
-  DirectMessagesMenuIsOpen = true;
 
 
   toggleChannelMenu() {
@@ -72,27 +76,63 @@ export class MainpageComponent {
 
 
   loadChannels() {
+    // this.route.params.subscribe((params) => {
+    //   console.log(params);
+    // });
     this.firestore
       .collection('channels')
       .valueChanges({ idField: 'channelId' })
-      .subscribe((changes: any) => {
-        this.channels = changes;
-      })
+      // .subscribe((changes: any) => {
+      //   this.channels = changes;
+      // })
+      .subscribe((channelId: any) => {
+        console.log('Mainpage: Channel ID is:', channelId);
+        this.channels = channelId;
+      });
   }
 
 
   openImprint() {  // Route einbauen°!°
     // this.content.nativeElement.innerHTML = 'Impressum'
-    // window.document.getElementById('imprint')!.classList.remove('d-n');
-    this.threads = false;
-    this.imprint = !this.imprint;
-
+    window.document.getElementById('imprint')!.classList.remove('d-n');
+    window.document.getElementById('threads')!.classList.add('d-n');
+    window.document.getElementById('channel')!.classList.add('d-n');
+    window.document.getElementById('chat')!.classList.add('d-n');
+    this.changeBGWhite();
   }
 
 
   openThreads() {
-    this.imprint = false;
-    this.threads = !this.threads;
+    window.document.getElementById('threads')!.classList.remove('d-n');
+    window.document.getElementById('imprint')!.classList.add('d-n');
+    window.document.getElementById('channel')!.classList.add('d-n');
+    window.document.getElementById('chat')!.classList.add('d-n');
+    this.changeBGWhite();
+  }
+
+
+  openChannel() {
+    window.document.getElementById('channel')!.classList.remove('d-n');
+    window.document.getElementById('imprint')!.classList.add('d-n');
+    window.document.getElementById('threads')!.classList.add('d-n');
+    window.document.getElementById('chat')!.classList.add('d-n');
+    this.changeBGWhite();
+  }
+
+  openChat() {
+    window.document.getElementById('chat')!.classList.remove('d-n');
+    window.document.getElementById('imprint')!.classList.add('d-n');
+    window.document.getElementById('channel')!.classList.add('d-n');
+    window.document.getElementById('threads')!.classList.add('d-n');
+    this.changeBGGray();
+  }
+
+  changeBGWhite() {
+    this.content.nativeElement.style.background = '#FAFAFA'
+  }
+
+  changeBGGray() {
+    this.content.nativeElement.style.background = '#EEEEEE'
   }
 
 

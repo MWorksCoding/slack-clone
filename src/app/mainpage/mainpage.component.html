@@ -34,8 +34,8 @@
                 <mat-icon class="mainpage-icons">speaker_notes</mat-icon>
                 <h3 class="pl-16">Threads</h3>
             </div>
-            <div class="df-ai_c-jc_sb pr-16 sidenav-header" (click)="toggleChannelMenu()">
-                <div class="pl-16 df-ai_c">
+            <div class="df-ai_c-jc_sb pr-16 sidenav-header">
+                <div class="pl-16 df-ai_c" (click)="toggleChannelMenu()">
                     <mat-icon *ngIf="ChannelMenuIsOpen">arrow_drop_down</mat-icon>
                     <mat-icon *ngIf="!ChannelMenuIsOpen">arrow_right</mat-icon>
                     <mat-icon class="mainpage-icons">forum</mat-icon>
@@ -46,10 +46,10 @@
                 </div>
             </div>
             <div *ngIf="ChannelMenuIsOpen">
-                <div *ngFor="let channel of channels, let i = index" class="single-chatroom pl-16 pb-16 pt-16">
-                    <div [ngClass]="{'single-chatroom' : allChatChannel == ('channel' + i) }" routerLink="/imprint">
+                <div *ngFor="let channel of channels, let i = index" class="single-channel pl-16 pb-16 pt-16">
+                    <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }" (click)="openChannel()">
                         <!-- routerLink="['/channel/' + channel.channelId]"> -->
-                        <span class=""># {{ channel['channelName'] }}</span>
+                        <span class=""># {{ channel['channelName'] }} </span>
                     </div>
                 </div>
             </div>
@@ -67,12 +67,19 @@
                     <mat-icon (click)="openDialogCreateChat()">add</mat-icon>
                 </div>
             </div>
-            <div *ngIf="DirectMessagesMenuIsOpen">
-                <p>Chat 1</p>
-                <p>Chat 2</p>
-                <p>Chat 3</p>
-                <p>Chat 4</p>
-                <p>Chat 5</p>
+            <div *ngIf="DirectMessagesMenuIsOpen" class="single-chat pl-16 pb-16 pt-16">
+                <div class="df-ai_c gap-8 pb-16" (click)="openChat()">
+                    <mat-icon>person</mat-icon>
+                    <span>Chat 1</span>
+                </div>
+                <div class="df-ai_c gap-8 pb-16" (click)="openChat()">
+                    <mat-icon>person</mat-icon>
+                    <span>Chat 2</span>
+                </div>
+                <div class="df-ai_c gap-8 pb-16" (click)="openChat()">
+                    <mat-icon>person</mat-icon>
+                    <span>Chat 3</span>
+                </div>
             </div>
 
             <div class="sidenav-header pl-16 imprint" (click)="openImprint()">
@@ -83,10 +90,16 @@
         </mat-drawer>
 
         <div class="mat-drawer-sidenav-content pt-16 pl-16" #content>
-            <div *ngIf="imprint">
+            <div>
                 <app-imprint></app-imprint>
             </div>
-            <div *ngIf="threads">
+            <div>
+                <app-channel></app-channel>
+            </div>
+            <div>
+                <app-chat></app-chat>
+            </div>
+            <div>
                 <app-threads></app-threads>
             </div>
         </div>

@@ -28,6 +28,8 @@ import { DialogResetPasswordInfoComponent } from './dialog-reset-password-info/d
 import { DialogErrorComponent } from './dialog-error/dialog-error.component';
 import { DialogUserInfoComponent } from './dialog-user-info/dialog-user-info.component'
 import { MatMenuModule } from '@angular/material/menu';
+import { ChannelComponent } from './channel/channel.component';
+import { ChatComponent } from './chat/chat.component';
 
 
 @NgModule({
@@ -45,6 +47,8 @@ import { MatMenuModule } from '@angular/material/menu';
     DialogResetPasswordInfoComponent,
     DialogErrorComponent,
     DialogUserInfoComponent,
+    ChannelComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,

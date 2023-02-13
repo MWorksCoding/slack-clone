@@ -101,8 +101,25 @@ mat-drawer {
     justify-content: space-between;
 }
 
-.single-chatroom {
+.single-channel {
     span {
+        cursor: pointer;
+
+        &:hover {
+            color: #da91dc !important;
+        }
+    }
+}
+
+.single-chat {
+    span {
+        cursor: pointer;
+
+        &:hover {
+            color: #da91dc !important;
+        }
+    }
+    mat-icon {
         cursor: pointer;
 
         &:hover {
@@ -125,4 +142,13 @@ mat-drawer {
             color: #da91dc !important;
         }
     }
+}
+
+
+.bg-white {
+    background-color: #FAFAFA;
+}
+
+.bg-gray {
+    background-color: #EEEEEE;
 }
