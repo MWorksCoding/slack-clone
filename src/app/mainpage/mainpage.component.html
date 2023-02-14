@@ -48,8 +48,10 @@
             <div *ngIf="ChannelMenuIsOpen">
                 <div *ngFor="let channel of channels, let i = index" class="single-channel pl-16 pb-16 pt-16">
                     <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }" (click)="openChannel()">
-                        <!-- routerLink="['/channel/' + channel.channelId]"> -->
+                     <!-- [routerLink]="['/channel/',channel['channelId']]" Zugriff auf Channel mit individuellem ID Pfad -->
+                    
                         <span class=""># {{ channel['channelName'] }} </span>
+                        <!-- <span class="">, ChannelID = {{ channel['channelId'] }} </span> Anzeigen der Channel ID im router Link -->
                     </div>
                 </div>
             </div>

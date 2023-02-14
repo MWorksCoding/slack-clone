@@ -15,24 +15,31 @@ export class ChannelComponent {
   constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
+  allChatChannel = '';
   channels = [];
-  channelId = '';
+  channelId: string = '';
   channel: Channel = new Channel();
 
   ngOnInit(): void {
+    // this.channels = window.history.state.data;
     this.loadChannel();
   }
 
   loadChannel() {
-    // this.route.params.subscribe((params) => {
-    //   console.log(params);
-    // });
+    // this.route.params.subscribe((params => {
+    //   this.channelId = params['get']('id');
+       this.route.params.subscribe((params) => {
+         console.log('Channel JSON is:', params);
+       });
+    // }))
     this.firestore
       .collection('channels')
       // .doc(this.channelId)
       .valueChanges()
-      .subscribe((channel: any) => {
-        this.channel = new Channel(channel);
+      .subscribe((channelId: any) => {
+        // this.channel = new Channel(channel);
+        console.log('Channel-Component: Channel ID is:', channelId);
+        this.channels = channelId;
       })
   }
 

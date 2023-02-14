@@ -30,6 +30,9 @@ import { DialogUserInfoComponent } from './dialog-user-info/dialog-user-info.com
 import { MatMenuModule } from '@angular/material/menu';
 import { ChannelComponent } from './channel/channel.component';
 import { ChatComponent } from './chat/chat.component';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AuthService } from './shared/auth.service';
 
 
 @NgModule({
@@ -66,7 +69,9 @@ import { ChatComponent } from './chat/chat.component';
     MatDialogModule,
     MatSelectModule,
     MatChipsModule,
-    MatMenuModule
+    MatMenuModule,
+    provideAuth(() => getAuth()),
+    AngularFireAuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
