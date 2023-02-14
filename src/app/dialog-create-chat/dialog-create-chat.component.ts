@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { getAuth } from '@angular/fire/auth';
+import { AuthService } from '../shared/auth.service';
 
 @Component({
   selector: 'app-dialog-create-chat',
@@ -9,18 +11,11 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 })
 export class DialogCreateChatComponent {
 
-  constructor(public dialogRef: MatDialogRef<DialogCreateChatComponent>, private firestore: AngularFirestore) { }
+  constructor(public dialogRef: MatDialogRef<DialogCreateChatComponent>, private firestore: AngularFirestore, private auth: AuthService) { }
 
 
   loading = false;
   // chat = new Chat();
-
-  ngOnInit(): void {
-    this.firestore
-    .collection('channels') // Ummünzen aus Users
-    .valueChanges({ idField: 'channelId' }) // Ummünzen aus Users
-    .subscribe();
-  }
 
   startChat(){
     this.loading = true;

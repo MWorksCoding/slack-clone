@@ -10,6 +10,8 @@ import { DialogUserInfoComponent } from '../dialog-user-info/dialog-user-info.co
 import { Channel } from 'src/models/channel.class';
 import { ChannelComponent } from '../channel/channel.component';
 import { ActivatedRoute } from '@angular/router';
+import { user } from '@angular/fire/auth';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-mainpage',
@@ -25,14 +27,14 @@ export class MainpageComponent {
 
   channelId = '';
   channels = [];
+  activeChannel = [];
   allChatChannel = '';
   ChannelMenuIsOpen = true;
   DirectMessagesMenuIsOpen = true;
 
 
-
-  ngOnInit(): void {
-    this.loadChannels();
+  async ngOnInit(): Promise<void> {
+    await this.loadChannels();
     this.openThreads();
     this.route.params.subscribe((params) => {
       console.log(params);
@@ -89,11 +91,13 @@ export class MainpageComponent {
         console.log('Mainpage: Channel ID is:', channelId);
         this.channels = channelId;
       });
+      ;
   }
 
 
   openImprint() {  // Route einbauen°!°
     // this.content.nativeElement.innerHTML = 'Impressum'
+
     window.document.getElementById('imprint')!.classList.remove('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
     window.document.getElementById('channel')!.classList.add('d-n');
@@ -112,6 +116,7 @@ export class MainpageComponent {
 
 
   openChannel() {
+    // this.route.navigate(['/channel'], {state: {data: {...this.channels}}});
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
@@ -127,10 +132,12 @@ export class MainpageComponent {
     this.changeBGGray();
   }
 
+
   changeBGWhite() {
     this.content.nativeElement.style.background = '#FAFAFA'
   }
 
+  
   changeBGGray() {
     this.content.nativeElement.style.background = '#EEEEEE'
   }
@@ -143,7 +150,6 @@ export class MainpageComponent {
     // opens the dialog won't be in the DOM any more when the dialog closes.
     dialogRef.afterClosed().subscribe(() => this.menuTrigger?.focus());
   }
-
 
 
   logout() {
