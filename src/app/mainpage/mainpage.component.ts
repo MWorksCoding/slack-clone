@@ -94,7 +94,7 @@ export class MainpageComponent {
         console.log('Mainpage: Channel ID is:', channelId);
         this.channels = channelId;
       });
-      ;
+    ;
   }
 
 
@@ -120,7 +120,7 @@ export class MainpageComponent {
 
   openChannel(i: any) {
     // this.route.navigate(['/channel'], {state: {data: {...this.channels}}});
-    console.log('Clicked ID is:', i);
+    console.log('Clicked ID is:', i['channelName']);
     this.forChild = i;
 
     // DIREKT UMWANDELN ZUM STRING ZUR WEITERGABE AN DAS CHILD-COMPONENT 'CHANNEL'
@@ -145,7 +145,7 @@ export class MainpageComponent {
     this.content.nativeElement.style.background = '#FAFAFA'
   }
 
-  
+
   changeBGGray() {
     this.content.nativeElement.style.background = '#EEEEEE'
   }

@@ -30,9 +30,11 @@ import { DialogUserInfoComponent } from './dialog-user-info/dialog-user-info.com
 import { MatMenuModule } from '@angular/material/menu';
 import { ChannelComponent } from './channel/channel.component';
 import { ChatComponent } from './chat/chat.component';
-import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideAuth, getAuth } from '@angular/fire/auth';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AuthService } from './shared/auth.service';
+import { LoaderComponent } from './loader/loader.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -52,6 +54,7 @@ import { AuthService } from './shared/auth.service';
     DialogUserInfoComponent,
     ChannelComponent,
     ChatComponent,
+    LoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,6 +75,7 @@ import { AuthService } from './shared/auth.service';
     MatMenuModule,
     provideAuth(() => getAuth()),
     AngularFireAuthModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
