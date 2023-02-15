@@ -61,6 +61,17 @@ mat-toolbar {
     }
 }
 
+.user-name {
+    font-size: 18px;
+    margin-right: 16px;
+}
+
+.profil-img {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 100%;
+}
+
 .dialog-icon-and-button {
     display: flex;
     align-items: center;
@@ -119,6 +130,7 @@ mat-drawer {
             color: #da91dc !important;
         }
     }
+
     mat-icon {
         cursor: pointer;
 

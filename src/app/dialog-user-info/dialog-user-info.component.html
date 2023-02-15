@@ -1,1 +1,29 @@
-<p>dialog-user-info works!</p>
+<div class="whole-dialog">
+    <h1>Edit Profile</h1>
+
+    <div class="input-and-img-container">
+        <div class="input-fields">
+            <mat-form-field appearance="outline">
+                <mat-label>User name</mat-label>
+                <input matInput placeholder="User name" [formControl]="usernameForm" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput placeholder="Email" [formControl]="emailForm" required name="email" [(ngModel)]="email">
+            </mat-form-field>
+        </div>
+
+        <div class="img-container">
+            <img class="profile-picture" src="../../assets/img/name-icon.png" alt="profil-icon">
+            <button class="upload-img-btn">
+                <img class="upload-img" src="../../assets/img/upload-icon.svg">
+                <span class="upload-text">Updload image</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+</div>
