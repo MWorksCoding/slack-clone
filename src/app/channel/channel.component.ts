@@ -17,6 +17,7 @@ export class ChannelComponent {
   }
 
   @Input() inputFromParent: string = "";
+  @Input() inputFromParentDescriptiont: string = "";
 
   allChatChannel = '';
   channels = [];
