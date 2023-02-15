@@ -26,11 +26,11 @@ export class MainpageComponent {
   @ViewChild('content') content!: ElementRef;
 
 
-  forChild: string = '';
+  forChildChannelName: string = '';
+  forChildDescription: string = '';
 
   channelId = '';
   channels = [];
-  activeChannel = [];
   allChatChannel = '';
   ChannelMenuIsOpen = true;
   DirectMessagesMenuIsOpen = true;
@@ -121,9 +121,18 @@ export class MainpageComponent {
   openChannel(i: any) {
     // this.route.navigate(['/channel'], {state: {data: {...this.channels}}});
     console.log('Clicked ID is:', i['channelName']);
-    this.forChild = i;
+    console.log('String to child-component:', i['channelName'])
+
+    this.forChildChannelName = i['channelName'];
+    this.forChildDescription = i['description'];
 
     // DIREKT UMWANDELN ZUM STRING ZUR WEITERGABE AN DAS CHILD-COMPONENT 'CHANNEL'
+
+    // this.activeChannel.push(i);
+    // this.activeChannel.push(test1)
+    // JSON.stringify(this.activeChannel);
+    // console.log('Active Channel is:', this.activeChannel);
+
 
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
