@@ -25,6 +25,9 @@ export class MainpageComponent {
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
 
+
+  forChild: string = '';
+
   channelId = '';
   channels = [];
   activeChannel = [];
@@ -115,8 +118,13 @@ export class MainpageComponent {
   }
 
 
-  openChannel() {
+  openChannel(i: any) {
     // this.route.navigate(['/channel'], {state: {data: {...this.channels}}});
+    console.log('Clicked ID is:', i);
+    this.forChild = i;
+
+    // DIREKT UMWANDELN ZUM STRING ZUR WEITERGABE AN DAS CHILD-COMPONENT 'CHANNEL'
+
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');

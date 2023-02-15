@@ -1,19 +1,24 @@
 <div class="channel-container d-n" id="channel">
-    <div *ngFor="let channel of channels, let i = index" class="single-channel pl-16 pb-16 pt-16">
-        <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }">
-         <!-- [routerLink]="['/channel/',channel['channelId']]"> -->
+    <div>
+        <div>
+
+            <!-- <div *ngFor="let channel of channels, let i = index" class="single-channel pl-16 pb-16 pt-16">
+        <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }"> -->
+            <!-- [routerLink]="['/channel/',channel['channelId']]"> -->
             <!-- <span class=""># {{ channel['channelName'] }} </span> -->
             <h2>
-                {{ channel['channelName'] }}
+                <!-- {{ channel['channelName'] }} -->
+                {{ inputFromParent }}
             </h2>
             <h3>
-                {{ channel['description'] }}
+                <!-- {{ channel['description'] }} -->
+                {{ inputFromParent }}
             </h3>
             <div class="post-container"> <!-- ACHTUNG HIER MUSS AUCH EIN INDEX VON ALLEN NACHRICHTEN ERSTELLT WERDEN -->
-                <div >
+                <div>
                     <div class="posts">
                         <mat-icon>person</mat-icon>
-        
+
                         <div>
                             <div class="general-info-line">
                                 <p><b></b></p>
@@ -22,15 +27,15 @@
                             <div class="post">
                                 <p></p>
                             </div>
-        
+
                             <img>
-        
+
                             <div class="open-thread">
                                 <p>Comments</p>
                             </div>
                         </div>
                     </div>
-        
+
                 </div>
             </div>
         </div>

@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../shared/auth.service';
 import { Channel } from 'src/models/channel.class';
 import { ActivatedRoute } from '@angular/router';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-channel',
@@ -14,6 +15,8 @@ export class ChannelComponent {
 
   constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
+
+  @Input() inputFromParent: string = "";
 
   allChatChannel = '';
   channels = [];
