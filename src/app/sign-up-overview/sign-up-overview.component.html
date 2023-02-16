@@ -1,3 +1,4 @@
+<app-overlay-spinner></app-overlay-spinner>
 <div class="logo-and-slack-container">
     <img src="" alt="">
     <span>slack</span>
@@ -14,7 +15,8 @@
         <form>
             <mat-form-field appearance="outline">
                 <mat-label>Username</mat-label>
-                <input matInput placeholder="Username" [formControl]="usernameForm" required>
+                <input matInput placeholder="Username" [formControl]="usernameForm" required name="userName"
+                    [(ngModel)]="userName">
                 <mat-error *ngIf="usernameForm.invalid">{{getErrorMessageUsername()}}</mat-error>
             </mat-form-field>
 

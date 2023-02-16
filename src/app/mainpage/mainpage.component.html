@@ -9,7 +9,8 @@
             <input onkeyup="" placeholder="Search ..." autocomplete="off" matInput>
         </div>
         <div class="toolbar-icons">
-            <span class="user-name">Guest</span>
+            <span class="user-name">{{ (auth.actualUser$ | async)?.userName ? (auth.actualUser$ | async).userName :
+                'Guest' }}</span>
             <img class="profil-img" [matMenuTriggerFor]="menu" #menuTrigger src="../../assets/img/name-icon.png"
                 alt="profil-icon">
             <mat-menu #menu="matMenu">
@@ -49,12 +50,13 @@
             </div>
             <div *ngIf="ChannelMenuIsOpen">
                 <div *ngFor="let channel of channels, let i = index" class="single-channel pl-16 pb-16 pt-16">
-                    <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }" (click)="openChannel(channels[i])">
+                    <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }"
+                        (click)="openChannel(channels[i])">
                         <!-- ng-click="openChannel(channel.channelName)" -->
                         <!-- ng-click="openChannel(i) -->
                         <!-- (click)="openChannel(i)" -->
-                     <!-- [routerLink]="['/channel/',channel['channelId']]" Zugriff auf Channel mit individuellem ID Pfad -->
-                    
+                        <!-- [routerLink]="['/channel/',channel['channelId']]" Zugriff auf Channel mit individuellem ID Pfad -->
+
                         <span class=""># {{ channel['channelName'] }} </span>
                         <!-- <span class="">, ChannelID = {{ channel['channelId'] }} </span> Anzeigen der Channel ID im router Link -->
                     </div>
@@ -101,7 +103,8 @@
                 <app-imprint></app-imprint>
             </div>
             <div>
-                <app-channel [inputFromParent]="forChildChannelName" [inputFromParentDescriptiont]="forChildDescription" ></app-channel>
+                <app-channel [inputFromParent]="forChildChannelName"
+                    [inputFromParentDescriptiont]="forChildDescription"></app-channel>
             </div>
             <div>
                 <app-chat></app-chat>

@@ -33,8 +33,8 @@ import { ChatComponent } from './chat/chat.component';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AuthService } from './shared/auth.service';
-import { LoaderComponent } from './loader/loader.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { OverlaySpinnerComponent } from './overlay-spinner/overlay-spinner.component';
 
 
 @NgModule({
@@ -54,7 +54,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     DialogUserInfoComponent,
     ChannelComponent,
     ChatComponent,
-    LoaderComponent,
+    OverlaySpinnerComponent,
   ],
   imports: [
     BrowserModule,

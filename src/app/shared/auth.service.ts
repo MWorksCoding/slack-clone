@@ -1,30 +1,51 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { GoogleAuthProvider } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogResetPasswordInfoComponent } from '../dialog-reset-password-info/dialog-reset-password-info.component';
 import { DialogErrorComponent } from '../dialog-error/dialog-error.component';
+import { SpinnerService } from './spinner.service';
+import { Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  actualUser$: Observable<any> | undefined;
   user: any;
   authState: any;
   currentUser: any;
   currentEmail: any;
 
 
-  constructor(private fireauth: AngularFireAuth, private router: Router, public dialog: MatDialog) { }
+  constructor(private fireauth: AngularFireAuth, private firestore: AngularFirestore, private router: Router, public dialog: MatDialog,
+    private spinnerService: SpinnerService) { }
+
+
+  showActualUser() {
+    this.actualUser$ = this.fireauth.authState.pipe(
+      switchMap(actualUser => {
+        if (actualUser) {
+          return this.firestore.doc(`users/${actualUser.uid}`).valueChanges();
+        } else {
+          return of(null);
+        }
+      })
+    );
+  }
 
 
   signIn(email: string, password: string) {
+    this.spinnerService.settLoadingStatus(true);
     this.fireauth.signInWithEmailAndPassword(email, password)
       .then(res => {
         localStorage.setItem('user', JSON.stringify(res.user));
         this.checkEmailVerified(res);
+        this.spinnerService.settLoadingStatus(false);
       }, err => {
+        this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
         this.router.navigate(['/signin']);
       });
@@ -32,44 +53,59 @@ export class AuthService {
 
 
   checkEmailVerified(res: any) {
+    this.spinnerService.settLoadingStatus(true);
     if (res.user?.emailVerified == true) {
       this.router.navigate(['/mainpage']);
     } else {
       this.router.navigate(['/varify-email']);
     }
+    this.spinnerService.settLoadingStatus(false);
   }
 
 
   signInWithGoogle() {
+    this.spinnerService.settLoadingStatus(true);
     return this.fireauth.signInWithPopup(new GoogleAuthProvider)
       .then(res => {
         this.router.navigate(['/mainpage']);
         localStorage.setItem('user', JSON.stringify(res.user));
+        this.spinnerService.settLoadingStatus(false);
       }, err => {
+        this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
       })
   }
 
 
   signInAsGuest() {
+    this.spinnerService.settLoadingStatus(true);
     this.fireauth.signInAnonymously()
       .then(res => {
         this.router.navigate(['/mainpage']);
         localStorage.setItem('user', JSON.stringify(res.user));
+        this.spinnerService.settLoadingStatus(false);
       }, err => {
+        this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
       })
   }
 
 
-  async signUp(email: string, password: string) {
+  async signUp(userName: string, email: string, password: string) {
+    const data = { userName };
+    this.spinnerService.settLoadingStatus(true);
     this.fireauth.createUserWithEmailAndPassword(email, password)
       .then(res => {
+        this.firestore.collection('users')
+          .doc(res.user?.uid)
+          .set(data);
         localStorage.setItem('user', JSON.stringify(res.user));
         this.currentEmail = email;
         this.router.navigate(['/signin']);
         this.sendEmailForVarification(res.user);
+        this.spinnerService.settLoadingStatus(false);
       }, err => {
+        this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
         this.router.navigate(['/signup']);
       })
@@ -77,42 +113,53 @@ export class AuthService {
 
 
   sendEmailForVarification(user: any) {
+    this.spinnerService.settLoadingStatus(true);
     user.sendEmailVerification()
       .then((res: any) => {
         this.router.navigate(['/varify-email']);
+        this.spinnerService.settLoadingStatus(false);
       }, (err: any) => {
+        this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
       });
   }
 
 
   resendVerificationMail() {
+    this.spinnerService.settLoadingStatus(true);
     return this.fireauth.currentUser
       .then((u: any) => {
         u.sendEmailVerification()
-        alert('success');
+        this.spinnerService.settLoadingStatus(false);
       }, err => {
+        this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
       });
   }
 
 
   signOut() {
+    this.spinnerService.settLoadingStatus(true);
     this.fireauth.signOut()
       .then(() => {
         localStorage.removeItem('user');
         this.router.navigate(['/signin']);
+        this.spinnerService.settLoadingStatus(false);
       }, err => {
+        this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
       })
   }
 
 
   forgotPassword(email: string) {
+    this.spinnerService.settLoadingStatus(true);
     this.fireauth.sendPasswordResetEmail(email)
       .then(() => {
         this.dialog.open(DialogResetPasswordInfoComponent);
+        this.spinnerService.settLoadingStatus(false);
       }, err => {
+        this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
       })
   }

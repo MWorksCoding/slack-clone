@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./mainpage.component.scss']
 })
 export class MainpageComponent {
-  constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+  constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
@@ -39,6 +39,7 @@ export class MainpageComponent {
   async ngOnInit(): Promise<void> {
     await this.loadChannels();
     this.openThreads();
+    this.auth.showActualUser();
     this.route.params.subscribe((params) => {
       console.log(params);
     });
@@ -120,7 +121,6 @@ export class MainpageComponent {
 
   openChannel(i: any) {
     // this.route.navigate(['/channel'], {state: {data: {...this.channels}}});
-    console.log('Clicked ID is:', i['channelName']);
     console.log('String to child-component:', i['channelName'])
 
     this.forChildChannelName = i['channelName'];

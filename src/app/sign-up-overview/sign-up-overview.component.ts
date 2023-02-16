@@ -14,6 +14,7 @@ export class SignUpOverviewComponent {
   constructor(private router: Router, private auth: AuthService) { }
 
 
+  userName: string = '';
   email: string = '';
   password: string = '';
   usernameForm = new FormControl('', [Validators.required, Validators.minLength(1)]);
@@ -35,7 +36,8 @@ export class SignUpOverviewComponent {
     if (this.passwordForm.hasError('required') || this.passwordForm.hasError('minlength'))
       this.getErrorMessagePassword();
     else {
-      this.auth.signUp(this.email, this.password);
+      this.auth.signUp(this.userName, this.email, this.password);
+      this.userName = '';
       this.email = '';
       this.password = '';
     }
