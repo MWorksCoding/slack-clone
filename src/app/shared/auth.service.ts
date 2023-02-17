@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { GoogleAuthProvider } from '@angular/fire/auth';
@@ -14,26 +14,65 @@ import { Observable, of, switchMap } from 'rxjs';
 })
 export class AuthService {
   actualUser$: Observable<any> | undefined;
+
   user: any;
-  authState: any;
-  currentUser: any;
+  currentUserName: any;
   currentEmail: any;
+  emailUpdated = new EventEmitter<string>();
+
 
 
   constructor(private fireauth: AngularFireAuth, private firestore: AngularFirestore, private router: Router, public dialog: MatDialog,
-    private spinnerService: SpinnerService) { }
+    private spinnerService: SpinnerService) {
+    this.fireauth.user.subscribe((user) => {
+      if (user) {
+        this.currentEmail = user.email;
+      }
+    });
+  }
 
 
   showActualUser() {
     this.actualUser$ = this.fireauth.authState.pipe(
       switchMap(actualUser => {
         if (actualUser) {
+          this.firestore.doc(`users/${actualUser.uid}`).valueChanges()
+            .subscribe((data: any) => {
+              this.currentUserName = data['userName'];
+            });
           return this.firestore.doc(`users/${actualUser.uid}`).valueChanges();
         } else {
           return of(null);
         }
       })
     );
+  }
+
+
+  updateActualEmail(newEmail: string, newUserName: string) {
+    this.fireauth.currentUser
+      .then((user) => {
+        if (user) {
+          user.updateEmail(newEmail)
+            .then(() => {
+              alert('email updated successfully');
+              this.currentEmail = newEmail;
+              const userId = user.uid;
+              const userRef = this.firestore.collection('users').doc(userId);
+              userRef.update({ userName: newUserName })
+                .then(() => {
+                  alert('name updated successfully');
+                }, err => {
+                  this.openErrorDialog(err);
+                })
+              this.emailUpdated.emit(newEmail);
+            }, (err) => {
+              this.openErrorDialog(err);
+            })
+        }
+      }, err => {
+        this.openErrorDialog(err);
+      })
   }
 
 

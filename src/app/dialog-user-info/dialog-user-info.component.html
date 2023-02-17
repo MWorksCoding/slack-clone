@@ -5,12 +5,13 @@
         <div class="input-fields">
             <mat-form-field appearance="outline">
                 <mat-label>User name</mat-label>
-                <input matInput placeholder="User name" [formControl]="usernameForm" required>
+                <input matInput placeholder="User name" [formControl]="usernameForm" required
+                    [(ngModel)]="updatedUserName">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Email</mat-label>
-                <input matInput placeholder="Email" [formControl]="emailForm" required name="email" [(ngModel)]="email">
+                <input matInput placeholder="Email" [formControl]="emailForm" required [(ngModel)]="updatedEmail">
             </mat-form-field>
         </div>
 
@@ -25,5 +26,6 @@
 </div>
 
 <div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Close</button>
+    <button mat-raised-button mat-dialog-close>Close</button>
+    <button mat-raised-button class="save-button" (click)="updateUserInfos()">Save</button>
 </div>
