@@ -13,16 +13,15 @@ export class AuthGuard implements CanActivate {
 
   }
 
+
+  //user have to be authenticated to get access to the other paths than signin
   async canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Promise<boolean | UrlTree> {
     const user = await this.afAuth.currentUser;
     const isAuthenticated = user ? true : false;
-    if (!isAuthenticated) {
-      console.log('You must be authenticated');
+    if (!isAuthenticated)
       this.router.navigate(['/signin']);
-    }
     return isAuthenticated;
   }
-
 }

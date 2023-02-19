@@ -19,8 +19,11 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./mainpage.component.scss']
 })
 export class MainpageComponent {
+
+
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
+
 
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
@@ -28,6 +31,7 @@ export class MainpageComponent {
 
   forChildChannelName: string = '';
   forChildDescription: string = '';
+
 
   channelId = '';
   channels = [];
@@ -43,11 +47,6 @@ export class MainpageComponent {
     this.route.params.subscribe((params) => {
       console.log(params);
     });
-  }
-
-
-  signOut() {
-    this.auth.signOut();
   }
 
 
@@ -169,7 +168,7 @@ export class MainpageComponent {
   }
 
 
-  logout() {
+  signOut() {
     this.auth.signOut();
   }
 
