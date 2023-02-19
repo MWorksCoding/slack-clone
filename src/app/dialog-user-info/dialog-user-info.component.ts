@@ -30,7 +30,7 @@ export class DialogUserInfoComponent {
 
 
   updateUserInfos() {
-    this.auth.updateActualEmail(this.updatedEmail, this.updatedUserName);
+    this.auth.updateEmailAndName(this.updatedEmail, this.updatedUserName);
   }
 
 

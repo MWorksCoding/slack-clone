@@ -13,6 +13,7 @@ import { Observable, of, switchMap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
+
   actualUser$: Observable<any> | undefined;
 
   user: any;
@@ -21,17 +22,19 @@ export class AuthService {
   emailUpdated = new EventEmitter<string>();
 
 
+  constructor(private fireauth: AngularFireAuth, private firestore: AngularFirestore, private router: Router,
+    public dialog: MatDialog, private spinnerService: SpinnerService) {
 
-  constructor(private fireauth: AngularFireAuth, private firestore: AngularFirestore, private router: Router, public dialog: MatDialog,
-    private spinnerService: SpinnerService) {
+
+    //subscribes to the user observable and sets variable currentEmail to the user email if logged in
     this.fireauth.user.subscribe((user) => {
-      if (user) {
+      if (user)
         this.currentEmail = user.email;
-      }
     });
   }
 
 
+  //creates an observable that emits the current users user name
   showActualUser() {
     this.actualUser$ = this.fireauth.authState.pipe(
       switchMap(actualUser => {
@@ -41,38 +44,46 @@ export class AuthService {
               this.currentUserName = data['userName'];
             });
           return this.firestore.doc(`users/${actualUser.uid}`).valueChanges();
-        } else {
+        } else
           return of(null);
-        }
       })
     );
   }
 
 
-  updateActualEmail(newEmail: string, newUserName: string) {
+  updateEmailAndName(newEmail: string, newUserName: string) {
     this.fireauth.currentUser
       .then((user) => {
-        if (user) {
-          user.updateEmail(newEmail)
-            .then(() => {
-              alert('email updated successfully');
-              this.currentEmail = newEmail;
-              const userId = user.uid;
-              const userRef = this.firestore.collection('users').doc(userId);
-              userRef.update({ userName: newUserName })
-                .then(() => {
-                  alert('name updated successfully');
-                }, err => {
-                  this.openErrorDialog(err);
-                })
-              this.emailUpdated.emit(newEmail);
-            }, (err) => {
-              this.openErrorDialog(err);
-            })
-        }
+        if (user)
+          this.updateEmail(user, newEmail, newUserName);
       }, err => {
         this.openErrorDialog(err);
-      })
+      });
+  }
+
+
+  updateEmail(user: any, newEmail: string, newUserName: string) {
+    user.updateEmail(newEmail)
+      .then(() => {
+        alert('email updated successfully');
+        this.currentEmail = newEmail;
+        this.emailUpdated.emit(newEmail);
+        this.updateUsername(user, newUserName);
+      }, (err: { message: string; code: string; }) => {
+        this.openErrorDialog(err);
+      });
+  }
+
+
+  updateUsername(user: any, newUserName: string) {
+    const userRef = this.firestore.collection('users')
+      .doc(user.uid);
+    userRef.update({ userName: newUserName })
+      .then(() => {
+        alert('name updated successfully');
+      }, (err: { message: string; code: string; }) => {
+        this.openErrorDialog(err);
+      });
   }
 
 
