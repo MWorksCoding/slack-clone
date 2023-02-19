@@ -35,6 +35,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AuthService } from './shared/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlaySpinnerComponent } from './overlay-spinner/overlay-spinner.component';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 
 
 @NgModule({
@@ -54,7 +55,7 @@ import { OverlaySpinnerComponent } from './overlay-spinner/overlay-spinner.compo
     DialogUserInfoComponent,
     ChannelComponent,
     ChatComponent,
-    OverlaySpinnerComponent,
+    OverlaySpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +76,8 @@ import { OverlaySpinnerComponent } from './overlay-spinner/overlay-spinner.compo
     MatMenuModule,
     provideAuth(() => getAuth()),
     AngularFireAuthModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    AngularFireStorageModule
   ],
   providers: [],
   bootstrap: [AppComponent]

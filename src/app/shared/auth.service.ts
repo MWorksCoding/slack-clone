@@ -104,11 +104,10 @@ export class AuthService {
 
   checkEmailVerified(res: any) {
     this.spinnerService.settLoadingStatus(true);
-    if (res.user?.emailVerified == true) {
+    if (res.user?.emailVerified == true)
       this.router.navigate(['/mainpage']);
-    } else {
+    else
       this.router.navigate(['/varify-email']);
-    }
     this.spinnerService.settLoadingStatus(false);
   }
 
@@ -146,19 +145,23 @@ export class AuthService {
     this.spinnerService.settLoadingStatus(true);
     this.fireauth.createUserWithEmailAndPassword(email, password)
       .then(res => {
-        this.firestore.collection('users')
-          .doc(res.user?.uid)
-          .set(data);
-        localStorage.setItem('user', JSON.stringify(res.user));
-        this.currentEmail = email;
-        this.router.navigate(['/signin']);
-        this.sendEmailForVarification(res.user);
-        this.spinnerService.settLoadingStatus(false);
+        this.successfulSignUp(data, res, email);
       }, err => {
         this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
         this.router.navigate(['/signup']);
       })
+  }
+
+
+  successfulSignUp(data: any, res: any, email: string) {
+    this.firestore.collection('users')
+      .doc(res.user?.uid).set(data);
+    localStorage.setItem('user', JSON.stringify(res.user));
+    this.currentEmail = email;
+    this.router.navigate(['/signin']);
+    this.sendEmailForVarification(res.user);
+    this.spinnerService.settLoadingStatus(false);
   }
 
 
@@ -179,13 +182,14 @@ export class AuthService {
     this.spinnerService.settLoadingStatus(true);
     return this.fireauth.currentUser
       .then((u: any) => {
-        u.sendEmailVerification()
+        u.sendEmailVerification();
         this.spinnerService.settLoadingStatus(false);
       }, err => {
         this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
       });
   }
+
 
 
   signOut() {
@@ -226,4 +230,12 @@ export class AuthService {
       });
   }
 
+
+  updateUserProfileImage(downloadURL: string): Promise<void> {
+    return this.fireauth.currentUser.then(user => {
+      return user?.updateProfile({
+        photoURL: downloadURL
+      });
+    });
+  }
 }
