@@ -9,17 +9,18 @@
             <input onkeyup="" placeholder="Search ..." autocomplete="off" matInput>
         </div>
         <div class="toolbar-icons">
+            <!-- displays the userName or Guest if logged in as Guest -->
             <span class="user-name">{{ (auth.actualUser$ | async)?.userName ? (auth.actualUser$ | async).userName :
                 'Guest' }}</span>
-            <img class="profil-img" [matMenuTriggerFor]="menu" #menuTrigger src="../../assets/img/name-icon.png"
+            <img class="profil-img" [matMenuTriggerFor]="menu" #menuTrigger src="assets/img/name-icon.png"
                 alt="profil-icon">
             <mat-menu #menu="matMenu">
-                <div mat-menu-item class="dialog-icon-and-button" (click)="openDialog()">
+                <div mat-menu-item class="dialog-icon-and-button" (click)="openDialogUserInfo()">
                     <mat-icon class="menu-icon" fontIcon="edit"></mat-icon>
                     <span>Edit user</span>
                 </div>
 
-                <div mat-menu-item class="dialog-icon-and-button" (click)="logout()">
+                <div mat-menu-item class="dialog-icon-and-button" (click)="signOut()">
                     <mat-icon class="menu-icon" fontIcon="logout"></mat-icon>
                     <span>Log out</span>
                 </div>

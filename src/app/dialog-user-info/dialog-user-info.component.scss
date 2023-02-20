@@ -59,3 +59,13 @@ h1 {
         font-size: 14px;
     }
 }
+
+.save-button {
+    color: white !important;
+    background-color: rgb(97, 31, 105) !important;
+
+    &:hover {
+        background-color: rgb(130, 50, 130) !important;
+        ;
+    }
+}

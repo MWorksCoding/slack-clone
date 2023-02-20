@@ -24,14 +24,10 @@ export class SignInOverviewComponent {
 
 
   signIn() {
-    if (this.emailForm.hasError('required') || this.emailForm.hasError('email')) {
+    if (this.emailForm.hasError('required') || this.emailForm.hasError('email'))
       this.getErrorMessageEmail();
-    }
-
-    if (this.passwordForm.hasError('required') || this.passwordForm.hasError('minlength')) {
+    if (this.passwordForm.hasError('required') || this.passwordForm.hasError('minlength'))
       this.getErrorMessagePassword();
-    }
-
     else {
       this.auth.signIn(this.email, this.password);
       this.email = '';
@@ -51,18 +47,15 @@ export class SignInOverviewComponent {
 
 
   getErrorMessageEmail() {
-    if (this.emailForm.hasError('required')) {
+    if (this.emailForm.hasError('required'))
       return 'You must enter your Email';
-    }
-
     return this.emailForm.hasError('email') ? 'Not a valid email' : '';
   }
 
 
   getErrorMessagePassword() {
-    if (this.passwordForm.hasError('required')) {
+    if (this.passwordForm.hasError('required'))
       return 'You must enter your Password';
-    }
     return this.passwordForm.hasError('minlength') ? 'Not a valid password' : '';
   }
 

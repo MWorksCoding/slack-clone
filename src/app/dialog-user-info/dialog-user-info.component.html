@@ -5,25 +5,31 @@
         <div class="input-fields">
             <mat-form-field appearance="outline">
                 <mat-label>User name</mat-label>
-                <input matInput placeholder="User name" [formControl]="usernameForm" required>
+                <input matInput placeholder="User name" [formControl]="usernameForm" required
+                    [(ngModel)]="updatedUserName">
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Email</mat-label>
-                <input matInput placeholder="Email" [formControl]="emailForm" required name="email" [(ngModel)]="email">
+                <input matInput placeholder="Email" [formControl]="emailForm" required [(ngModel)]="updatedEmail">
             </mat-form-field>
         </div>
 
-        <div class="img-container">
-            <img class="profile-picture" src="../../assets/img/name-icon.png" alt="profil-icon">
+        <form class="img-container">
+            <div *ngIf="downloadURL | async as imageUrl">
+                <img class="profile-picture" [src]="imageUrl" alt="profil-icon">
+            </div>
+
+            <input type="file" (change)="onFileSelected($event)" accept="image/jpeg,image/png">
             <button class="upload-img-btn">
-                <img class="upload-img" src="../../assets/img/upload-icon.svg">
-                <span class="upload-text">Updload image</span>
+                <img class="upload-img" src="assets/img/upload-icon.svg">
+                <span class="upload-text" (click)="uploadImage()">Updload image</span>
             </button>
-        </div>
+        </form>
     </div>
 </div>
 
 <div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Close</button>
+    <button mat-raised-button mat-dialog-close>Close</button>
+    <button mat-raised-button class="save-button" (click)="updateUserInfos()">Save</button>
 </div>

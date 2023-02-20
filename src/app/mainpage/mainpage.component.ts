@@ -12,6 +12,7 @@ import { ChannelComponent } from '../channel/channel.component';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@angular/fire/auth';
 import { RouterModule } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
   selector: 'app-mainpage',
@@ -19,8 +20,12 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./mainpage.component.scss']
 })
 export class MainpageComponent {
-  constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+
+
+  constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
+    private fireauth: AngularFireAuth) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
+
 
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
@@ -47,11 +52,6 @@ export class MainpageComponent {
     this.route.params.subscribe((params) => {
       console.log(params);
     });
-  }
-
-
-  signOut() {
-    this.auth.signOut();
   }
 
 
@@ -163,16 +163,14 @@ export class MainpageComponent {
   }
 
 
-  openDialog() {
-    const dialogRef = this.dialog.open(DialogUserInfoComponent, { restoreFocus: false });
-
-    // Manually restore focus to the menu trigger since the element that
-    // opens the dialog won't be in the DOM any more when the dialog closes.
-    dialogRef.afterClosed().subscribe(() => this.menuTrigger?.focus());
+  async openDialogUserInfo() {
+    if (!await this.fireauth.currentUser) {
+      const dialogRef = this.dialog.open(DialogUserInfoComponent);
+    }
   }
 
 
-  logout() {
+  signOut() {
     this.auth.signOut();
   }
 

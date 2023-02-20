@@ -14,8 +14,10 @@ export class ForgotPasswordComponent {
 
   constructor(private auth: AuthService, public dialogRef: MatDialogRef<SignInOverviewComponent>) { }
 
+
   email: string = '';
   emailForm = new FormControl('', [Validators.required, Validators.email]);
+
 
   forgotPassword() {
     this.auth.forgotPassword(this.email)
