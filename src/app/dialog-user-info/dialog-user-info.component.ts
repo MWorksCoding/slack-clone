@@ -5,6 +5,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { finalize, map, Observable } from 'rxjs';
 import { AuthService } from '../shared/auth.service';
+import { SpinnerService } from '../shared/spinner.service';
+
 
 
 @Component({
@@ -22,7 +24,8 @@ export class DialogUserInfoComponent {
   usernameForm = new FormControl('', [Validators.required, Validators.minLength(2)]);
 
 
-  constructor(public dialog: MatDialog, public auth: AuthService, public firestore: AngularFirestore, public storage: AngularFireStorage) {
+  constructor(public dialog: MatDialog, public auth: AuthService, public firestore: AngularFirestore, public storage: AngularFireStorage,
+    public spinnerService: SpinnerService) {
     this.updatedEmail = this.auth.currentEmail;
     this.updatedUserName = this.auth.currentUserName;
   }

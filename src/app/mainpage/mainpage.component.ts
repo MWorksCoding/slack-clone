@@ -48,7 +48,7 @@ export class MainpageComponent {
     await this.loadChannels();
     await this.loadUsers();
     this.openThreads();
-    this.auth.showActualUser();
+    await this.auth.showActualUser();
     this.route.params.subscribe((params) => {
       console.log(params);
     });
@@ -99,15 +99,15 @@ export class MainpageComponent {
 
 
 
-  loadUsers(){
+  loadUsers() {
     this.loading = true;
     this.firestore
-    .collection('users')
-    .valueChanges({ idField: 'userId' })
-    .subscribe((chatId: any) => {
-      console.log('User ID is:', chatId);
-      this.users = chatId;
-    });
+      .collection('users')
+      .valueChanges({ idField: 'userId' })
+      .subscribe((chatId: any) => {
+        console.log('User ID is:', chatId);
+        this.users = chatId;
+      });
   }
 
   openImprint() {  // Route einbauen°!°
@@ -164,7 +164,8 @@ export class MainpageComponent {
 
 
   async openDialogUserInfo() {
-    if (!await this.fireauth.currentUser) {
+    const user = await this.fireauth.currentUser;
+    if (!user?.isAnonymous) { //only open dialog if user is registered
       const dialogRef = this.dialog.open(DialogUserInfoComponent);
     }
   }

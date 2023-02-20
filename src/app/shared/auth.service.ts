@@ -9,13 +9,14 @@ import { DialogErrorComponent } from '../dialog-error/dialog-error.component';
 import { SpinnerService } from './spinner.service';
 import { Observable, of, switchMap } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  actualUser$: Observable<any> | undefined;
 
+  actualUser$: Observable<any> | undefined;
   user: any;
   currentUserName: any;
   currentEmail: any;
@@ -38,7 +39,8 @@ export class AuthService {
   showActualUser() {
     this.actualUser$ = this.fireauth.authState.pipe(
       switchMap(actualUser => {
-        if (actualUser) {
+        if (actualUser && !actualUser.isAnonymous) { //will only carried out if actualUser is registered
+          //and not logged in as Guest
           this.firestore.doc(`users/${actualUser.uid}`).valueChanges()
             .subscribe((data: any) => {
               this.currentUserName = data['userName'];
@@ -51,21 +53,26 @@ export class AuthService {
   }
 
 
-  updateEmailAndName(newEmail: string, newUserName: string) {
+  async updateEmailAndName(newEmail: string, newUserName: string) {
+    this.spinnerService.settProgressingStatus(true);
     this.fireauth.currentUser
-      .then((user) => {
-        if (user)
-          this.updateEmail(user, newEmail, newUserName);
+      .then(async user => {
+        if (user) {
+          await this.updateEmail(user, newEmail, newUserName);
+          await user.sendEmailVerification();
+          this.spinnerService.settProgressingStatus(false);
+          this.dialog.closeAll();
+        }
       }, err => {
+        this.spinnerService.settProgressingStatus(false);
         this.openErrorDialog(err);
       });
   }
 
 
-  updateEmail(user: any, newEmail: string, newUserName: string) {
+  async updateEmail(user: any, newEmail: string, newUserName: string) {
     user.updateEmail(newEmail)
       .then(() => {
-        alert('email updated successfully');
         this.currentEmail = newEmail;
         this.emailUpdated.emit(newEmail);
         this.updateUsername(user, newUserName);
@@ -75,12 +82,11 @@ export class AuthService {
   }
 
 
-  updateUsername(user: any, newUserName: string) {
+  async updateUsername(user: any, newUserName: string) {
     const userRef = this.firestore.collection('users')
       .doc(user.uid);
     userRef.update({ userName: newUserName })
       .then(() => {
-        alert('name updated successfully');
       }, (err: { message: string; code: string; }) => {
         this.openErrorDialog(err);
       });

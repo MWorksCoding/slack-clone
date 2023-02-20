@@ -9,9 +9,13 @@ export class SpinnerService {
 
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   public isLoading$ = this.isLoadingSubject.asObservable();
+  private isProgressingSubject = new BehaviorSubject<boolean>(false);
+  public isProgressing$ = this.isProgressingSubject.asObservable();
 
 
-  constructor() { }
+  settProgressingStatus(status: boolean) {
+    this.isProgressingSubject.next(status);
+  }
 
 
   settLoadingStatus(status: boolean) {
