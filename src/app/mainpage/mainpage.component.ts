@@ -27,17 +27,21 @@ export class MainpageComponent {
 
 
   forChildChannelName: string = '';
-  forChildDescription: string = '';
+  forChildChannelDescription: string = '';
+  forChildUserName: string = '';
 
+  loading = false;
   channelId = '';
   channels = [];
   allChatChannel = '';
+  users = [];
   ChannelMenuIsOpen = true;
   DirectMessagesMenuIsOpen = true;
 
 
   async ngOnInit(): Promise<void> {
     await this.loadChannels();
+    await this.loadUsers();
     this.openThreads();
     this.auth.showActualUser();
     this.route.params.subscribe((params) => {
@@ -82,15 +86,10 @@ export class MainpageComponent {
 
 
   loadChannels() {
-    // this.route.params.subscribe((params) => {
-    //   console.log(params);
-    // });
+    this.loading = true;
     this.firestore
       .collection('channels')
       .valueChanges({ idField: 'channelId' })
-      // .subscribe((changes: any) => {
-      //   this.channels = changes;
-      // })
       .subscribe((channelId: any) => {
         console.log('Mainpage: Channel ID is:', channelId);
         this.channels = channelId;
@@ -98,6 +97,18 @@ export class MainpageComponent {
     ;
   }
 
+
+
+  loadUsers(){
+    this.loading = true;
+    this.firestore
+    .collection('users')
+    .valueChanges({ idField: 'userId' })
+    .subscribe((chatId: any) => {
+      console.log('User ID is:', chatId);
+      this.users = chatId;
+    });
+  }
 
   openImprint() {  // Route einbauen°!°
     // this.content.nativeElement.innerHTML = 'Impressum'
@@ -120,20 +131,9 @@ export class MainpageComponent {
 
 
   openChannel(i: any) {
-    // this.route.navigate(['/channel'], {state: {data: {...this.channels}}});
     console.log('String to child-component:', i['channelName'])
-
     this.forChildChannelName = i['channelName'];
-    this.forChildDescription = i['description'];
-
-    // DIREKT UMWANDELN ZUM STRING ZUR WEITERGABE AN DAS CHILD-COMPONENT 'CHANNEL'
-
-    // this.activeChannel.push(i);
-    // this.activeChannel.push(test1)
-    // JSON.stringify(this.activeChannel);
-    // console.log('Active Channel is:', this.activeChannel);
-
-
+    this.forChildChannelDescription = i['description'];
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
@@ -141,7 +141,10 @@ export class MainpageComponent {
     this.changeBGWhite();
   }
 
-  openChat() {
+
+  openChat(i: any) {
+    console.log('User to child-component:', i['userName'])
+    this.forChildUserName = i['userName'];
     window.document.getElementById('chat')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('channel')!.classList.add('d-n');

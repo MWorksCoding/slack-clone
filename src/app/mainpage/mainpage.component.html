@@ -52,13 +52,7 @@
                 <div *ngFor="let channel of channels, let i = index" class="single-channel pl-16 pb-16 pt-16">
                     <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }"
                         (click)="openChannel(channels[i])">
-                        <!-- ng-click="openChannel(channel.channelName)" -->
-                        <!-- ng-click="openChannel(i) -->
-                        <!-- (click)="openChannel(i)" -->
-                        <!-- [routerLink]="['/channel/',channel['channelId']]" Zugriff auf Channel mit individuellem ID Pfad -->
-
                         <span class=""># {{ channel['channelName'] }} </span>
-                        <!-- <span class="">, ChannelID = {{ channel['channelId'] }} </span> Anzeigen der Channel ID im router Link -->
                     </div>
                 </div>
             </div>
@@ -76,18 +70,18 @@
                     <mat-icon (click)="openDialogCreateChat()">add</mat-icon>
                 </div>
             </div>
-            <div *ngIf="DirectMessagesMenuIsOpen" class="single-chat pl-16 pb-16 pt-16">
-                <div class="df-ai_c gap-8 pb-16" (click)="openChat()">
-                    <mat-icon>person</mat-icon>
-                    <span>Chat 1</span>
-                </div>
-                <div class="df-ai_c gap-8 pb-16" (click)="openChat()">
-                    <mat-icon>person</mat-icon>
-                    <span>Chat 2</span>
-                </div>
-                <div class="df-ai_c gap-8 pb-16" (click)="openChat()">
-                    <mat-icon>person</mat-icon>
-                    <span>Chat 3</span>
+
+
+
+            <div *ngIf="DirectMessagesMenuIsOpen">
+                <div *ngFor="let user of users, let i = index" class="single-chat pl-16 pb-16 pt-16">
+                    <div [ngClass]="{'single-chat' : allChatChannel == ('user' + i) }" (click)="openChat(users[i])">
+                        <div class="df-ai_c gap-8">
+                            <mat-icon>person</mat-icon>
+                            <span>{{ user['userName'] }}</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -104,10 +98,10 @@
             </div>
             <div>
                 <app-channel [inputFromParent]="forChildChannelName"
-                    [inputFromParentDescriptiont]="forChildDescription"></app-channel>
+                    [inputFromParentDescriptiont]="forChildChannelDescription"></app-channel>
             </div>
             <div>
-                <app-chat></app-chat>
+                <app-chat [inputFromParentChat]="forChildUserName"></app-chat>
             </div>
             <div>
                 <app-threads></app-threads>

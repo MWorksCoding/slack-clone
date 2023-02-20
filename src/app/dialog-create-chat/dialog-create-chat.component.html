@@ -3,10 +3,13 @@
   <mat-form-field appearance="fill" class="pt-16">
     <mat-label>Select</mat-label>
     <mat-select>
-      <mat-option value="one">User 1</mat-option>
-      <mat-option value="two">User 2</mat-option>
-      <mat-option value="three">User 3</mat-option>
+      <div *ngFor="let user of users, let i = index">
+        <mat-option value="{{ user['userName'] }}" (click)="checkUser((users[i]))">
+          <span class="" > {{ user['userName'] }} </span>
+        </mat-option>
+      </div>
     </mat-select>
+
   </mat-form-field>
   <div mat-dialog-actions>
     <button mat-button mat-dialog-close (click)="dialogRef.close()">Abort</button>
