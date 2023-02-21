@@ -3,7 +3,7 @@ import { AuthService } from '../shared/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 import { DialogCreateChatComponent } from '../dialog-create-chat/dialog-create-chat.component';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFirestore, fromCollectionRef } from '@angular/fire/compat/firestore';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatMenuModule } from '@angular/material/menu';
 import { DialogUserInfoComponent } from '../dialog-user-info/dialog-user-info.component';
@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { user } from '@angular/fire/auth';
 import { RouterModule } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Threads } from 'src/models/threads.class';
 
 @Component({
   selector: 'app-mainpage',
@@ -43,12 +44,12 @@ export class MainpageComponent {
   ChannelMenuIsOpen = true;
   DirectMessagesMenuIsOpen = true;
 
-
   async ngOnInit(): Promise<void> {
     await this.loadChannels();
     await this.loadUsers();
+    await this.loadThreads();
     this.openThreads();
-    this.auth.showActualUser();
+    await this.auth.showActualUser();
     this.route.params.subscribe((params) => {
       console.log(params);
     });
@@ -97,17 +98,60 @@ export class MainpageComponent {
     ;
   }
 
+  allThreads: any[] = [];
+  allThreadsArr: any[] = [];
+
+  loadThreads() {
+    this.firestore
+      .collection('channels')
+      .valueChanges({ idField: 'channelId' })
+      .subscribe((channelId: any) => {
+        this.channels = channelId;
+
+        for (let i = 0; i < this.channels.length; i++) {
+          this.allChatChannel = this.channels[i];
+          this.firestore
+            .collection('channels')
+            .doc(this.allChatChannel)
+            .collection('threads')
+            .valueChanges({ idField: 'threadId' })
+            .subscribe(val => console.log('threads are:', val));
+          // .subscribe((thread: any)) => {
+          // this.allThreads.push(thread);
+          // this.allThreadsArr.push(this.allThreads[i]);
+          // this.forChildUserName.push
+        }});
+
+    // this.firestore
+    //   .collection("channels")
+    //   .doc(this.channelId)
+    //   .collection("threads")
+    //   .valueChanges()
+    //   .subscribe(val => console.log('Angular University', val));
+  
 
 
-  loadUsers(){
+    // console.log('allThreads', this.allThreads);
+    // console.log('allThreadsArr', this.allThreadsArr);
+    // console.log('threaddatas', this.name); 
+
+  }
+
+
+  // .valueChanges({ idField: 'channelId' })
+  // .subscribe(val => console.log('Angular University', val));
+
+
+
+  loadUsers() {
     this.loading = true;
     this.firestore
-    .collection('users')
-    .valueChanges({ idField: 'userId' })
-    .subscribe((chatId: any) => {
-      console.log('User ID is:', chatId);
-      this.users = chatId;
-    });
+      .collection('users')
+      .valueChanges({ idField: 'userId' })
+      .subscribe((chatId: any) => {
+        console.log('User ID is:', chatId);
+        this.users = chatId;
+      });
   }
 
   openImprint() {  // Route einbauen°!°
@@ -164,7 +208,8 @@ export class MainpageComponent {
 
 
   async openDialogUserInfo() {
-    if (!await this.fireauth.currentUser) {
+    const user = await this.fireauth.currentUser;
+    if (!user?.isAnonymous) { //only open dialog if user is registered
       const dialogRef = this.dialog.open(DialogUserInfoComponent);
     }
   }

@@ -10,7 +10,7 @@
         </div>
         <div class="toolbar-icons">
             <!-- displays the userName or Guest if logged in as Guest -->
-            <span class="user-name">{{ (auth.actualUser$ | async)?.userName ? (auth.actualUser$ | async).userName :
+            <span class="user-name">{{ (auth.actualUser$ | async)?.userName ? (auth.actualUser$ | async)?.userName :
                 'Guest' }}</span>
             <img class="profil-img" [matMenuTriggerFor]="menu" #menuTrigger src="assets/img/name-icon.png"
                 alt="profil-icon">
@@ -108,6 +108,7 @@
                 <app-threads></app-threads>
             </div>
         </div>
+
 
     </mat-drawer-container>
 </div>
