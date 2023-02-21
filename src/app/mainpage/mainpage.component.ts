@@ -130,20 +130,7 @@ export class MainpageComponent {
     //   .subscribe(val => console.log('Angular University', val));
   
 
-
-    // console.log('allThreads', this.allThreads);
-    // console.log('allThreadsArr', this.allThreadsArr);
-    // console.log('threaddatas', this.name); 
-
-  }
-
-
-  // .valueChanges({ idField: 'channelId' })
-  // .subscribe(val => console.log('Angular University', val));
-
-
-
-  loadUsers() {
+  loadUsers(){
     this.loading = true;
     this.firestore
       .collection('users')

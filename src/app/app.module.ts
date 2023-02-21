@@ -36,6 +36,7 @@ import { AuthService } from './shared/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlaySpinnerComponent } from './overlay-spinner/overlay-spinner.component';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
     provideAuth(() => getAuth()),
     AngularFireAuthModule,
     MatProgressSpinnerModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
