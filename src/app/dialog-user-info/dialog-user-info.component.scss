@@ -33,31 +33,36 @@ h1 {
     }
 }
 
-.upload-img-btn {
+
+.custom-file-upload {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 6px;
     padding: 6px 12px;
-    background: transparent;
-    border: 1px solid lightgrey;
-    border-radius: 6px;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid lightgrey;
+    background: transparent;
+    border-radius: 5px;
     transition: all 0.1s ease-in-out;
 
     &:hover {
         background-color: rgb(240, 240, 240);
     }
+  }
+  
+.upload-img {
+    width: auto;
+    height: 23px;
+    filter: invert(55%);
+}
 
-    .upload-img {
-        width: auto;
-        height: 23px;
-        filter: invert(55%);
-    }
-
-    .upload-text {
-        font-size: 14px;
-    }
+.upload-text {
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .save-button {
@@ -80,3 +85,5 @@ h1 {
 ::ng-deep .mat-progress-bar-buffer {
     background: rgb(97, 31, 105);
 }
+
+
