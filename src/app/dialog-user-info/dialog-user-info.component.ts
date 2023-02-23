@@ -20,19 +20,26 @@ export class DialogUserInfoComponent {
   downloadURL: Observable<string> | undefined;
   updatedEmail: string = '';
   updatedUserName: string = '';
-  emailForm = new FormControl('', [Validators.required, Validators.email]);
+  emailForm = new FormControl(this.auth.currentEmail, [Validators.required, Validators.email]);
   usernameForm = new FormControl('', [Validators.required, Validators.minLength(2)]);
 
 
   constructor(public dialog: MatDialog, public auth: AuthService, public firestore: AngularFirestore, public storage: AngularFireStorage,
     public spinnerService: SpinnerService) {
-    this.updatedEmail = this.auth.currentEmail;
+    // this.updatedEmail = this.auth.currentEmail;
+    // this.emailForm.setValue(this.auth.currentEmail);
     this.updatedUserName = this.auth.currentUserName;
   }
 
 
+  getErrorMessageEmail() {
+    if (this.emailForm.hasError('required'))
+      return 'You must enter your Email';
+    return this.emailForm.hasError('email') ? 'Not a valid email' : '';
+  }
+
   updateUserInfos() {
-    this.auth.updateEmailAndName(this.updatedEmail, this.updatedUserName);
+    this.auth.updateEmailAndName(this.emailForm.value, this.updatedUserName);
   }
 
 
@@ -60,5 +67,5 @@ export class DialogUserInfoComponent {
       )
       .subscribe();
   }
-  
+
 }

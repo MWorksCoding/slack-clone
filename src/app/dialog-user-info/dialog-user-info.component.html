@@ -13,7 +13,8 @@
 
             <mat-form-field appearance="outline">
                 <mat-label>Email</mat-label>
-                <input matInput placeholder="Email" [formControl]="emailForm" required [(ngModel)]="updatedEmail">
+                <input matInput placeholder="Email" [formControl]="emailForm" required>
+                <mat-error *ngIf="emailForm.invalid">{{getErrorMessageEmail()}}</mat-error>
             </mat-form-field>
         </div>
 
