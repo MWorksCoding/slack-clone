@@ -3,7 +3,7 @@ import { AuthService } from '../shared/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 import { DialogCreateChatComponent } from '../dialog-create-chat/dialog-create-chat.component';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFirestore, fromCollectionRef } from '@angular/fire/compat/firestore';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatMenuModule } from '@angular/material/menu';
 import { DialogUserInfoComponent } from '../dialog-user-info/dialog-user-info.component';
@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { user } from '@angular/fire/auth';
 import { RouterModule } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Threads } from 'src/models/threads.class';
 
 @Component({
   selector: 'app-mainpage',
@@ -43,10 +44,10 @@ export class MainpageComponent {
   ChannelMenuIsOpen = true;
   DirectMessagesMenuIsOpen = true;
 
-
   async ngOnInit(): Promise<void> {
     await this.loadChannels();
     await this.loadUsers();
+    await this.loadThreads();
     this.openThreads();
     await this.auth.showActualUser();
     this.route.params.subscribe((params) => {
@@ -97,7 +98,64 @@ export class MainpageComponent {
     ;
   }
 
+  allThreads: any[] = [];
+  allThreadsArr: any[] = [];
+  threadId = '';
 
+  loadThreads() {
+    this.firestore
+      .collection('channels')
+      .valueChanges({ idField: 'channelId' })
+      .subscribe((channelId: any) => {
+        this.channels = channelId;
+
+        for (let i = 0; i < this.channels.length; i++) {
+          this.allChatChannel = this.channels[i];
+          this.firestore
+            .collection('channels')
+            .doc(this.channelId)
+            .collection('threads')
+            .get()
+            .subscribe((querySnapshot) => {
+              console.log('Query Snapshot is:', querySnapshot)
+              querySnapshot.forEach((doc) => {
+                console.log('Angular University', doc.data());
+              });
+            });
+        }
+
+
+        // .collection('channels')
+        // .doc('<id>')
+        // .collection('threads')
+        // .doc('672IvdSL3ClRekuivi9S')
+        // .get()
+        // .subscribe((doc) => {
+        //   if (doc.exists) {
+        //     console.log(doc.get('username'));
+        //   }
+        // });
+
+        // .collection('channels')
+        // .doc(this.allChatChannel)
+        // .collection('threads')
+        // .valueChanges({ idField: 'threadId' })
+        // .subscribe(val => console.log('threads are:', val));
+
+
+        // .subscribe((thread: any)) => {
+        // this.allThreads.push(thread);
+        // this.allThreadsArr.push(this.allThreads[i]);
+        // this.forChildUserName.push
+      });
+
+    // this.firestore
+    //   .collection("channels")
+    //   .doc(this.channelId)
+    //   .collection("threads")
+    //   .valueChanges()
+    //   .subscribe(val => console.log('Angular University', val));
+  }
 
   loadUsers() {
     this.loading = true;
