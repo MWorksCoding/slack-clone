@@ -37,6 +37,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlaySpinnerComponent } from './overlay-spinner/overlay-spinner.component';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { FirebaseAppModule } from '@angular/fire/app';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 
 @NgModule({
@@ -56,7 +59,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     DialogUserInfoComponent,
     ChannelComponent,
     ChatComponent,
-    OverlaySpinnerComponent
+    OverlaySpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,9 +82,12 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     AngularFireAuthModule,
     MatProgressSpinnerModule,
     AngularFireStorageModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    FirebaseAppModule,
+    AngularFireDatabaseModule,
+    AngularFireModule,
   ],
-  providers: [],
+  providers: [AngularFirestoreModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

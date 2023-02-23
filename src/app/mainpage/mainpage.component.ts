@@ -100,6 +100,7 @@ export class MainpageComponent {
 
   allThreads: any[] = [];
   allThreadsArr: any[] = [];
+  threadId = '';
 
   loadThreads() {
     this.firestore
@@ -112,15 +113,41 @@ export class MainpageComponent {
           this.allChatChannel = this.channels[i];
           this.firestore
             .collection('channels')
-            .doc(this.allChatChannel)
+            .doc(this.channelId)
             .collection('threads')
-            .valueChanges({ idField: 'threadId' })
-            .subscribe(val => console.log('threads are:', val));
-          // .subscribe((thread: any)) => {
-          // this.allThreads.push(thread);
-          // this.allThreadsArr.push(this.allThreads[i]);
-          // this.forChildUserName.push
-        }});
+            .get()
+            .subscribe((querySnapshot) => {
+              console.log('Query Snapshot is:', querySnapshot)
+              querySnapshot.forEach((doc) => {
+                console.log('Angular University', doc.data());
+              });
+            });
+        }
+
+
+        // .collection('channels')
+        // .doc('<id>')
+        // .collection('threads')
+        // .doc('672IvdSL3ClRekuivi9S')
+        // .get()
+        // .subscribe((doc) => {
+        //   if (doc.exists) {
+        //     console.log(doc.get('username'));
+        //   }
+        // });
+
+        // .collection('channels')
+        // .doc(this.allChatChannel)
+        // .collection('threads')
+        // .valueChanges({ idField: 'threadId' })
+        // .subscribe(val => console.log('threads are:', val));
+
+
+        // .subscribe((thread: any)) => {
+        // this.allThreads.push(thread);
+        // this.allThreadsArr.push(this.allThreads[i]);
+        // this.forChildUserName.push
+      });
 
     // this.firestore
     //   .collection("channels")
@@ -128,9 +155,9 @@ export class MainpageComponent {
     //   .collection("threads")
     //   .valueChanges()
     //   .subscribe(val => console.log('Angular University', val));
-  
+  }
 
-  loadUsers(){
+  loadUsers() {
     this.loading = true;
     this.firestore
       .collection('users')
