@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, OnInit } from '@angular/core';
+import { EventEmitter, Injectable, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { GoogleAuthProvider } from '@angular/fire/auth';
@@ -7,17 +7,19 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogResetPasswordInfoComponent } from '../dialog-reset-password-info/dialog-reset-password-info.component';
 import { DialogErrorComponent } from '../dialog-error/dialog-error.component';
 import { SpinnerService } from './spinner.service';
-import { Observable, of, switchMap } from 'rxjs';
+import { Observable, of, Subscription, switchMap } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
 
 
   actualUser$: Observable<any> | undefined;
   user: any;
+  userSubscription: Subscription | undefined;
+  currentUserId: string = '';
   currentUserName: any;
   currentEmail: any;
   emailUpdated = new EventEmitter<string>();
@@ -28,7 +30,7 @@ export class AuthService {
 
 
     //subscribes to the user observable and sets variable currentEmail to the user email if logged in
-    this.fireauth.user.subscribe((user) => {
+    this.userSubscription = this.fireauth.user.subscribe((user) => {
       if (user)
         this.currentEmail = user.email;
     });
@@ -40,7 +42,8 @@ export class AuthService {
     this.actualUser$ = this.fireauth.authState.pipe(
       switchMap(actualUser => {
         if (actualUser && !actualUser.isAnonymous) { //will only carried out if actualUser is registered
-          //and not logged in as Guest
+          // //and not logged in as Guest
+          this.currentUserId = actualUser.uid;
           this.firestore.doc(`users/${actualUser.uid}`).valueChanges()
             .subscribe((data: any) => {
               this.currentUserName = data['userName'];
@@ -59,7 +62,6 @@ export class AuthService {
       .then(async user => {
         if (user) {
           await this.updateEmail(user, newEmail, newUserName);
-          await user.sendEmailVerification();
           this.spinnerService.settProgressingStatus(false);
           this.dialog.closeAll();
         }
@@ -244,4 +246,12 @@ export class AuthService {
       });
     });
   }
+
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription?.unsubscribe();
+    }
+  }
 }
+

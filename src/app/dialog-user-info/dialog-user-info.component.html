@@ -1,5 +1,4 @@
-<mat-progress-bar  *ngIf="spinnerService.isProgressing$ | async"
-    mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar *ngIf="spinnerService.isProgressing$ | async" mode="indeterminate"></mat-progress-bar>
 <div class="whole-dialog">
     <h1>Edit Profile</h1>
 
@@ -7,13 +6,14 @@
         <div class="input-fields">
             <mat-form-field appearance="outline">
                 <mat-label>User name</mat-label>
-                <input matInput placeholder="User name" [formControl]="usernameForm" required
-                    [(ngModel)]="updatedUserName">
+                <input matInput placeholder="User name" [formControl]="usernameForm" required>
+                <mat-error *ngIf="usernameForm.invalid">{{getErrorMessageUsername()}}</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Email</mat-label>
-                <input matInput placeholder="Email" [formControl]="emailForm" required [(ngModel)]="updatedEmail">
+                <input matInput placeholder="Email" [formControl]="emailForm" required>
+                <mat-error *ngIf="emailForm.invalid">{{getErrorMessageEmail()}}</mat-error>
             </mat-form-field>
         </div>
 
@@ -22,11 +22,12 @@
                 <img class="profile-picture" [src]="imageUrl" alt="profil-icon">
             </div>
 
-            <input type="file" (change)="onFileSelected($event)" accept="image/jpeg,image/png">
-            <button class="upload-img-btn">
+            <label for="file-input" class="custom-file-upload">
                 <img class="upload-img" src="assets/img/upload-icon.svg">
-                <span class="upload-text" (click)="uploadImage()">Updload image</span>
-            </button>
+                <span class="upload-text">Upload Image</span>
+            </label>
+            <input class="d-n" type="file" id="file-input" (change)="onFileSelected($event, this.auth.currentUserId)"
+                accept="image/jpeg,image/png">
         </form>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../shared/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
@@ -14,19 +14,22 @@ import { user } from '@angular/fire/auth';
 import { RouterModule } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Threads } from 'src/models/threads.class';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 @Component({
   selector: 'app-mainpage',
   templateUrl: './mainpage.component.html',
   styleUrls: ['./mainpage.component.scss']
 })
-export class MainpageComponent {
+export class MainpageComponent implements OnInit{
 
 
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
-    private fireauth: AngularFireAuth, private db: AngularFirestore) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+    private fireauth: AngularFireAuth) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
+
+imagePath: any = '';
 
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
@@ -45,19 +48,20 @@ export class MainpageComponent {
   DirectMessagesMenuIsOpen = true;
 
   async ngOnInit(): Promise<void> {
-
+    this.imagePath = this.storage.ref(`users/${this.auth.currentUserId}/profile-picture`);
+    let profilPicture = document.getElementById('profile-picture') as HTMLImageElement;
+    if(profilPicture) {
+      profilPicture.src = this.imagePath.getDownloadURL();
+      console.log('image', this.imagePath.getDownloadURL());
+    }
     // let subColRef = (this.db, 'channels', 'CBmE9iBuhxIbkOqke0ni' , 'threads', ((val: any) => console.log('Values are:', val)));
     // const qSnap = getDocs(subColRef) 
     // console.log('qSnap is:', qSnap)
-
-
     this.db.collection('channels').valueChanges().subscribe(val => console.log('Values are:', val));
     const channelRef = this.db.collection('channels').doc('id');
     channelRef.collection('threads').valueChanges().subscribe(val => console.log('Thread values are:', val));
-
     // const threadRef = channelRef.collection('threads').doc('id');
     // threadRef.valueChanges().subscribe(val => console.log('Username value is:', val));
-
     // const username = threadRef.get().subscribe(doc => console.log('Username value is:', doc));
     
 
