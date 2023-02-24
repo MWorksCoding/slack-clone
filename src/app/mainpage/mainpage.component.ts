@@ -22,10 +22,11 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
   styleUrls: ['./mainpage.component.scss']
 })
 export class MainpageComponent implements OnInit{
+  db: any;
 
 
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
-    private fireauth: AngularFireAuth) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+    private fireauth: AngularFireAuth, public storage: AngularFireStorage) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
 
@@ -57,9 +58,6 @@ imagePath: any = '';
     // let subColRef = (this.db, 'channels', 'CBmE9iBuhxIbkOqke0ni' , 'threads', ((val: any) => console.log('Values are:', val)));
     // const qSnap = getDocs(subColRef) 
     // console.log('qSnap is:', qSnap)
-    this.db.collection('channels').valueChanges().subscribe(val => console.log('Values are:', val));
-    const channelRef = this.db.collection('channels').doc('id');
-    channelRef.collection('threads').valueChanges().subscribe(val => console.log('Thread values are:', val));
     // const threadRef = channelRef.collection('threads').doc('id');
     // threadRef.valueChanges().subscribe(val => console.log('Username value is:', val));
     // const username = threadRef.get().subscribe(doc => console.log('Username value is:', doc));
