@@ -24,7 +24,7 @@ export class MainpageComponent {
 
 
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
-    private fireauth: AngularFireAuth) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+    private fireauth: AngularFireAuth, private db: AngularFirestore) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
 
@@ -45,6 +45,22 @@ export class MainpageComponent {
   DirectMessagesMenuIsOpen = true;
 
   async ngOnInit(): Promise<void> {
+
+    // let subColRef = (this.db, 'channels', 'CBmE9iBuhxIbkOqke0ni' , 'threads', ((val: any) => console.log('Values are:', val)));
+    // const qSnap = getDocs(subColRef) 
+    // console.log('qSnap is:', qSnap)
+
+
+    this.db.collection('channels').valueChanges().subscribe(val => console.log('Values are:', val));
+    const channelRef = this.db.collection('channels').doc('id');
+    channelRef.collection('threads').valueChanges().subscribe(val => console.log('Thread values are:', val));
+
+    // const threadRef = channelRef.collection('threads').doc('id');
+    // threadRef.valueChanges().subscribe(val => console.log('Username value is:', val));
+
+    // const username = threadRef.get().subscribe(doc => console.log('Username value is:', doc));
+    
+
     await this.loadChannels();
     await this.loadUsers();
     await this.loadThreads();
@@ -102,27 +118,31 @@ export class MainpageComponent {
   allThreadsArr: any[] = [];
   threadId = '';
 
-  loadThreads() {
-    this.firestore
-      .collection('channels')
-      .valueChanges({ idField: 'channelId' })
-      .subscribe((channelId: any) => {
-        this.channels = channelId;
 
-        for (let i = 0; i < this.channels.length; i++) {
-          this.allChatChannel = this.channels[i];
-          this.firestore
-            .collection('channels')
-            .doc(this.channelId)
-            .collection('threads')
-            .get()
-            .subscribe((querySnapshot) => {
-              console.log('Query Snapshot is:', querySnapshot)
-              querySnapshot.forEach((doc) => {
-                console.log('Angular University', doc.data());
-              });
-            });
-        }
+  
+  loadThreads() {
+
+  }
+    // this.firestore
+    //   .collection('channels')
+    //   .valueChanges({ idField: 'channelId' })
+    //   .subscribe((channelId: any) => {
+    //     this.channels = channelId;
+
+    //     for (let i = 0; i < this.channels.length; i++) {
+    //       this.allChatChannel = this.channels[i];
+    //       this.firestore
+    //         .collection('channels')
+    //         .doc(this.channelId)
+    //         .collection('threads')
+    //         .get()
+    //         .subscribe((querySnapshot) => {
+    //           console.log('Query Snapshot is:', querySnapshot)
+    //           querySnapshot.forEach((doc) => {
+    //             console.log('Angular University', doc.data());
+    //           });
+    //         });
+    //     }
 
 
         // .collection('channels')
@@ -147,7 +167,7 @@ export class MainpageComponent {
         // this.allThreads.push(thread);
         // this.allThreadsArr.push(this.allThreads[i]);
         // this.forChildUserName.push
-      });
+      // });
 
     // this.firestore
     //   .collection("channels")
@@ -155,7 +175,7 @@ export class MainpageComponent {
     //   .collection("threads")
     //   .valueChanges()
     //   .subscribe(val => console.log('Angular University', val));
-  }
+  // }
 
   loadUsers() {
     this.loading = true;
@@ -233,4 +253,8 @@ export class MainpageComponent {
     this.auth.signOut();
   }
 
+}
+
+function getDocs(subColRef: (val: any) => void) {
+  throw new Error('Function not implemented.');
 }
