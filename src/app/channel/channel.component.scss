@@ -1,45 +1,11 @@
-.drawer-container{
-    height: 100%;
-    width: 100%;
-}
-
-.channel-page{
-    height: 100%;
-    width: 100%;
-    padding: 32px;
-    display: flex;
-    flex-direction: column;
-    position: relative
-}
-
-pre{
-    width:200px;
-}
-
-app-comment-box, mat-expansion-panel{
-    position: absolute;
-    bottom: 32px;
-    right: 32px;
-    left: 32px;
-    z-index: 10;
-}
-
-
-.post-container{
+.post-container {
     overflow-x: hidden;
     overflow-y: auto;
     margin-bottom: 16px;
     height: calc(100% - 200px);
 }
 
-.profile-img{
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 15px;
-}
-
-.posts{
+.posts {
     display: flex;
     margin: 4px;
     margin-bottom: 24px;
@@ -47,251 +13,129 @@ app-comment-box, mat-expansion-panel{
     box-shadow: 0px 2px 8px -1px rgb(0 0 0 / 20%);
     border-radius: 10px;
 
-    img{
+    img {
         margin-right: 16px;
     }
 
-    &:last-child{
+    &:last-child {
         margin-bottom: 8px;
         margin-right: 24px;
     }
 
-    p{
+    p {
         word-break: break-word;
     }
 }
 
-.general-info-line{
-    display: flex;
+.general-info-line {
 
-    span{
+    p {
         color: gray;
-        margin-left: 12px;
-        font-size: 12px;
+        margin-left: 8px;
+        font-size: 16px;
     }
 }
 
-.post{
+.user-info {
+    p {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+.post {
     max-width: 75vw;
 }
 
-.open-thread{
-    p{
-        color: rgb(19 19 189);
-        font-size: 12px;
-        cursor: pointer;
+
+.post-settings-box {
+    display: flex;
+    margin: 4px;
+    margin-bottom: 24px;
+    box-shadow: 0px 2px 8px -1px rgb(0 0 0 / 20%);
+    border-radius: 10px;
+    flex-direction: column;
+    border: solid 1px black;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    margin-right: 24px;
+    background: white;
+}
+
+.post-settings {
+    font-weight: 400;
+    padding: 8px 16px;
+    text-align: left;
+    background: whitesmoke;
+    border-bottom: solid 1px black;
+    border-radius: 10px;
+
+    p {
+        margin: 0;
+        mat-icon {
+            font-size: 30px;
+            padding: 16px 16px 16px 0;
+        }
     }
 }
 
-.align{
+.post-inputfield-box {
+    height: 100px;
+    background: white;
+    border-radius: 12px;
     display: flex;
     align-items: center;
-    cursor: pointer;
-}
-
-.empty-channel{
-    width: 100%;
-    text-align: center;
-    margin-top: 64px;
-    line-height: 32px;
-    font-weight: 500;
-}
-
-.head{
-    position: sticky;
-    top: 0;
-    width: 100%;
-    display: flex;
     justify-content: space-between;
-    align-items: center;
-    height: 64px;
-    padding: 16px;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
-    background-color: white;
-
-    h2{
-        margin: unset;
-    }
-
-    i{
-        cursor: pointer;
-    }
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
-.upload-image{
-    margin-top: 15px;
-    height: 100px!important;
-    width: 100px!important;
-    object-fit: cover;
-    cursor: pointer;
-    border-radius: 10px!important;
-    box-sizing:unset;
-    border: 1px solid black;
+.post-inputfield {
+    border: none;
+    height: fit-content;
+    font-size: 18px;
+    resize: none;
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
+    width: 95%;
 }
 
-.mat-drawer{
-    width: 300px;
-}
-
-
-quill-editor{
-    width: 100%;
-}
-
-.text-editor{
-    position: relative;
-    border: 1px solid rgba(0,0,0,0.5);
-    border-radius: 10px;
-    background-color: white;
-}
-
-.send-icon{
-    position: absolute;
-    right: 12px;
-    bottom: 16px;
-    cursor: pointer;
-
-    &:hover{
-        color: #A161A3;
-    }
-}
-
-
-.send-icon2{
-    position: absolute;
-    right: 12px;
-    top: 8px;
-    label{
-        cursor: pointer;
-    }
-    &:hover{
-        color: #A161A3;
-       
-    }
-}
-
-.form-container{
-    position: absolute;
-    width: calc(100% - 80px);
-    left: 40px;
-    bottom: 20px;
-}
-
-input[type="file"] {
-    display: none;
-}
-
-.upload-image-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: min-content;
-    border-radius: 10px;
-
-    div{
-        position: relative;
-        &:hover{
-            i{
-                display: flex
-            }
-        }
-    }
-    img{
-        height: 60px;
-        width: 50px;
-        object-fit: cover;
-        border: 2px solid black;
-        cursor: pointer;
-        border-radius: 10px;
-        margin-bottom: 8px;
-        margin-left: 8px;
-    }
-    i{
-        display: none;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        font-weight: 500;
-        height: 20px;
-        width: 20px;
-        color: lightgray;
-        border-radius: 100%;
-        background-color: rgb(67, 65, 65);
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        border: 1px solid transparent;
-        &:hover{
-            cursor: pointer;
-            color: black;
-            background-color: white;
-            font-weight: bold;
-            border: 1px solid black;
-        }
-    }
-}
-
-.set-height{
-    height: 120px;
-}
-
-
-
-
-@media(max-width: 680px){
-    .mat-drawer{
-        width: 100%;
-    }
-}
-
-@media(max-height: 600px){
-    .post-container{
+@media(max-height: 600px) {
+    .post-container {
         height: calc(100% - 110px);
     }
 }
 
-@media(max-width: 530px){
-    .post{
+@media(max-width: 530px) {
+    .post {
         max-width: 300px;
     }
 }
 
-@media(max-width: 465px){
-    .post{
+@media(max-width: 465px) {
+    .post {
         max-width: 250px;
     }
 }
 
-@media(max-width: 410px){
-    .post{
+@media(max-width: 410px) {
+    .post {
         max-width: 200px;
     }
 }
 
-@media(max-width: 380px){
-    .general-info-line{
+@media(max-width: 380px) {
+    .general-info-line {
         flex-direction: column;
-    
-        span{
+
+        span {
             margin-left: unset;
         }
     }
-
-    .channel-page{
-        padding: 16px;
-    }
-
-    app-comment-box, mat-expansion-panel{
-        bottom: 16px;
-        right: 16px;
-        left: 16px;
-    }
 }
 
-@media(max-width: 350px){
-    .post{
+@media(max-width: 350px) {
+    .post {
         max-width: 150px;
     }
 }
-
-

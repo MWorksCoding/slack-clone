@@ -1,43 +1,49 @@
 <div class="channel-container d-n" id="channel">
     <div>
         <div>
-
-            <!-- <div *ngFor="let channel of channels, let i = index" class="single-channel pl-16 pb-16 pt-16">
-        <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }"> -->
-            <!-- [routerLink]="['/channel/',channel['channelId']]"> -->
-            <!-- <span class=""># {{ channel['channelName'] }} </span> -->
             <h2>
-                <!-- {{ channel['channelName'] }} -->
-                {{ inputFromParent }}
+                Channel: {{ inputFromParent }}
             </h2>
             <h3>
-                <!-- {{ channel['description'] }} -->
                 {{ inputFromParentDescriptiont }}
             </h3>
-            <div class="post-container"> <!-- ACHTUNG HIER MUSS AUCH EIN INDEX VON ALLEN NACHRICHTEN ERSTELLT WERDEN -->
+
+            <div class="post-container" *ngFor="let channel of inputFromParentChatArray; let i = index">
                 <div>
                     <div class="posts">
-                        <mat-icon>person</mat-icon>
 
                         <div>
                             <div class="general-info-line">
-                                <p><b></b></p>
-                                <span> Uhr</span>
+                                <p><b>Am {{channel.userMessageDate}} um {{channel.userMessageTime}} Uhr</b></p>
+                            </div>
+                            <div class="user-info">
+                                <p> <mat-icon>person</mat-icon><b>{{channel.userName}}</b></p>
                             </div>
                             <div class="post">
-                                <p></p>
-                            </div>
-
-                            <img>
-
-                            <div class="open-thread">
-                                <p>Comments</p>
+                                <p>{{channel.userMessage}}</p>
                             </div>
                         </div>
                     </div>
 
                 </div>
             </div>
+            <div class="post-settings-box">
+                <div class="post-settings">
+                    <p>
+                        <mat-icon matSuffix>format_bold</mat-icon>
+                        <mat-icon matSuffix>format_italic</mat-icon>
+                        <mat-icon matSuffix>format_underlined</mat-icon>
+                        <mat-icon matSuffix>sentiment_satisfied</mat-icon>
+                        <mat-icon matSuffix>add_link</mat-icon>
+                        <mat-icon matSuffix>attach_file_add</mat-icon>
+                    </p>
+                </div>
+                <div class="post-inputfield-box">
+                        <textarea matInput id="post-inputfield" rows="3" cols="80" autocomplete="off" placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
+                        <mat-icon matSuffix (click)="sendMessageToChannel()">send</mat-icon>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

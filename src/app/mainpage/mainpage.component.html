@@ -101,10 +101,16 @@
             </div>
             <div>
                 <app-channel [inputFromParent]="forChildChannelName"
-                    [inputFromParentDescriptiont]="forChildChannelDescription"></app-channel>
+                    [inputFromParentDescriptiont]="forChildChannelDescription"
+                    [inputFromParentChatUserName]="forChildChatUserName"
+                    [inputFromParentChatArray]="allThreadsArr"
+                    ></app-channel>
             </div>
             <div>
-                <app-chat [inputFromParentChat]="forChildUserName"></app-chat>
+                <app-chat [inputFromParentChat]="forChildUserName">
+
+                    
+                </app-chat>
             </div>
             <div>
                 <app-threads></app-threads>

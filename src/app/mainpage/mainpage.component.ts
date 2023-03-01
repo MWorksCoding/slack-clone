@@ -21,16 +21,13 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
   templateUrl: './mainpage.component.html',
   styleUrls: ['./mainpage.component.scss']
 })
-export class MainpageComponent implements OnInit{
-  db: any;
-
-
+export class MainpageComponent implements OnInit {
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
     private fireauth: AngularFireAuth, public storage: AngularFireStorage) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
 
-imagePath: any = '';
+  imagePath: any = '';
 
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
@@ -47,30 +44,28 @@ imagePath: any = '';
   users = [];
   ChannelMenuIsOpen = true;
   DirectMessagesMenuIsOpen = true;
+  forChildChatUserName: string = '';
+  allThreads: any[] = [];
+  allThreadsArr: any[] = [];
+
+
 
   async ngOnInit(): Promise<void> {
     this.imagePath = this.storage.ref(`users/${this.auth.currentUserId}/profile-picture`);
     let profilPicture = document.getElementById('profile-picture') as HTMLImageElement;
-    if(profilPicture) {
+    if (profilPicture) {
       profilPicture.src = this.imagePath.getDownloadURL();
       console.log('image', this.imagePath.getDownloadURL());
     }
-    // let subColRef = (this.db, 'channels', 'CBmE9iBuhxIbkOqke0ni' , 'threads', ((val: any) => console.log('Values are:', val)));
-    // const qSnap = getDocs(subColRef) 
-    // console.log('qSnap is:', qSnap)
-    // const threadRef = channelRef.collection('threads').doc('id');
-    // threadRef.valueChanges().subscribe(val => console.log('Username value is:', val));
-    // const username = threadRef.get().subscribe(doc => console.log('Username value is:', doc));
-    
 
     await this.loadChannels();
     await this.loadUsers();
     await this.loadThreads();
     this.openThreads();
     await this.auth.showActualUser();
-    this.route.params.subscribe((params) => {
-      console.log(params);
-    });
+    // this.route.params.subscribe((params) => {
+    //   // console.log(params);
+    // });
   }
 
 
@@ -110,74 +105,42 @@ imagePath: any = '';
       .collection('channels')
       .valueChanges({ idField: 'channelId' })
       .subscribe((channelId: any) => {
-        console.log('Mainpage: Channel ID is:', channelId);
+        // console.log('Mainpage: Channel ID is:', channelId);
         this.channels = channelId;
       });
     ;
   }
 
-  allThreads: any[] = [];
-  allThreadsArr: any[] = [];
-  threadId = '';
 
-
-  
   loadThreads() {
 
+    this.firestore
+      .collection('channels')
+      .get()
+      .subscribe((channels: any) => {
+        channels.forEach((channel: { data: () => any; id: string | undefined; }) => {
+          const channelData = channel.data();
+          // Query the sub collections of the channel
+          this.firestore
+            .collection('channels')
+            .doc(channel.id)
+            .collection('threads')
+            .get()
+            .subscribe((threads: any) => {
+              threads.forEach((thread: { data: () => any; }) => {
+                const threadData = thread.data();
+                // Push the thread data into the array
+                this.allThreads.push({
+                  ...channelData,
+                  ...threadData
+                });
+                // console.log('ALLTHREADS ARE', this.allThreads)
+                // ACHTUNG DIE JEWEILIGE CHANNEL ID MUSS NOCH MIT INS ARRAY!!!
+              });
+            });
+        });
+      });
   }
-    // this.firestore
-    //   .collection('channels')
-    //   .valueChanges({ idField: 'channelId' })
-    //   .subscribe((channelId: any) => {
-    //     this.channels = channelId;
-
-    //     for (let i = 0; i < this.channels.length; i++) {
-    //       this.allChatChannel = this.channels[i];
-    //       this.firestore
-    //         .collection('channels')
-    //         .doc(this.channelId)
-    //         .collection('threads')
-    //         .get()
-    //         .subscribe((querySnapshot) => {
-    //           console.log('Query Snapshot is:', querySnapshot)
-    //           querySnapshot.forEach((doc) => {
-    //             console.log('Angular University', doc.data());
-    //           });
-    //         });
-    //     }
-
-
-        // .collection('channels')
-        // .doc('<id>')
-        // .collection('threads')
-        // .doc('672IvdSL3ClRekuivi9S')
-        // .get()
-        // .subscribe((doc) => {
-        //   if (doc.exists) {
-        //     console.log(doc.get('username'));
-        //   }
-        // });
-
-        // .collection('channels')
-        // .doc(this.allChatChannel)
-        // .collection('threads')
-        // .valueChanges({ idField: 'threadId' })
-        // .subscribe(val => console.log('threads are:', val));
-
-
-        // .subscribe((thread: any)) => {
-        // this.allThreads.push(thread);
-        // this.allThreadsArr.push(this.allThreads[i]);
-        // this.forChildUserName.push
-      // });
-
-    // this.firestore
-    //   .collection("channels")
-    //   .doc(this.channelId)
-    //   .collection("threads")
-    //   .valueChanges()
-    //   .subscribe(val => console.log('Angular University', val));
-  // }
 
   loadUsers() {
     this.loading = true;
@@ -185,14 +148,12 @@ imagePath: any = '';
       .collection('users')
       .valueChanges({ idField: 'userId' })
       .subscribe((chatId: any) => {
-        console.log('User ID is:', chatId);
+        // console.log('User ID is:', chatId);
         this.users = chatId;
       });
   }
 
-  openImprint() {  // Route einbauen°!°
-    // this.content.nativeElement.innerHTML = 'Impressum'
-
+  openImprint() {
     window.document.getElementById('imprint')!.classList.remove('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
     window.document.getElementById('channel')!.classList.add('d-n');
@@ -211,9 +172,18 @@ imagePath: any = '';
 
 
   openChannel(i: any) {
-    console.log('String to child-component:', i['channelName'])
     this.forChildChannelName = i['channelName'];
+    console.log('Chat CHANNEL NAME BASE is:', i['channelName'])
     this.forChildChannelDescription = i['description'];
+    this.allThreadsArr = [];
+    for (let j = 0; j < this.allThreads.length; j++) {
+      const element = this.allThreads[j];
+      console.log('openChannel - AllThreads:', this.allThreads[j])
+      if (this.forChildChannelName == this.allThreads[j]['channelName']) {
+        this.allThreadsArr.push(this.allThreads[j])
+      }
+      console.log('Contents of allThreadsArr:', this.allThreadsArr);
+    }
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
@@ -223,7 +193,7 @@ imagePath: any = '';
 
 
   openChat(i: any) {
-    console.log('User to child-component:', i['userName'])
+    // console.log('User to child-component:', i['userName'])
     this.forChildUserName = i['userName'];
     window.document.getElementById('chat')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
@@ -260,3 +230,15 @@ imagePath: any = '';
 function getDocs(subColRef: (val: any) => void) {
   throw new Error('Function not implemented.');
 }
+function switchMap(arg0: (channels: { channelId: any; }) => any): import("rxjs").OperatorFunction<{ channelId: string; }[], unknown> {
+  throw new Error('Function not implemented.');
+}
+
+function tap(arg0: (roles: any) => void): import("rxjs").OperatorFunction<unknown, unknown> {
+  throw new Error('Function not implemented.');
+}
+
+function combineLatest(arg0: any) {
+  throw new Error('Function not implemented.');
+}
+
