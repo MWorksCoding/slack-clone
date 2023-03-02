@@ -25,7 +25,7 @@ import { Observable } from 'rxjs';
 })
 export class MainpageComponent implements OnInit {
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
-    private fireauth: AngularFireAuth, public storage: AngularFireStorage) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+    public fireauth: AngularFireAuth, public storage: AngularFireStorage) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
 
@@ -56,7 +56,6 @@ export class MainpageComponent implements OnInit {
     let profilPicture = document.getElementById('profile-picture') as HTMLImageElement;
     if (profilPicture) {
       profilPicture.src = this.imagePath.getDownloadURL();
-      console.log('image', this.imagePath.getDownloadURL());
     }
     await this.loadChannels();
     await this.loadUsers();

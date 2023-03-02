@@ -22,6 +22,7 @@ export class AuthService implements OnDestroy {
   currentUserId: string = '';
   currentUserName: any;
   currentEmail: any;
+  photoURL: any;
   emailUpdated = new EventEmitter<string>();
 
 
@@ -56,12 +57,15 @@ export class AuthService implements OnDestroy {
   }
 
 
-  async updateEmailAndName(newEmail: string, newUserName: string) {
+  async updateEmailAndName(newEmail: string, newUserName: string, downloadURL: any) {
     this.spinnerService.settProgressingStatus(true);
     this.fireauth.currentUser
       .then(async user => {
         if (user) {
           await this.updateEmail(user, newEmail, newUserName);
+          if(downloadURL) {
+            this.photoURL = downloadURL;
+          }
           this.spinnerService.settProgressingStatus(false);
           this.dialog.closeAll();
         }
@@ -239,13 +243,16 @@ export class AuthService implements OnDestroy {
   }
 
 
-  updateUserProfileImage(downloadURL: string): Promise<void> {
-    return this.fireauth.currentUser.then(user => {
-      return user?.updateProfile({
-        photoURL: downloadURL
-      });
-    });
-  }
+  // updateUserProfileImage(downloadURL: any): Promise<void> {
+  //   return this.fireauth.currentUser.then(user => {
+  //     console.log('user', user);
+  //     return user?.updateProfile({
+  //       photoURL: downloadURL
+  //     });
+  //   }).catch(error => {
+  //     console.log('Error', error)
+  //   });
+  // }
 
 
   ngOnDestroy(): void {

@@ -43,8 +43,8 @@ export class DialogUserInfoComponent{
 
 
   updateUserInfos() {
-    this.auth.updateEmailAndName(this.emailForm.value, this.usernameForm.value);
-    // this.auth.updateUserProfileImage(this.downloadURL);
+    this.auth.updateEmailAndName(this.emailForm.value, this.usernameForm.value, this.downloadURL$);
+    // this.auth.updateUserProfileImage(this.downloadURL$);
   }
 
 
