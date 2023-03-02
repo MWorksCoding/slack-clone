@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ export class UploadServiceService {
   constructor(public storage: AngularFireStorage) { }
 
   selectedImage: any;
-  url$: any;
+  public url$: BehaviorSubject<string> | undefined;
 
   onFileSelected(event: any, userId: string): void {
     this.selectedImage = event.target.files[0];

@@ -13,14 +13,20 @@
             <!-- displays the userName or Guest if logged in as Guest -->
             <span class="user-name">{{ (auth.actualUser$ | async)?.userName ? (auth.actualUser$ | async)?.userName :
                 'Guest' }}</span>
-            <div *ngIf="auth.profilPicture | async as imageUrl; else defaultImage">
-                <img class="profil-img" id="profile-picture"  [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon"
-                    [src]="imageUrl ?? 'assets/img/name-icon.png'">
+
+
+            <div *ngIf="uploadService.url$ as imageUrl; else authPicture">
+                <img class="profil-img" [src]="imageUrl" [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon">
             </div>
 
-            <!-- if actualUser$ is undefined or null (e.g. anonym signin) -->
+            <ng-template #authPicture>
+                <div *ngIf="auth.profilPicture as imageUrl; else defaultImage">
+                    <img class="profil-img" [src]="imageUrl" [matMenuTriggerFor]="menu" #menuTrigger alt="proil-icon">
+                </div>
+            </ng-template>
+
             <ng-template #defaultImage>
-                <img class="profil-img" [src]="'assets/img/name-icon.png'" [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon">
+                    <img class="profil-img" [src]="'assets/img/name-icon.png'" [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon">
             </ng-template>
 
 

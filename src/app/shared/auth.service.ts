@@ -9,6 +9,7 @@ import { DialogErrorComponent } from '../dialog-error/dialog-error.component';
 import { SpinnerService } from './spinner.service';
 import { Observable, of, Subscription, switchMap } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { UploadServiceService } from './upload-service.service';
 
 
 @Injectable({
@@ -32,7 +33,7 @@ export class AuthService implements OnDestroy {
 
 
   constructor(private fireauth: AngularFireAuth, private firestore: AngularFirestore, private router: Router,
-    public dialog: MatDialog, private spinnerService: SpinnerService, private storage: AngularFireStorage) {
+    public dialog: MatDialog, private spinnerService: SpinnerService, private storage: AngularFireStorage, public uploadService: UploadServiceService) {
 
 
     //subscribes to the user observable and sets variable currentEmail to the user email if logged in
@@ -50,11 +51,14 @@ export class AuthService implements OnDestroy {
         if (actualUser && !actualUser?.isAnonymous) { //will only carried out if actualUser is registered
           //and not logged in as Guest
           this.currentUserId = actualUser.uid;
-          const imagePath = this.storage.ref(`users/${this.currentUserId}/profile-picture`);
-          this.profilPicture = imagePath.getDownloadURL();
-          this.profilePictureSubscription = this.profilPicture.subscribe((url: any) => {
-            this.imageUrl = url;
-          })
+          if(this.storage.ref(`users/${this.currentUserId}/profile-picture`)) {
+            const imagePath = this.storage.ref(`users/${this.currentUserId}/profile-picture`);
+            this.profilPicture = imagePath.getDownloadURL();
+            this.profilePictureSubscription = this.profilPicture.subscribe((url: any) => {
+              this.imageUrl = url;
+            })
+          }
+
         
           this.firestore.doc(`users/${actualUser.uid}`).valueChanges()
             .subscribe((data: any) => {
@@ -252,17 +256,6 @@ export class AuthService implements OnDestroy {
       });
   }
 
-
-  // updateUserProfileImage(downloadURL: any): Promise<void> {
-  //   return this.fireauth.currentUser.then(user => {
-  //     console.log('user', user);
-  //     return user?.updateProfile({
-  //       photoURL: downloadURL
-  //     });
-  //   }).catch(error => {
-  //     console.log('Error', error)
-  //   });
-  // }
 
   unsubscribe() {
     if (this.userSubscription) {
