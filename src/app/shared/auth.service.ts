@@ -8,6 +8,7 @@ import { DialogResetPasswordInfoComponent } from '../dialog-reset-password-info/
 import { DialogErrorComponent } from '../dialog-error/dialog-error.component';
 import { SpinnerService } from './spinner.service';
 import { Observable, of, Subscription, switchMap } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 
 
 @Injectable({
@@ -19,15 +20,19 @@ export class AuthService implements OnDestroy {
   actualUser$: Observable<any> | undefined;
   user: any;
   userSubscription: Subscription | undefined;
+  profilePictureSubscription: Subscription | undefined;
   currentUserId: string = '';
   currentUserName: any;
   currentEmail: any;
   photoURL: any;
   emailUpdated = new EventEmitter<string>();
 
+  profilPicture: any;
+  imageUrl: any;
+
 
   constructor(private fireauth: AngularFireAuth, private firestore: AngularFirestore, private router: Router,
-    public dialog: MatDialog, private spinnerService: SpinnerService) {
+    public dialog: MatDialog, private spinnerService: SpinnerService, private storage: AngularFireStorage) {
 
 
     //subscribes to the user observable and sets variable currentEmail to the user email if logged in
@@ -42,9 +47,15 @@ export class AuthService implements OnDestroy {
   showActualUser() {
     this.actualUser$ = this.fireauth.authState.pipe(
       switchMap(actualUser => {
-        if (actualUser && !actualUser.isAnonymous) { //will only carried out if actualUser is registered
-          // //and not logged in as Guest
+        if (actualUser && !actualUser?.isAnonymous) { //will only carried out if actualUser is registered
+          //and not logged in as Guest
           this.currentUserId = actualUser.uid;
+          const imagePath = this.storage.ref(`users/${this.currentUserId}/profile-picture`);
+          this.profilPicture = imagePath.getDownloadURL();
+          this.profilePictureSubscription = this.profilPicture.subscribe((url: any) => {
+            this.imageUrl = url;
+          })
+        
           this.firestore.doc(`users/${actualUser.uid}`).valueChanges()
             .subscribe((data: any) => {
               this.currentUserName = data['userName'];
@@ -55,17 +66,16 @@ export class AuthService implements OnDestroy {
       })
     );
   }
+  
 
 
-  async updateEmailAndName(newEmail: string, newUserName: string, downloadURL: any) {
+
+  async updateEmailAndName(newEmail: string, newUserName: string) {
     this.spinnerService.settProgressingStatus(true);
     this.fireauth.currentUser
       .then(async user => {
         if (user) {
           await this.updateEmail(user, newEmail, newUserName);
-          if(downloadURL) {
-            this.photoURL = downloadURL;
-          }
           this.spinnerService.settProgressingStatus(false);
           this.dialog.closeAll();
         }
@@ -254,10 +264,24 @@ export class AuthService implements OnDestroy {
   //   });
   // }
 
+  unsubscribe() {
+    if (this.userSubscription) {
+      this.userSubscription?.unsubscribe();
+    }
+    if(this.profilePictureSubscription) {
+      this.profilePictureSubscription?.unsubscribe();
+      console.log('UNSUBSCRIBED');
+    }
+  }
+
 
   ngOnDestroy(): void {
     if (this.userSubscription) {
       this.userSubscription?.unsubscribe();
+    }
+    if(this.profilePictureSubscription) {
+      this.profilePictureSubscription.unsubscribe();
+      console.log('unsubscribed');
     }
   }
 }

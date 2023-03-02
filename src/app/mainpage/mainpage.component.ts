@@ -1,33 +1,28 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../shared/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 import { DialogCreateChatComponent } from '../dialog-create-chat/dialog-create-chat.component';
 import { AngularFirestore, fromCollectionRef } from '@angular/fire/compat/firestore';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { MatMenuModule } from '@angular/material/menu';
 import { DialogUserInfoComponent } from '../dialog-user-info/dialog-user-info.component';
-import { Channel } from 'src/models/channel.class';
-import { ChannelComponent } from '../channel/channel.component';
 import { ActivatedRoute } from '@angular/router';
-import { user } from '@angular/fire/auth';
-import { RouterModule } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Threads } from 'src/models/threads.class';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { FirebaseError } from 'firebase/app';
-import { Observable } from 'rxjs';
+import { UploadServiceService } from '../shared/upload-service.service';
+import { Subscribe } from '@firebase/util';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-mainpage',
   templateUrl: './mainpage.component.html',
   styleUrls: ['./mainpage.component.scss']
 })
-export class MainpageComponent implements OnInit {
+export class MainpageComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
-    public fireauth: AngularFireAuth, public storage: AngularFireStorage) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+    public fireauth: AngularFireAuth, public storage: AngularFireStorage, public uploadService: UploadServiceService) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
-
 
   imagePath: any = '';
 
@@ -50,18 +45,17 @@ export class MainpageComponent implements OnInit {
   allThreads: any[] = [];
   allThreadsArr: any[] = [];
 
+  profilPicture: any;
+  imageUrl: any;
+
 
   async ngOnInit(): Promise<void> {
-    this.imagePath = this.storage.ref(`users/${this.auth.currentUserId}/profile-picture`);
-    let profilPicture = document.getElementById('profile-picture') as HTMLImageElement;
-    if (profilPicture) {
-      profilPicture.src = this.imagePath.getDownloadURL();
-    }
+    await this.auth.showActualUser();
     await this.loadChannels();
     await this.loadUsers();
     await this.loadThreads();
     await this.openThreads();
-    await this.auth.showActualUser();
+
     //  this.route.params.subscribe((params) => {
     //  console.log(params);
     //  });
@@ -232,16 +226,18 @@ export class MainpageComponent implements OnInit {
 
   signOut() {
     this.auth.signOut();
+    this.auth.unsubscribe();
   }
 
+  ngOnDestroy(): void {
+
+  }
 }
 
 function getDocs(subColRef: (val: any) => void) {
   throw new Error('Function not implemented.');
 }
-function switchMap(arg0: (channels: { channelId: any; }) => any): import("rxjs").OperatorFunction<{ channelId: string; }[], unknown> {
-  throw new Error('Function not implemented.');
-}
+
 
 function tap(arg0: (roles: any) => void): import("rxjs").OperatorFunction<unknown, unknown> {
   throw new Error('Function not implemented.');

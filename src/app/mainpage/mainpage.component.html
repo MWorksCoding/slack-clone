@@ -13,8 +13,8 @@
             <!-- displays the userName or Guest if logged in as Guest -->
             <span class="user-name">{{ (auth.actualUser$ | async)?.userName ? (auth.actualUser$ | async)?.userName :
                 'Guest' }}</span>
-            <div *ngIf="auth.photoURL | async as imageUrl; else defaultImage">
-                <img class="profil-img"  [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon"
+            <div *ngIf="auth.profilPicture | async as imageUrl; else defaultImage">
+                <img class="profil-img" id="profile-picture"  [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon"
                     [src]="imageUrl ?? 'assets/img/name-icon.png'">
             </div>
 

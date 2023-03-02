@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { finalize, from, map, Observable, switchMap } from 'rxjs';
 import { AuthService } from '../shared/auth.service';
 import { SpinnerService } from '../shared/spinner.service';
+import { UploadServiceService } from '../shared/upload-service.service';
 
 
 @Component({
@@ -15,8 +16,7 @@ import { SpinnerService } from '../shared/spinner.service';
 })
 export class DialogUserInfoComponent{
 
-  imageRef: string = '';
-  selectedImage: any;
+
   uploadPercent: Observable<number> | undefined;
   downloadURL$: Observable<string> | undefined;
   emailForm = new FormControl(this.auth.currentEmail, [Validators.required, Validators.email]);
@@ -24,7 +24,7 @@ export class DialogUserInfoComponent{
 
 
   constructor(public dialog: MatDialog, public auth: AuthService, public firestore: AngularFirestore, public storage: AngularFireStorage,
-    public spinnerService: SpinnerService) {
+    public spinnerService: SpinnerService, public uploadService: UploadServiceService) {
   }
 
 
@@ -43,51 +43,31 @@ export class DialogUserInfoComponent{
 
 
   updateUserInfos() {
-    this.auth.updateEmailAndName(this.emailForm.value, this.usernameForm.value, this.downloadURL$);
-    // this.auth.updateUserProfileImage(this.downloadURL$);
-  }
-
-
-  onFileSelected(event: any, userId: string): void {
-    this.selectedImage = event.target.files[0];
-    this.uploadImage(userId);
-  }
-
-
-  async uploadImage(userId: string) {
-    if (!this.selectedImage) {
-      return;
-    }
-
-    const previousImageRef = this.storage.ref(`users/${userId}/profile-picture`);
-    if (previousImageRef) {
-      try {
-        previousImageRef.delete()
-      } catch (error) {
-        console.log(`Previous profile picture does not exist: ${error}`);
-      }
-    }
-
-    const filePath = `users/${userId}/profile-picture`;
-    const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(filePath, this.selectedImage);
-
-
-
-    this.uploadPercent = task.percentageChanges().pipe(map(percent => percent ?? 0));
-
-
-    task
-      .snapshotChanges()
-      .pipe(
-        finalize(async () => {
-          this.downloadURL$ = fileRef.getDownloadURL();
-          console.log('File uploaded and exists at', this.downloadURL$);
-        })
-      )
-      .subscribe();
+    this.auth.updateEmailAndName(this.emailForm.value, this.usernameForm.value);
   }
 
 
 
-}
+
+
+
+
+
+    // this.uploadPercent = task.percentageChanges().pipe(map(percent => percent ?? 0));
+
+
+    // task
+    //   .snapshotChanges()
+    //   .pipe(
+    //     finalize(async () => {
+    //       this.downloadURL$ = fileRef.getDownloadURL();
+    //       console.log('File uploaded and exists at', this.downloadURL$);
+    //     })
+    //   )
+    //   .subscribe();
+  }
+
+
+
+
+
