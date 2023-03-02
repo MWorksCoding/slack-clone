@@ -103,7 +103,7 @@
                 <app-channel [inputFromParent]="forChildChannelName"
                     [inputFromParentDescriptiont]="forChildChannelDescription"
                     [inputFromParentChatUserName]="forChildChatUserName"
-                    [inputFromParentChatArray]="allThreadsArr"
+                    [inputFromParentChannelArray]="allThreadsArr"
                     ></app-channel>
             </div>
             <div>
@@ -113,7 +113,8 @@
                 </app-chat>
             </div>
             <div>
-                <app-threads></app-threads>
+                <app-threads [inputFromParentThreadArray]="allThreadsArr"
+                ></app-threads>
             </div>
         </div>
 

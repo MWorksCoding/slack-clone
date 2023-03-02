@@ -14,6 +14,7 @@ import { MatCardModule } from '@angular/material/card';
   styleUrls: ['./channel.component.scss']
 })
 export class ChannelComponent {
+  componentData: any;
 
   constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
@@ -21,31 +22,33 @@ export class ChannelComponent {
   @Input() inputFromParent: string = "";
   @Input() inputFromParentDescriptiont: string = "";
   @Input() inputFromParentChatUserName: string = "";
-  @Input() inputFromParentChatArray: {
+  @Input() inputFromParentChannelArray: {
     channelName: string;
     description: string;
     userMessage: string;
     userMessageDate: string;
     userMessageTime: string;
     userName: string;
+    channelId: string;
   }[] = [];
   textInput: HTMLTextAreaElement | undefined;
 
 
 
   ngOnInit(): void {
-    console.log('IM CHANNEL CHAT ARRAY:', this.inputFromParentChatArray)
-    let modifiedInputFromParentChatArray = this.inputFromParentChatArray.map(channel => {
+    console.log('inputFromParentChannelChatArray:', this.inputFromParentChannelArray)
+    let modifiedInputFromParentChannelArray = this.inputFromParentChannelArray.map(channel => {
       return {
         channelName: channel.channelName,
         description: channel.description,
         userMessage: channel.userMessage,
         userMessageDate: channel.userMessageDate,
         userMessageTime: channel.userMessageTime,
-        userName: channel.userName
+        userName: channel.userName,
+        channelId: channel.channelId
       };
     });
-    console.log('IM CHANNEL CHAT ARRAY2:', modifiedInputFromParentChatArray)
+    console.log('modifiedInputFromParentChatArray:', modifiedInputFromParentChannelArray)
   }
 
   sendMessageToChannel() {
@@ -56,8 +59,12 @@ export class ChannelComponent {
       userMessage: element.value,
       userName: 'Guest', // must be changed to the current user!!
       userMessageDate: new Date().toLocaleDateString('en-GB', {day: '2-digit', month: '2-digit', year: 'numeric'}),
-      userMessageTime: new Date().getTime().toString()
+      userMessageTime: new Date().getTime().toString(),
     };
+
+    const dataWithChannelId = {  // diese Variable is separiert, damit sie nicht mit den anderen Daten von const data mitgesendet wird;
+      channelId: this.inputFromParentChannelArray[0].channelId
+    }
 
     let timestamp = data.userMessageTime;
     let date = new Date(Number(timestamp));
@@ -66,21 +73,20 @@ export class ChannelComponent {
     data.userMessageTime = formattedTime;
 
 
-    if (element.value.length == 0) {
+    if (element.value.length == 0) { // the inputfield/textarea should not be empty
       alert('Please enter a message.');
     } else {
       this.textInput = element;
       this.firestore
         .collection('channels')
-        // .doc(channel.id) //the id is unknown and must be found first
-        // .collection('threads')
+        .doc(dataWithChannelId.channelId)
+        .collection('threads')
         .add(data);
-      console.log('textInput is:', element)
+        element.value = '';
       alert('SAVE TO THE FIRESTORE');
     }
   }
 
-  // Abspeichern in firestore funktioniert grundsätzlich, allerdings muss noch threads gespeichert werden
-  // Dazu muss die ID von dem jeweiligen Channel ebenfalls übertragen werden von der Mainpage, damit sie in der Channel Component als Variable dienen kann.
+  // es fehlt: automatisches Refreshen nach dem Subscriben bei Value Changes im Channel
 
 }

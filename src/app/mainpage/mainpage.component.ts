@@ -61,11 +61,11 @@ export class MainpageComponent implements OnInit {
     await this.loadChannels();
     await this.loadUsers();
     await this.loadThreads();
-    this.openThreads();
+    await this.openThreads();
     await this.auth.showActualUser();
-    // this.route.params.subscribe((params) => {
-    //   // console.log(params);
-    // });
+    //  this.route.params.subscribe((params) => {
+    //  console.log(params);
+    //  });
   }
 
 
@@ -112,9 +112,9 @@ export class MainpageComponent implements OnInit {
   }
 
 
-  loadThreads() {
+  async loadThreads() {
 
-    this.firestore
+    await this.firestore
       .collection('channels')
       .get()
       .subscribe((channels: any) => {
@@ -132,11 +132,12 @@ export class MainpageComponent implements OnInit {
                 // Push the thread data into the array
                 this.allThreads.push({
                   ...channelData,
-                  ...threadData
+                  ...threadData,
+                  channelId: channel.id // DIE JEWEILIGE CHANNEL ID MUSS  MIT INS ARRAY
                 });
-                // console.log('ALLTHREADS ARE', this.allThreads)
-                // ACHTUNG DIE JEWEILIGE CHANNEL ID MUSS NOCH MIT INS ARRAY!!!
+                console.log('ALLTHREADS ARE', this.allThreads)
               });
+              this.openThreads(); // place openThreads here to show it automatically after log in
             });
         });
       });
@@ -163,6 +164,15 @@ export class MainpageComponent implements OnInit {
 
 
   openThreads() {
+    this.allThreadsArr = []; // The array is empty with every click, to take over only the needed data from the choosen channel from the array allThreads
+    let currentUser = 'Guest'; // !!!Change this variable to the current user later!!!
+    for (let j = 0; j < this.allThreads.length; j++) { // loop for array allThreads
+      const element = this.allThreads[j];
+      if (currentUser == this.allThreads[j]['userName']) { // current User ('guest') is part of the array allThreads, then
+        this.allThreadsArr.push(this.allThreads[j]) // ...then push alle j data to the empty array allThreadsArr; data is send to child component
+      }
+      console.log('Contents of allThreadsArr for Threads:', this.allThreadsArr);
+    }
     window.document.getElementById('threads')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('channel')!.classList.add('d-n');
@@ -172,15 +182,15 @@ export class MainpageComponent implements OnInit {
 
 
   openChannel(i: any) {
-    this.forChildChannelName = i['channelName'];
-    console.log('Chat CHANNEL NAME BASE is:', i['channelName'])
-    this.forChildChannelDescription = i['description'];
-    this.allThreadsArr = [];
-    for (let j = 0; j < this.allThreads.length; j++) {
+    this.forChildChannelName = i['channelName']; // This variable is needed to give it to the child component, determined from html
+    // console.log('Chat CHANNEL NAME BASE is:', i['channelName'])
+    this.forChildChannelDescription = i['description']; // This variable is needed to give it to the child component, determined from html
+    this.allThreadsArr = []; // The array is empty with every click, to take over only the needed data from the choosen channel from the array allThreads
+    for (let j = 0; j < this.allThreads.length; j++) { // loop for array allThreads
       const element = this.allThreads[j];
-      console.log('openChannel - AllThreads:', this.allThreads[j])
-      if (this.forChildChannelName == this.allThreads[j]['channelName']) {
-        this.allThreadsArr.push(this.allThreads[j])
+      // console.log('openChannel() - AllThreads:', this.allThreads[j])
+      if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
+        this.allThreadsArr.push(this.allThreads[j]) // ...then push alle j data to the empty array allThreadsArr; data is send to child component
       }
       console.log('Contents of allThreadsArr:', this.allThreadsArr);
     }

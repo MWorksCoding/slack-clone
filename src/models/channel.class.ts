@@ -3,6 +3,7 @@ export class Channel {
     channelName: string;
     description: string;
     thread: string;
+  id: string | undefined;
 
     constructor(obj?: any){
         this.channelName = obj ? obj.channelName : '';
