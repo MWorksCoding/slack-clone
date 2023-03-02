@@ -15,6 +15,8 @@ import { RouterModule } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Threads } from 'src/models/threads.class';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { FirebaseError } from 'firebase/app';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-mainpage',
@@ -23,7 +25,7 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 })
 export class MainpageComponent implements OnInit {
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
-    private fireauth: AngularFireAuth, public storage: AngularFireStorage) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+    public fireauth: AngularFireAuth, public storage: AngularFireStorage) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
 
@@ -49,15 +51,12 @@ export class MainpageComponent implements OnInit {
   allThreadsArr: any[] = [];
 
 
-
   async ngOnInit(): Promise<void> {
     this.imagePath = this.storage.ref(`users/${this.auth.currentUserId}/profile-picture`);
     let profilPicture = document.getElementById('profile-picture') as HTMLImageElement;
     if (profilPicture) {
       profilPicture.src = this.imagePath.getDownloadURL();
-      console.log('image', this.imagePath.getDownloadURL());
     }
-
     await this.loadChannels();
     await this.loadUsers();
     await this.loadThreads();

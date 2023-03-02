@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { AngularFireStorage, GetDownloadURLPipe } from '@angular/fire/compat/storage';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { finalize, map, Observable } from 'rxjs';
+import { finalize, from, map, Observable, switchMap } from 'rxjs';
 import { AuthService } from '../shared/auth.service';
 import { SpinnerService } from '../shared/spinner.service';
 
@@ -18,7 +18,7 @@ export class DialogUserInfoComponent{
   imageRef: string = '';
   selectedImage: any;
   uploadPercent: Observable<number> | undefined;
-  downloadURL: Observable<string> | undefined;
+  downloadURL$: Observable<string> | undefined;
   emailForm = new FormControl(this.auth.currentEmail, [Validators.required, Validators.email]);
   usernameForm = new FormControl(this.auth.currentUserName, [Validators.required, Validators.minLength(2)]);
 
@@ -43,7 +43,8 @@ export class DialogUserInfoComponent{
 
 
   updateUserInfos() {
-    this.auth.updateEmailAndName(this.emailForm.value, this.usernameForm.value);
+    this.auth.updateEmailAndName(this.emailForm.value, this.usernameForm.value, this.downloadURL$);
+    // this.auth.updateUserProfileImage(this.downloadURL$);
   }
 
 
@@ -67,11 +68,11 @@ export class DialogUserInfoComponent{
       }
     }
 
-
-
     const filePath = `users/${userId}/profile-picture`;
     const fileRef = this.storage.ref(filePath);
     const task = this.storage.upload(filePath, this.selectedImage);
+
+
 
     this.uploadPercent = task.percentageChanges().pipe(map(percent => percent ?? 0));
 
@@ -80,12 +81,13 @@ export class DialogUserInfoComponent{
       .snapshotChanges()
       .pipe(
         finalize(async () => {
-          this.downloadURL = fileRef.getDownloadURL();
-          console.log('File uploaded and exists at', this.downloadURL);
+          this.downloadURL$ = fileRef.getDownloadURL();
+          console.log('File uploaded and exists at', this.downloadURL$);
         })
       )
       .subscribe();
   }
+
 
 
 }

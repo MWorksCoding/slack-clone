@@ -18,8 +18,12 @@
         </div>
 
         <form class="img-container">
-            <div *ngIf="downloadURL | async as imageUrl">
-                <img class="profile-picture" [src]="imageUrl" alt="profil-icon">
+            <div *ngIf="downloadURL$ | async as imageUrl; defaultImage">
+                <img class="profile-picture" [src]="imageUrl" alt="profil-icon" alt="profil-icon">
+            </div>
+
+            <div *ngIf="!downloadURL$" #defaultImage>
+                <img class="profile-picture" [src]="'assets/img/name-icon.png'" alt="profil-icon">
             </div>
 
             <label for="file-input" class="custom-file-upload">
