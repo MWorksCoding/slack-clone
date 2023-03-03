@@ -21,6 +21,7 @@ export class AuthService implements OnDestroy {
   actualUser$: Observable<any> | undefined;
   user: any;
   userSubscription: Subscription | undefined;
+  currentUserSubscription: Subscription | undefined;
   profilePictureSubscription: Subscription | undefined;
   currentUserId: string = '';
   currentUserName: any;
@@ -36,11 +37,7 @@ export class AuthService implements OnDestroy {
     public dialog: MatDialog, private spinnerService: SpinnerService, private storage: AngularFireStorage, public uploadService: UploadServiceService) {
 
 
-    //subscribes to the user observable and sets variable currentEmail to the user email if logged in
-    this.userSubscription = this.fireauth.user.subscribe((user) => {
-      if (user)
-        this.currentEmail = user.email;
-    });
+
   }
 
 
@@ -51,16 +48,16 @@ export class AuthService implements OnDestroy {
         if (actualUser && !actualUser?.isAnonymous) { //will only carried out if actualUser is registered
           //and not logged in as Guest
           this.currentUserId = actualUser.uid;
-          if(this.storage.ref(`users/${this.currentUserId}/profile-picture`)) {
-            const imagePath = this.storage.ref(`users/${this.currentUserId}/profile-picture`);
-            this.profilPicture = imagePath.getDownloadURL();
-            this.profilePictureSubscription = this.profilPicture.subscribe((url: any) => {
-              this.imageUrl = url;
-            })
-          }
+          const imagePath = this.storage.ref(`users/${this.currentUserId}/profile-picture`);
+          this.profilPicture = imagePath.getDownloadURL();
+          this.profilePictureSubscription = this.profilPicture.subscribe((url: any) => {
+            this.imageUrl = url;
+            console.log('Guest img', this.imageUrl);
+          })
 
-        
-          this.firestore.doc(`users/${actualUser.uid}`).valueChanges()
+
+
+          this.currentUserSubscription = this.firestore.doc(`users/${actualUser.uid}`).valueChanges()
             .subscribe((data: any) => {
               this.currentUserName = data['userName'];
             });
@@ -70,8 +67,6 @@ export class AuthService implements OnDestroy {
       })
     );
   }
-  
-
 
 
   async updateEmailAndName(newEmail: string, newUserName: string) {
@@ -119,6 +114,11 @@ export class AuthService implements OnDestroy {
       .then(res => {
         localStorage.setItem('user', JSON.stringify(res.user));
         this.checkEmailVerified(res);
+        //subscribes to the user observable and sets variable currentEmail to the user email if logged in
+        this.userSubscription = this.fireauth.user.subscribe((user) => {
+          if (user)
+            this.currentEmail = user.email;
+        });
         this.spinnerService.settLoadingStatus(false);
       }, err => {
         this.spinnerService.settLoadingStatus(false);
@@ -172,6 +172,7 @@ export class AuthService implements OnDestroy {
     this.fireauth.createUserWithEmailAndPassword(email, password)
       .then(res => {
         this.successfulSignUp(data, res, email);
+        this.uploadService.uploadImage(res.user?.uid);
       }, err => {
         this.spinnerService.settLoadingStatus(false);
         this.openErrorDialog(err);
@@ -261,10 +262,11 @@ export class AuthService implements OnDestroy {
     if (this.userSubscription) {
       this.userSubscription?.unsubscribe();
     }
-    if(this.profilePictureSubscription) {
+    if (this.profilePictureSubscription) {
       this.profilePictureSubscription?.unsubscribe();
-      console.log('UNSUBSCRIBED');
     }
+    if (this.currentUserSubscription)
+      this.currentUserSubscription.unsubscribe();
   }
 
 
@@ -272,7 +274,7 @@ export class AuthService implements OnDestroy {
     if (this.userSubscription) {
       this.userSubscription?.unsubscribe();
     }
-    if(this.profilePictureSubscription) {
+    if (this.profilePictureSubscription) {
       this.profilePictureSubscription.unsubscribe();
       console.log('unsubscribed');
     }

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../shared/auth.service';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sign-in-overview',

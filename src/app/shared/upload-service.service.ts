@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ export class UploadServiceService {
 
   constructor(public storage: AngularFireStorage) { }
 
-  selectedImage: any;
+  selectedImage: any = 'assets/img/name-icon.png';
   public url$: BehaviorSubject<string> | undefined;
 
   onFileSelected(event: any, userId: string): void {
@@ -18,11 +18,7 @@ export class UploadServiceService {
   }
 
 
-  async uploadImage(userId: string) {
-    if (!this.selectedImage) {
-      return;
-    }
-
+  async uploadImage(userId: string | undefined) {
     const previousImageRef = this.storage.ref(`users/${userId}/profile-picture`);
     if (previousImageRef) {
       try {

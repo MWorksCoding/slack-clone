@@ -14,7 +14,7 @@ import { UploadServiceService } from '../shared/upload-service.service';
   templateUrl: './dialog-user-info.component.html',
   styleUrls: ['./dialog-user-info.component.scss']
 })
-export class DialogUserInfoComponent{
+export class DialogUserInfoComponent {
 
 
   uploadPercent: Observable<number> | undefined;
@@ -46,26 +46,7 @@ export class DialogUserInfoComponent{
     this.auth.updateEmailAndName(this.emailForm.value, this.usernameForm.value);
   }
 
-
-
-
-
-
-
-
-    // this.uploadPercent = task.percentageChanges().pipe(map(percent => percent ?? 0));
-
-
-    // task
-    //   .snapshotChanges()
-    //   .pipe(
-    //     finalize(async () => {
-    //       this.downloadURL$ = fileRef.getDownloadURL();
-    //       console.log('File uploaded and exists at', this.downloadURL$);
-    //     })
-    //   )
-    //   .subscribe();
-  }
+}
 
 
 

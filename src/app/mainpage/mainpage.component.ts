@@ -128,7 +128,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
                   ...threadData,
                   channelId: channel.id // DIE JEWEILIGE CHANNEL ID MUSS  MIT INS ARRAY
                 });
-                console.log('ALLTHREADS ARE', this.allThreads)
+                // console.log('ALLTHREADS ARE', this.allThreads)
               });
               this.openThreads(); // place openThreads here to show it automatically after log in
             });
@@ -164,7 +164,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
       if (currentUser == this.allThreads[j]['userName']) { // current User ('guest') is part of the array allThreads, then
         this.allThreadsArr.push(this.allThreads[j]) // ...then push alle j data to the empty array allThreadsArr; data is send to child component
       }
-      console.log('Contents of allThreadsArr for Threads:', this.allThreadsArr);
+      // console.log('Contents of allThreadsArr for Threads:', this.allThreadsArr);
     }
     window.document.getElementById('threads')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
@@ -185,7 +185,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
       if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
         this.allThreadsArr.push(this.allThreads[j]) // ...then push alle j data to the empty array allThreadsArr; data is send to child component
       }
-      console.log('Contents of allThreadsArr:', this.allThreadsArr);
+      // console.log('Contents of allThreadsArr:', this.allThreadsArr);
     }
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
