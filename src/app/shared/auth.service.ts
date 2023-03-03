@@ -54,6 +54,11 @@ export class AuthService implements OnDestroy {
             this.imageUrl = url;
             console.log('Guest img', this.imageUrl);
           })
+          //subscribes to the user observable and sets variable currentEmail to the user email if logged in
+          this.userSubscription = this.fireauth.user.subscribe((user) => {
+            if (user)
+              this.currentEmail = user.email;
+          });
 
 
 
@@ -114,11 +119,6 @@ export class AuthService implements OnDestroy {
       .then(res => {
         localStorage.setItem('user', JSON.stringify(res.user));
         this.checkEmailVerified(res);
-        //subscribes to the user observable and sets variable currentEmail to the user email if logged in
-        this.userSubscription = this.fireauth.user.subscribe((user) => {
-          if (user)
-            this.currentEmail = user.email;
-        });
         this.spinnerService.settLoadingStatus(false);
       }, err => {
         this.spinnerService.settLoadingStatus(false);
