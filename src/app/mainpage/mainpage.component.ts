@@ -10,8 +10,6 @@ import { ActivatedRoute } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { UploadServiceService } from '../shared/upload-service.service';
-import { Subscribe } from '@firebase/util';
-import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -24,7 +22,6 @@ export class MainpageComponent implements OnInit, OnDestroy {
     public fireauth: AngularFireAuth, public storage: AngularFireStorage, public uploadService: UploadServiceService) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
-  imagePath: any = '';
 
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
@@ -44,8 +41,6 @@ export class MainpageComponent implements OnInit, OnDestroy {
   forChildChatUserName: string = '';
   allThreads: any[] = [];
   allThreadsArr: any[] = [];
-
-  profilPicture: any;
 
 
   ngOnInit(): void {
@@ -215,14 +210,26 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
+  /**
+   * opens dialog if user is not logged in as Guest, else info appears for 2 seconds
+   */
   async openDialogUserInfo() {
     const user = await this.fireauth.currentUser;
-    if (!user?.isAnonymous) { //only open dialog if user is registered
+    if (!user?.isAnonymous) {  //only open dialog if user is registered
       const dialogRef = this.dialog.open(DialogUserInfoComponent);
+    }
+    else {
+      document.getElementById('only-for-registered-user')?.classList.remove('d-n');
+      setTimeout(() => {
+        document.getElementById('only-for-registered-user')?.classList.add('d-n');
+      }, 2000);
     }
   }
 
 
+  /**
+   * sign out function in auth service will be called and unsubscribe from observables
+   */
   signOut() {
     this.auth.signOut();
     this.auth.unsubscribe();

@@ -22,13 +22,6 @@
                 <img class="profile-picture" [src]="imageUrl" alt="profil-icon">
             </div>
 
-            <ng-template #authPicture>
-                <div *ngIf="auth.profilPicture | async as imageUrl">
-                    <img class="profile-picture" [src]="imageUrl" alt="proil-icon">
-                </div>
-            </ng-template>
-
-
             <label for="file-input" class="custom-file-upload">
                 <img class="upload-img" src="assets/img/upload-icon.svg">
                 <span class="upload-text">Upload Image</span>

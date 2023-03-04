@@ -40,6 +40,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { FirebaseAppModule } from '@angular/fire/app';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import {MatCardModule} from '@angular/material/card';
 
 
 @NgModule({
@@ -86,6 +87,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     FirebaseAppModule,
     AngularFireDatabaseModule,
     AngularFireModule,
+    MatCardModule
   ],
   providers: [AngularFirestoreModule],
   bootstrap: [AppComponent]

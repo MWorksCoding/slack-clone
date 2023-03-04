@@ -1,3 +1,9 @@
+<mat-card id="only-for-registered-user" class="only-for-registered-user-info-container d-n">
+    <div class="img-container">
+        <img src="assets/img/info-icon.svg" alt="info-icon">
+    </div>
+    <mat-card-content>Only for registered users</mat-card-content>
+</mat-card>
 <div class="mainpage">
     <mat-toolbar color="primary">
         <div class="toolbar-icons" (click)="drawer.toggle()">
@@ -17,13 +23,6 @@
             <div *ngIf="(uploadService.url$ | async) as imageUrl">
                 <img class="profil-img" [src]="imageUrl" [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon">
             </div>
-
-            <!-- <ng-template #authPicture>
-                <div *ngIf="auth.imageUrl">
-                    <img class="profil-img" [src]="imageUrl" [matMenuTriggerFor]="menu" #menuTrigger alt="proil-icon2">
-                </div>
-            </ng-template> -->
-
 
             <mat-menu #menu="matMenu">
                 <div mat-menu-item class="dialog-icon-and-button" (click)="openDialogUserInfo()">
@@ -112,8 +111,7 @@
                 <app-channel [inputFromParent]="forChildChannelName"
                     [inputFromParentDescriptiont]="forChildChannelDescription"
                     [inputFromParentChatUserName]="forChildChatUserName"
-                    [inputFromParentChannelArray]="allThreadsArr"
-                    ></app-channel>
+                    [inputFromParentChannelArray]="allThreadsArr"></app-channel>
             </div>
             <div>
                 <app-chat [inputFromParentChat]="forChildUserName">
@@ -122,8 +120,7 @@
                 </app-chat>
             </div>
             <div>
-                <app-threads [inputFromParentThreadArray]="allThreadsArr"
-                ></app-threads>
+                <app-threads [inputFromParentThreadArray]="allThreadsArr"></app-threads>
             </div>
         </div>
 
