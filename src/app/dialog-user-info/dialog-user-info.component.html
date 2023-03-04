@@ -18,7 +18,7 @@
         </div>
 
         <form class="img-container">
-            <div *ngIf="uploadService.url$ as imageUrl; else authPicture">
+            <div *ngIf="(uploadService.url$ | async) as imageUrl">
                 <img class="profile-picture" [src]="imageUrl" alt="profil-icon">
             </div>
 

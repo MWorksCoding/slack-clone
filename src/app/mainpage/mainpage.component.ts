@@ -46,15 +46,14 @@ export class MainpageComponent implements OnInit, OnDestroy {
   allThreadsArr: any[] = [];
 
   profilPicture: any;
-  imageUrl: any;
 
 
-  async ngOnInit(): Promise<void> {
-    await this.auth.showActualUser();
-    await this.loadChannels();
-    await this.loadUsers();
-    await this.loadThreads();
-    await this.openThreads();
+  ngOnInit(): void {
+    this.auth.showActualUser();
+    this.loadChannels();
+    this.loadUsers();
+    this.loadThreads();
+    this.openThreads();
 
     //  this.route.params.subscribe((params) => {
     //  console.log(params);
