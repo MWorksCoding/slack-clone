@@ -14,15 +14,15 @@
             <span class="user-name">{{ (auth.actualUser$ | async)?.userName ? (auth.actualUser$ | async)?.userName :
                 'Guest' }}</span>
 
-            <div *ngIf="uploadService.url$  as imageUrl; else authPicture">
+            <div *ngIf="(uploadService.url$ | async) as imageUrl">
                 <img class="profil-img" [src]="imageUrl" [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon1">
             </div>
 
-            <ng-template #authPicture>
-                <div *ngIf="auth.profilPicture | async as imageUrl">
+            <!-- <ng-template #authPicture>
+                <div *ngIf="auth.imageUrl">
                     <img class="profil-img" [src]="imageUrl" [matMenuTriggerFor]="menu" #menuTrigger alt="proil-icon2">
                 </div>
-            </ng-template>
+            </ng-template> -->
 
 
             <mat-menu #menu="matMenu">
