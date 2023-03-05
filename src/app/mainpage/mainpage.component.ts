@@ -3,13 +3,14 @@ import { AuthService } from '../shared/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 import { DialogCreateChatComponent } from '../dialog-create-chat/dialog-create-chat.component';
-import { AngularFirestore, fromCollectionRef } from '@angular/fire/compat/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { DialogUserInfoComponent } from '../dialog-user-info/dialog-user-info.component';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { UploadServiceService } from '../shared/upload-service.service';
+import { ChannelComponent } from '../channel/channel.component';
 
 
 @Component({
@@ -23,6 +24,8 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
+  @ViewChild(ChannelComponent) channelComponent: ChannelComponent | undefined; 
+  // get a reference to the channel component
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
 
@@ -169,6 +172,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
 
 
   openChannel(i: any) {
+    this.channelComponent?.clearTextarea();
     this.forChildChannelName = i['channelName']; // This variable is needed to give it to the child component, determined from html
     // console.log('Chat CHANNEL NAME BASE is:', i['channelName'])
     this.forChildChannelDescription = i['description']; // This variable is needed to give it to the child component, determined from html

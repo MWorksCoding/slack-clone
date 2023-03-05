@@ -39,11 +39,10 @@
                     </p>
                 </div>
                 <div class="post-inputfield-box">
-                        <textarea matInput id="post-inputfield" rows="3" cols="80" autocomplete="off" placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
+                        <textarea matInput id="post-inputfield" #postTextarea rows="3" cols="80" autocomplete="off" placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
                         <mat-icon matSuffix (click)="sendMessageToChannel()">send</mat-icon>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

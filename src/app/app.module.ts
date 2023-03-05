@@ -60,7 +60,7 @@ import {MatCardModule} from '@angular/material/card';
     DialogUserInfoComponent,
     ChannelComponent,
     ChatComponent,
-    OverlaySpinnerComponent,
+    OverlaySpinnerComponent
   ],
   imports: [
     BrowserModule,

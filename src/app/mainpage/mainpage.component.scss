@@ -97,6 +97,10 @@ mat-toolbar {
 .user-name {
     font-size: 18px;
     margin-right: 16px;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .profil-img {
