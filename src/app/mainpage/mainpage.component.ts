@@ -11,6 +11,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { UploadServiceService } from '../shared/upload-service.service';
 import { ChannelComponent } from '../channel/channel.component';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 
 @Component({
@@ -24,12 +25,16 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
+  allThreads$ = new BehaviorSubject<any>(null);
+
+
   @ViewChild(ChannelComponent) channelComponent: ChannelComponent | undefined; 
   // get a reference to the channel component
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
 
 
+  forChildChannelId: string = '';
   forChildChannelName: string = '';
   forChildChannelDescription: string = '';
   forChildUserName: string = '';
@@ -95,7 +100,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
       .collection('channels')
       .valueChanges({ idField: 'channelId' })
       .subscribe((channelId: any) => {
-        // console.log('Mainpage: Channel ID is:', channelId);
+        console.log('Mainpage: Channel ID is:', channelId);
         this.channels = channelId;
       });
     ;
@@ -173,6 +178,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
 
   openChannel(i: any) {
     this.channelComponent?.clearTextarea();
+    this.forChildChannelId = i['channelId'];
     this.forChildChannelName = i['channelName']; // This variable is needed to give it to the child component, determined from html
     // console.log('Chat CHANNEL NAME BASE is:', i['channelName'])
     this.forChildChannelDescription = i['description']; // This variable is needed to give it to the child component, determined from html
@@ -181,9 +187,12 @@ export class MainpageComponent implements OnInit, OnDestroy {
       const element = this.allThreads[j];
       // console.log('openChannel() - AllThreads:', this.allThreads[j])
       if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
-        this.allThreadsArr.push(this.allThreads[j]) // ...then push alle j data to the empty array allThreadsArr; data is send to child component
+        this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
+        this.allThreads$.next(this.allThreadsArr);
+        console.log('Contents of allThreadsArr:', this.allThreads$);
+      } else {
+        this.allThreads$.next(this.allThreadsArr);
       }
-      // console.log('Contents of allThreadsArr:', this.allThreadsArr);
     }
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');

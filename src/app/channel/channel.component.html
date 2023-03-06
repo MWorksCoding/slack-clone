@@ -8,10 +8,10 @@
                 {{ inputFromParentDescriptiont }}
             </h3>
 
-            <div class="post-container" *ngFor="let channel of inputFromParentChannelArray; let i = index">
+
+            <div class="post-container" *ngFor="let channel of allThreads; let i = index">
                 <div>
                     <div class="posts">
-
                         <div>
                             <div class="general-info-line">
                                 <p><b>Am {{channel.userMessageDate}} um {{channel.userMessageTime}} Uhr</b></p>
@@ -24,9 +24,9 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
+
             <div class="post-settings-box">
                 <div class="post-settings">
                     <p>
@@ -39,8 +39,9 @@
                     </p>
                 </div>
                 <div class="post-inputfield-box">
-                        <textarea matInput id="post-inputfield" #postTextarea rows="3" cols="80" autocomplete="off" placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
-                        <mat-icon matSuffix (click)="sendMessageToChannel()">send</mat-icon>
+                    <textarea matInput id="post-inputfield" #postTextarea rows="3" cols="80" autocomplete="off"
+                        placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
+                    <mat-icon matSuffix (click)="sendMessageToChannel()">send</mat-icon>
                 </div>
             </div>
         </div>

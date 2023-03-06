@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../shared/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { Input } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { async, BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 
 @Component({
@@ -22,10 +22,7 @@ export class ChannelComponent {
 
   @ViewChild('postTextarea') postTextarea: ElementRef | undefined;
 
-  @Input() inputFromParent: string = "";
-  @Input() inputFromParentDescriptiont: string = "";
-  @Input() inputFromParentChatUserName: string = "";
-  @Input() inputFromParentChannelArray: {
+  @Input() allThreads: {
     channelName: string;
     description: string;
     userMessage: string;
@@ -34,49 +31,68 @@ export class ChannelComponent {
     userName: string;
     channelId: string;
   }[] = [];
+  @Input() inputFromParentChannelId: string = '';
+  @Input() allThreads$: Observable<any> | undefined;
+  @Input() inputFromParent: string = "";
+  @Input() inputFromParentDescriptiont: string = "";
+  @Input() inputFromParentChatUserName: string = "";
+  @Input() inputFromParentChannelArray: any;
+  // @Input() inputFromParentChannelArray: {
+  //   channelName: string;
+  //   description: string;
+  //   userMessage: string;
+  //   userMessageDate: string;
+  //   userMessageTime: string;
+  //   userName: string;
+  //   channelId: string;
+  // }[] = [];
   textInput: HTMLTextAreaElement | undefined;
 
 
-  public inputFromParentChannelArray$ = new BehaviorSubject<any>(null);
 
 
   ngOnInit(): void {
-        this.inputFromParentChannelArray.map(channel => {
-          return {
-            channelName: channel.channelName,
-            description: channel.description,
-            userMessage: channel.userMessage,
-            userMessageDate: channel.userMessageDate,
-            userMessageTime: channel.userMessageTime,
-            userName: channel.userName,
-            channelId: channel.channelId
-          };
-        });
-    }
+    console.log('ONIINIT');
+    // this.allThreads$?.subscribe((threads) => {
+    //   console.log('new Data', threads);
+    //   this.allThreads = threads;
+    // })
+    this.allThreads.map((channel) => {
+      return {
+        channelName: channel.channelName,
+        description: channel.description,
+        userMessage: channel.userMessage,
+        userMessageDate: channel.userMessageDate,
+        userMessageTime: channel.userMessageTime,
+        userName: channel.userName,
+        channelId: channel.channelId
+      };
+    });
+  }
 
   sendMessageToChannel() {
-        const element = document.getElementById('post-inputfield') as HTMLTextAreaElement;
-        // console.log(document.getElementById('post-inputfield'));
+    const element = document.getElementById('post-inputfield') as HTMLTextAreaElement;
+    // console.log(document.getElementById('post-inputfield'));
 
-        const data = {
-          userMessage: element.value,
-          userName: this.auth.currentUserName ?? 'Guest', // must be changed to the current user!!
-          userMessageDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }),
-          userMessageTime: new Date().getTime().toString(),
-        };
+    const data = {
+      userMessage: element.value,
+      userName: this.auth.currentUserName ?? 'Guest', // must be changed to the current user!!
+      userMessageDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+      userMessageTime: new Date().getTime().toString(),
+    };
 
-        const dataWithChannelId = {  // diese Variable is separiert, damit sie nicht mit den anderen Daten von const data mitgesendet wird;
-          channelId: this.inputFromParentChannelArray[0].channelId
-        }
+    const dataWithChannelId = {  // diese Variable is separiert, damit sie nicht mit den anderen Daten von const data mitgesendet wird;
+      channelId: this.inputFromParentChannelId
+    }
 
     let timestamp = data.userMessageTime;
-        let date = new Date(Number(timestamp));
-        let formattedTimestamp = date.getTime().toString();
-        let formattedTime = date.toLocaleTimeString('en-GB');
-        data.userMessageTime = formattedTime;
+    let date = new Date(Number(timestamp));
+    let formattedTimestamp = date.getTime().toString();
+    let formattedTime = date.toLocaleTimeString('en-GB');
+    data.userMessageTime = formattedTime;
 
 
-        if(element.value.length == 0) { // the inputfield/textarea should not be empty
+    if (element.value.length == 0) { // the inputfield/textarea should not be empty
       alert('Please enter a message.');
     } else {
       this.textInput = element;
@@ -87,7 +103,6 @@ export class ChannelComponent {
         .add(data);
       element.value = '';
       alert('SAVE TO THE FIRESTORE');
-      this.inputFromParentChannelArray$.next(data);
       console.log('data', data);
     }
   }

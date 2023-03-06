@@ -108,10 +108,10 @@
                 <app-imprint></app-imprint>
             </div>
             <div>
-                <app-channel [inputFromParent]="forChildChannelName"
+                <app-channel [inputFromParentChannelId]="forChildChannelId" [inputFromParent]="forChildChannelName"
                     [inputFromParentDescriptiont]="forChildChannelDescription"
                     [inputFromParentChatUserName]="forChildChatUserName"
-                    [inputFromParentChannelArray]="allThreadsArr"></app-channel>
+                    [allThreads]="allThreads$ | async"></app-channel>
             </div>
             <div>
                 <app-chat [inputFromParentChat]="forChildUserName">
