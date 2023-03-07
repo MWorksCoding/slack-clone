@@ -8,8 +8,7 @@
                 {{ inputFromParentDescriptiont }}
             </h3>
 
-
-            <div class="post-container" *ngFor="let channel of allThreads; let i = index">
+            <div class="post-container" *ngFor="let channel of allThreads$ | async; let i = index">
                 <div>
                     <div class="posts">
                         <div>

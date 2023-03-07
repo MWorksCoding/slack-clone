@@ -176,6 +176,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
+
   openChannel(i: any) {
     this.channelComponent?.clearTextarea();
     this.forChildChannelId = i['channelId'];
@@ -188,12 +189,16 @@ export class MainpageComponent implements OnInit, OnDestroy {
       // console.log('openChannel() - AllThreads:', this.allThreads[j])
       if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
         this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
-        this.allThreads$.next(this.allThreadsArr);
-        console.log('Contents of allThreadsArr:', this.allThreads$);
-      } else {
-        this.allThreads$.next(this.allThreadsArr);
-      }
+      } 
     }
+    this.firestore
+    .collection('channels')
+    .doc(this.forChildChannelId)
+    .collection('threads')
+    .valueChanges().subscribe(value => {
+      console.log('value from mainpage', value);
+      this.allThreads$.next(value);
+    })
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');

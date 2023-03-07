@@ -111,7 +111,7 @@
                 <app-channel [inputFromParentChannelId]="forChildChannelId" [inputFromParent]="forChildChannelName"
                     [inputFromParentDescriptiont]="forChildChannelDescription"
                     [inputFromParentChatUserName]="forChildChatUserName"
-                    [allThreads]="allThreads$ | async"></app-channel>
+                    [allThreads$]="allThreads$.asObservable()"></app-channel>
             </div>
             <div>
                 <app-chat [inputFromParentChat]="forChildUserName">
