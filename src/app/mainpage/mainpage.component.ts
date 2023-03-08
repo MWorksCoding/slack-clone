@@ -11,7 +11,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { UploadServiceService } from '../shared/upload-service.service';
 import { ChannelComponent } from '../channel/channel.component';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscriber, Subscription } from 'rxjs';
 
 
 @Component({
@@ -25,6 +25,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
+  channelSubscription: Subscription | undefined;
   allThreads$ = new BehaviorSubject<any>(null);
 
 
@@ -107,7 +108,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
-  async loadThreads() {
+  async loadThreads() { //Frage, was wird hier gemacht ?
 
     await this.firestore
       .collection('channels')
@@ -178,6 +179,9 @@ export class MainpageComponent implements OnInit, OnDestroy {
 
 
   openChannel(i: any) {
+    if(this.channelSubscription) {
+      this.channelSubscription.unsubscribe();
+    }
     this.channelComponent?.clearTextarea();
     this.forChildChannelId = i['channelId'];
     this.forChildChannelName = i['channelName']; // This variable is needed to give it to the child component, determined from html
@@ -191,12 +195,11 @@ export class MainpageComponent implements OnInit, OnDestroy {
         this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
       } 
     }
-    this.firestore
+    this.channelSubscription = this.firestore
     .collection('channels')
     .doc(this.forChildChannelId)
     .collection('threads')
     .valueChanges().subscribe(value => {
-      console.log('value from mainpage', value);
       this.allThreads$.next(value);
     })
     window.document.getElementById('channel')!.classList.remove('d-n');
