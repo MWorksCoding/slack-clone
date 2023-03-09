@@ -12,16 +12,23 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { UploadServiceService } from '../shared/upload-service.service';
 import { ChannelComponent } from '../channel/channel.component';
 import { BehaviorSubject, Observable, of, Subscriber, Subscription } from 'rxjs';
+import { ThreadsComponent } from '../threads/threads.component';
 
 
 @Component({
   selector: 'app-mainpage',
   templateUrl: './mainpage.component.html',
-  styleUrls: ['./mainpage.component.scss']
+  styleUrls: ['./mainpage.component.scss'],
+  template: `
+        <div class="mainpage">
+            <child></child>
+        </div>
+    `
 })
 export class MainpageComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
     public fireauth: AngularFireAuth, public storage: AngularFireStorage, public uploadService: UploadServiceService) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+    this.forChildChannelName = '';
   }
 
 
@@ -29,11 +36,12 @@ export class MainpageComponent implements OnInit, OnDestroy {
   allThreads$ = new BehaviorSubject<any>(null);
 
 
-  @ViewChild(ChannelComponent) channelComponent: ChannelComponent | undefined; 
+  @ViewChild(ChannelComponent) channelComponent: ChannelComponent | undefined;
   // get a reference to the channel component
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
-
+  @ViewChild(ThreadsComponent)
+  threadsComponent!: ThreadsComponent;
 
   forChildChannelId: string = '';
   forChildChannelName: string = '';
@@ -51,19 +59,21 @@ export class MainpageComponent implements OnInit, OnDestroy {
   allThreads: any[] = [];
   allThreadsArr: any[] = [];
 
-  chatId ='';
+  chatId = '';
   allChats: any[] = [];
   allChatsArr: any[] = [];
 
+// test user: hotid53611@fenwazi.com ; 12345678
 
-
-  ngOnInit(): void {
-    this.auth.showActualUser();
-    this.loadChannels();
-    this.loadUsers();
-    this.loadThreads();
-    this.openThreads();
-
+  async ngOnInit(): Promise<void> {
+    await this.auth.showActualUser();
+    setTimeout(() => {
+      console.log('username', this.auth.currentUserName);
+    }, 2000);
+    await this.loadChannels();
+    await this.loadUsers();
+    await this.loadThreads();
+    await this.openThreads();
     //  this.route.params.subscribe((params) => {
     //  console.log(params);
     //  });
@@ -155,7 +165,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
       });
   }
 
-// *******************************************************************************
+  // *******************************************************************************
   async loadUserChats() {
     await this.firestore
       .collection('users')
@@ -213,10 +223,35 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.changeBGWhite();
   }
 
+  //Change name into openChannelsFromThreads() ! // it is empty 
+  async ngAfterViewInit(): Promise<void> { // subscribe to the postChannelNameEvent, open the choosen channel from threads
+
+    this.threadsComponent.postChannelNameEvent.subscribe((channelName) => {
+      // set the value of this.forChildChannelName to the value of the channelName emitted from the child component
+      this.forChildChannelName = channelName;
+      console.log('Channel Name in Main Component:', channelName);
+      // this.allThreads = [];
+      // this.loadThreads();
+      // console.log('main component array to compare:', this.allThreads)
+      this.allThreadsArr = []; // The array is empty with every click, to take over only the needed data from the choosen channel from the array allThreads
+      for (let j = 0; j < this.allThreads.length; j++) { // loop for array allThreads
+        const element = this.allThreads[j];
+        // console.log('openChannel() - AllThreads:', this.allThreads[j])
+        if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
+          this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
+        }
+      }
+      window.document.getElementById('channel')!.classList.remove('d-n');
+      window.document.getElementById('imprint')!.classList.add('d-n');
+      window.document.getElementById('threads')!.classList.add('d-n');
+      window.document.getElementById('chat')!.classList.add('d-n');
+      this.changeBGWhite();
+    });
+  }
 
 
   openChannel(i: any) {
-    if(this.channelSubscription) {
+    if (this.channelSubscription) {
       this.channelSubscription.unsubscribe();
     }
     this.channelComponent?.clearTextarea();
@@ -230,20 +265,21 @@ export class MainpageComponent implements OnInit, OnDestroy {
       // console.log('openChannel() - AllThreads:', this.allThreads[j])
       if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
         this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
-      } 
+      }
     }
     this.channelSubscription = this.firestore
-    .collection('channels')
-    .doc(this.forChildChannelId)
-    .collection('threads')
-    .valueChanges().subscribe(value => {
-      this.allThreads$.next(value);
-    })
+      .collection('channels')
+      .doc(this.forChildChannelId)
+      .collection('threads')
+      .valueChanges().subscribe(value => {
+        this.allThreads$.next(value);
+      })
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
     window.document.getElementById('chat')!.classList.add('d-n');
     this.changeBGWhite();
+
   }
 
 
@@ -306,6 +342,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
 
   }
+
 }
 
 function getDocs(subColRef: (val: any) => void) {

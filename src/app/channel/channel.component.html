@@ -7,25 +7,25 @@
             <h3>
                 {{ inputFromParentDescriptiont }}
             </h3>
-
-            <div class="post-container" *ngFor="let channel of allThreads$ | async; let i = index">
-                <div>
-                    <div class="posts">
-                        <div>
-                            <div class="general-info-line">
-                                <p><b>Am {{channel.userMessageDate}} um {{channel.userMessageTime}} Uhr</b></p>
-                            </div>
-                            <div class="user-info">
-                                <p> <mat-icon>person</mat-icon><b>{{channel.userName}}</b></p>
-                            </div>
-                            <div class="post">
-                                <p>{{channel.userMessage}}</p>
+            <div class="post-container-box">
+                <div class="post-container" *ngFor="let channel of allThreads$ | async; let i = index">
+                    <div>
+                        <div class="posts">
+                            <div>
+                                <div class="general-info-line">
+                                    <p><b>Am {{channel.userMessageDate}} um {{channel.userMessageTime}} Uhr</b></p>
+                                </div>
+                                <div class="user-info">
+                                    <p> <mat-icon>person</mat-icon><b>{{channel.userName}}</b></p>
+                                </div>
+                                <div class="post">
+                                    <p>{{channel.userMessage}}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="post-settings-box">
                 <div class="post-settings">
                     <p>
