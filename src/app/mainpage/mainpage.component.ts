@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import { AuthService } from '../shared/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
@@ -44,7 +38,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   // get a reference to the channel component
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
-
+  @ViewChild(ThreadsComponent) threadsComponent!: ThreadsComponent;
 
   forChildChannelId: string = '';
   forChildChannelName: string = '';
