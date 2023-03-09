@@ -187,10 +187,11 @@ mat-drawer {
 
 .imprint {
     position: sticky;
-    top:100%;
+    top: calc(100% - 113px);
     width: 284px;
     z-index: 1;
     background-color: #512752;
+    bottom: 100%;
 
     h4 {
         cursor: pointer;
