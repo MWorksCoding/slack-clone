@@ -16,7 +16,7 @@ export class ThreadsComponent {
 
   constructor(public dialog: MatDialog, private auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
-  
+
   @Input() inputFromParentThreadArray: {
     channelName: string;
     description: string;
@@ -43,5 +43,10 @@ export class ThreadsComponent {
     });
     console.log('modifiedInputFromParentChatArray:', modifiedInputFromParentThreadArray)
   }
+
+  openPost(i: any) {
+    console.log('i is:', i)
+  }
+
 
 }

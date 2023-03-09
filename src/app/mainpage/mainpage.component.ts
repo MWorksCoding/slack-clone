@@ -50,6 +50,11 @@ export class MainpageComponent implements OnInit {
   allThreads: any[] = [];
   allThreadsArr: any[] = [];
 
+  chatId ='';
+  allChats: any[] = [];
+  allChatsArr: any[] = [];
+
+
 
   async ngOnInit(): Promise<void> {
     this.imagePath = this.storage.ref(`users/${this.auth.currentUserId}/profile-picture`);
@@ -61,6 +66,8 @@ export class MainpageComponent implements OnInit {
     await this.loadUsers();
     await this.loadThreads();
     await this.openThreads();
+    await this.loadUserChats();
+
     await this.auth.showActualUser();
     //  this.route.params.subscribe((params) => {
     //  console.log(params);
@@ -112,7 +119,6 @@ export class MainpageComponent implements OnInit {
 
 
   async loadThreads() {
-
     await this.firestore
       .collection('channels')
       .get()
@@ -134,7 +140,7 @@ export class MainpageComponent implements OnInit {
                   ...threadData,
                   channelId: channel.id // DIE JEWEILIGE CHANNEL ID MUSS  MIT INS ARRAY
                 });
-                console.log('ALLTHREADS ARE', this.allThreads)
+                // console.log('ALLTHREADS ARE', this.allThreads)
               });
               this.openThreads(); // place openThreads here to show it automatically after log in
             });
@@ -153,6 +159,38 @@ export class MainpageComponent implements OnInit {
       });
   }
 
+// *******************************************************************************
+  async loadUserChats() {
+    await this.firestore
+      .collection('users')
+      .get()
+      .subscribe((users: any) => {
+        users.forEach((chatId: { data: () => any; id: string | undefined; }) => {
+          const channelData = chatId.data();
+          // Query the sub collections of the channel
+          this.firestore
+            .collection('users')
+            .doc(chatId.id)
+            .collection('chats')
+            .get()
+            .subscribe((chats: any) => {
+              chats.forEach((chat: { data: () => any; }) => {
+                const threadData = chat.data();
+                // Push the thread data into the array
+                this.allChats.push({
+                  ...channelData,
+                  ...threadData,
+                  chatId: chatId.id // DIE JEWEILIGE ID MUSS  MIT INS ARRAY
+                });
+                console.log('ALL CHATS ARE', this.allChats)
+              });
+              // this.openThreads(); // place openThreads here to show it automatically after log in
+            });
+        });
+      });
+  }
+
+
   openImprint() {
     window.document.getElementById('imprint')!.classList.remove('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
@@ -168,9 +206,8 @@ export class MainpageComponent implements OnInit {
     for (let j = 0; j < this.allThreads.length; j++) { // loop for array allThreads
       const element = this.allThreads[j];
       if (currentUser == this.allThreads[j]['userName']) { // current User ('guest') is part of the array allThreads, then
-        this.allThreadsArr.push(this.allThreads[j]) // ...then push alle j data to the empty array allThreadsArr; data is send to child component
+        this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
       }
-      console.log('Contents of allThreadsArr for Threads:', this.allThreadsArr);
     }
     window.document.getElementById('threads')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
@@ -204,6 +241,16 @@ export class MainpageComponent implements OnInit {
   openChat(i: any) {
     // console.log('User to child-component:', i['userName'])
     this.forChildUserName = i['userName'];
+    console.log('Chat User NAME BASE is:', i['userName']) // ok
+    this.allChatsArr = [];
+    for (let j = 0; j < this.allChats.length; j++) { // loop for array allThreads
+      const element = this.allChats[j];
+      console.log('openChat() - AllChats:', this.allChats[j])
+      if (this.forChildUserName == this.allChats[j]['userName']) { // if the clicked user name is equal to the username from the array allThreads ...
+        this.allChatsArr.push(this.allChats[j]) // ...then push alle j data to the empty array allThreadsArr; data is send to child component
+      }
+      console.log('Contents of allChatsArr:', this.allChatsArr);
+    }
     window.document.getElementById('chat')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('channel')!.classList.add('d-n');

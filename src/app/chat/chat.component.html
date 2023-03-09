@@ -1,49 +1,91 @@
-<div class="chat-container" id="chat">
+<div class="chat-container d-n" id="chat">
     <div>
+        <div>
+            <h2>
+                Chat mit {{ inputFromParentChat }}
+            </h2>
+            <div class="post-container-box">
+                <div class="post-container" >
+                    <div *ngFor="let chat of inputFromParentChatArray; let i = index">
+                        <div class="posts">
+                            <div>
+                                <div class="general-info-line">
+                                    <p><b>Am {{chat.userMessageDate}} um {{chat.userMessageTime}} Uhr</b></p>
+                                </div>
+                                <div class="user-info">
+                                    <p> <mat-icon>person</mat-icon><b>{{chat.userNameOfMessage}}</b></p>
+                                </div>
+                                <div class="post">
+                                    <p>{{chat.userMessage}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="post-settings-box">
+                <div class="post-settings">
+                    <p>
+                        <mat-icon matSuffix>format_bold</mat-icon>
+                        <mat-icon matSuffix>format_italic</mat-icon>
+                        <mat-icon matSuffix>format_underlined</mat-icon>
+                        <mat-icon matSuffix>sentiment_satisfied</mat-icon>
+                        <mat-icon matSuffix>add_link</mat-icon>
+                        <mat-icon matSuffix>attach_file_add</mat-icon>
+                    </p>
+                </div>
+                <div class="post-inputfield-box">
+                    <textarea matInput id="post-inputfield" rows="3" cols="80" autocomplete="off"
+                        placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
+                    <mat-icon matSuffix (click)="sendMessageToChannel()">send</mat-icon>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+    <!-- <div>
         <h2>
             Chat mit {{ inputFromParentChat }}
         </h2>
     </div>
-    <div class="messages-container" #scrollMe>
-        <div class="other-user">
-            <div class="student-container p-2 d-flex align-items-start">
-                <div class="d-flex align-items-start">
-                    <mat-icon>person</mat-icon>
-                    <div>
-                        <div class="fs-5 fw-bold">
-                        </div>
-                        <p class="fw-light ps-1 pt-1"><i>User 1</i></p>
-                    </div>
+
+    <div class="post-container" *ngFor="let chat of inputFromParentChatArray; let i = index">
+        <div>
+            <div class="posts">
+                <div class="general-info-line">
+                    <p><b>Am {{chat.userMessageDate}} um {{chat.userMessageTime}} Uhr</b></p>
+                </div>
+                <div class="user-info">
+                    <p> <mat-icon>person</mat-icon><b>{{chat.userNameOfMessage}}</b></p>
+                </div>
+                <div class="post">
+                    <p>{{chat.userMessage}}</p>
                 </div>
             </div>
         </div>
-        <div 
-            class="conversation-container pt-3 text-secondary d-flex justify-content-center align-items-center flex-wrap">
-            <p class="text-center">This conversation is just between the two of you. Here you can send
-                messages and share files with <b></b></p>
-
-        </div>
-        <div class="d-flex flex-column-reverse" style="background-color: #eeeeee;">
-        <div class="load-message-container">
-            <div class="one-message my-2 p-2 d-flex align-items-start pl-16 pb-16 pt-16">
-                <div class="chat-user">
-                    <mat-icon>person</mat-icon> 
-                    <span>User 1</span>
-                </div>
-                <div>
-                    <div class="message-header">
-                        <p class="me-1"><b></b></p>
-                        <p> XX.XX Uhr</p>
-                    </div>
-                    <div class="message-text">
-                        <mat-icon>drafts</mat-icon>
-                        Test message
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-        </div>
-
     </div>
+    <div class="post-settings-box">
+        <div class="post-settings">
+            <p>
+                <mat-icon matSuffix>format_bold</mat-icon>
+                <mat-icon matSuffix>format_italic</mat-icon>
+                <mat-icon matSuffix>format_underlined</mat-icon>
+                <mat-icon matSuffix>sentiment_satisfied</mat-icon>
+                <mat-icon matSuffix>add_link</mat-icon>
+                <mat-icon matSuffix>attach_file_add</mat-icon>
+            </p>
+        </div>
+        <div class="post-inputfield-box">
+            <textarea matInput id="post-inputfield" rows="3" cols="80" autocomplete="off"
+                placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
+            <mat-icon matSuffix (click)="sendMessageToChannel()">send</mat-icon>
+        </div>
+    </div> -->
+
 </div>

@@ -6,6 +6,14 @@ mat-drawer-container {
     height: calc(100vh - 64px) !important;
 }
 
+.sidenav-height{
+    width: fit-content !important;
+    height: calc(100% - 50px) !important;
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+
 .example-spacer {
     flex: 1 1 auto;
 }
@@ -141,8 +149,8 @@ mat-drawer {
 }
 
 .imprint {
-    position: fixed;
-    bottom: 0px;
+    position: sticky;
+    top:100%;
     width: 284px;
     z-index: 1;
     background-color: #512752;

@@ -1,17 +1,22 @@
 <div class="thread-container d-n" id="threads">
     <div *ngFor="let thread of inputFromParentThreadArray; let i = index">
         <div class="posts comments">
-            <img class="profile-img">
-            <div>
-                <div class="general-info-line">
-                    <p>{{thread.userName}}<b></b></p>
+            <p><b># {{thread.channelName}}</b></p>
+            <div class="thread-width">
+                <div class="post-box">
+                    <div class="post-box-user-info">
+                        <mat-icon>person</mat-icon>
+                        <div class="general-info-line">
+                            <p><b>{{thread.userName}}</b></p>
+                        </div>
+                    </div>
                     <span> Am {{thread.userMessageDate}} um {{thread.userMessageTime}} Uhr</span>
+                    <div class="post">
+                        <p>{{thread.userMessage}}</p>
+                    </div>
                 </div>
-                <div class="post">
-                    <p>{{thread.userMessage}}</p>
-                </div>
-                <div class="post">
-                    <p routerLink="">Hier geht's zum Post</p>
+                <div class="ml-16 link-to-post">
+                    <p (click)="openPost(i)">Hier geht's zum Post</p>
                 </div>
             </div>
         </div>

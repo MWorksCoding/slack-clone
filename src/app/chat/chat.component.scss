@@ -3,227 +3,146 @@
     min-height: calc(100vh - 100px);
 }
 
-.load-message-container {
-    padding-bottom: 16px;
-}
-
-.header-container {
-    padding-left: 32px;
-    background-color: white;
-    border-bottom: 3px solid lightgrey;
-}
-
-.header-img-container {
-    position: relative;
-
-    img {
-        height: 30px;
-        width: 30px;
-        border-radius: 5px;
-
-    }
-
-    div {
-        position: absolute;
-        height: 11px;
-        width: 11px;
-        background-color: white;
-        border: 2px solid gray;
-        right: -3px;
-        bottom: -3px;
-        border-radius: 100%;
-    }
-}
-
-.header-icon-online {
-    background-color: rgb(46, 187, 46) !important;
-    border: 1.5px solid black !important;
-}
-
-.header-user-name {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.add-bookmark-container {
-    background-color: white;
-    border-bottom: 3px solid lightgrey;
-    padding: 5px 0;
-    padding-left: 32px;
-
-    div {
-
-        &:hover {
-            background-color: lightgrey;
-            border-radius: 20px;
-            cursor: pointer;
-            color: white;
-
-            p,
-            mat-icon {
-                color: white;
-            }
-        }
-
-        mat-icon {
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-style: italic;
-            color: grey;
-        }
-
-        p {
-            font-size: 12px;
-            color: grey;
-            font-style: italic;
-        }
-    }
-
-}
-
-.messages-container {
-    overflow-y: auto;
+.post-container {
     overflow-x: hidden;
-    height: calc(100% - 290px);
-    /* width */
-
+    overflow-y: auto;
+    margin-bottom: 16px;
+    height: calc(100vh - 359px);
 }
 
-.other-user {
-    border-bottom: 3px solid lightgrey;
-    padding: 10px 0;
-    padding-left: 32px;
-}
-
-.one-message {
-    margin-left: 16px;
-    margin-right: 32px;
-    background-color: white;
+.posts {
+    display: flex;
+    margin: 4px;
+    margin-bottom: 24px;
+    padding: 16px;
     box-shadow: 0px 2px 8px -1px rgb(0 0 0 / 20%);
     border-radius: 10px;
+    background-color: white;
 
     img {
-        height: 30px;
-        width: 30px;
-        border-radius: 5px;
+        margin-right: 16px;
+    }
+
+    &:last-child {
+        margin-bottom: 8px;
+        margin-right: 24px;
+    }
+
+    p {
+        word-break: break-word;
     }
 }
 
-.server-message {
-    color: gray;
-}
+.general-info-line {
 
-.user-img {
-    height: 50px !important;
-    width: 50px !important;
-}
-
-.chat-user{
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.message-text {
-    display: flex;
-    flex-direction: row;
-    padding-right: 50px;
-    gap: 16px;
-}
-
-.loadmore-button {
-    font-size: 12px;
-    font-style: italic;
-}
-
-.loadmessage-image {
-    margin-top: 15px;
-    height: 100px !important;
-    width: 100px !important;
-    object-fit: contain;
-    cursor: pointer;
-    border-radius: 10px !important;
-    box-sizing: unset;
-    border: 1px solid black;
-}
-
-.lightbox-container {
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    justify-content: center;
-    background-color: black;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-}
-
-.close-lightbox {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    padding: 4px;
-    background-color: black;
-    border-radius: 100%;
-
-    &:hover {
-        cursor: pointer;
-        color: black;
-        background-color: white;
+    p {
+        color: gray;
+        margin-left: 8px;
+        font-size: 16px;
     }
 }
 
-app-comment-box-chatroom,
-mat-expansion-panel {
-    position: absolute;
-    bottom: 32px;
-    right: 32px;
-    left: 32px;
-    z-index: 10;
-}
-
-.comment-box-container{
-    background-color: red;
-}
-
-.conversation-container {
-    padding-left: 32px;
-    padding-right: 32px;
-    background-color: #eeeeee;
-    color: black!important;
-}
-
-.message-header {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    padding-bottom: 5px;
-}
-
-
-@media(max-width: 800px) {
-    .message-header {
+.user-info {
+    p {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        gap: 8px;
     }
 }
 
-@media(max-width: 380px){
+.post {
+    max-width: 75vw;
+}
 
-    app-comment-box-chatroom,
-    mat-expansion-panel{
-        bottom: 16px;
-        right: 16px;
-        left: 16px;
+
+.post-settings-box {
+    display: flex;
+    margin: 4px;
+    margin-bottom: 24px;
+    box-shadow: 0px 2px 8px -1px rgb(0 0 0 / 20%);
+    border-radius: 10px;
+    flex-direction: column;
+    border: solid 1px black;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    margin-right: 24px;
+    background: white;
+}
+
+.post-settings {
+    font-weight: 400;
+    padding: 8px 16px;
+    text-align: left;
+    background: whitesmoke;
+    border-bottom: solid 1px black;
+    border-radius: 10px;
+
+    p {
+        margin: 0;
+
+        mat-icon {
+            font-size: 30px;
+            padding: 16px 16px 16px 0;
+        }
+    }
+}
+
+.post-inputfield-box {
+    height: 100px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.post-inputfield {
+    border: none;
+    height: fit-content;
+    font-size: 18px;
+    resize: none;
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
+    width: 95%;
+}
+
+@media(max-height: 600px) {
+    .post-container {
+        height: calc(100% - 110px);
+    }
+}
+
+@media(max-width: 530px) {
+    .post {
+        max-width: 300px;
+    }
+}
+
+@media(max-width: 465px) {
+    .post {
+        max-width: 250px;
+    }
+}
+
+@media(max-width: 410px) {
+    .post {
+        max-width: 200px;
+    }
+}
+
+@media(max-width: 380px) {
+    .general-info-line {
+        flex-direction: column;
+
+        span {
+            margin-left: unset;
+        }
+    }
+}
+
+@media(max-width: 350px) {
+    .post {
+        max-width: 150px;
     }
 }
