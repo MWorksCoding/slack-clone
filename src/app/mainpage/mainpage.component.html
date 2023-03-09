@@ -1,3 +1,9 @@
+<mat-card id="only-for-registered-user" class="only-for-registered-user-info-container d-n">
+    <div class="img-container">
+        <img src="assets/img/info-icon.svg" alt="info-icon">
+    </div>
+    <mat-card-content>Only for registered users</mat-card-content>
+</mat-card>
 <div class="mainpage">
     <mat-toolbar color="primary">
         <div class="toolbar-icons" (click)="drawer.toggle()">
@@ -13,17 +19,10 @@
             <!-- displays the userName or Guest if logged in as Guest -->
             <span class="user-name">{{ (auth.actualUser$ | async)?.userName ? (auth.actualUser$ | async)?.userName :
                 'Guest' }}</span>
-            <div *ngIf="auth.photoURL | async as imageUrl; else defaultImage">
-                <img class="profil-img" [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon"
-                    [src]="imageUrl ?? 'assets/img/name-icon.png'">
+
+            <div *ngIf="(uploadService.url$ | async) as imageUrl">
+                <img class="profil-img" [src]="imageUrl" [matMenuTriggerFor]="menu" #menuTrigger alt="profil-icon">
             </div>
-
-            <!-- if actualUser$ is undefined or null (e.g. anonym signin) -->
-            <ng-template #defaultImage>
-                <img class="profil-img" [src]="'assets/img/name-icon.png'" [matMenuTriggerFor]="menu" #menuTrigger
-                    alt="profil-icon">
-            </ng-template>
-
 
             <mat-menu #menu="matMenu">
                 <div mat-menu-item class="dialog-icon-and-button" (click)="openDialogUserInfo()">
@@ -41,67 +40,67 @@
 
     <mat-drawer-container class="mat-drawer-container" autosize>
         <mat-drawer #drawer opened="true" class="mat-drawer-sidenav" mode="side">
-            <div class="sidenav-height">
-                <div class="pl-16 sidenav-header">
-                    <h2>Developer Akademie</h2>
+
+            <div class="pl-16 sidenav-header">
+                <h2>Developer Akademie</h2>
+            </div>
+            <div class="pl-16 df-ai_c" (click)="openThreads()">
+                <mat-icon class="mainpage-icons">speaker_notes</mat-icon>
+                <h3 class="pl-16">Threads</h3>
+            </div>
+            <div class="df-ai_c-jc_sb pr-16 sidenav-header">
+                <div class="pl-16 df-ai_c" (click)="toggleChannelMenu()">
+                    <mat-icon *ngIf="ChannelMenuIsOpen">arrow_drop_down</mat-icon>
+                    <mat-icon *ngIf="!ChannelMenuIsOpen">arrow_right</mat-icon>
+                    <mat-icon class="mainpage-icons">forum</mat-icon>
+                    <h3 class="pl-16">Channels</h3>
                 </div>
-                <div class="pl-16 df-ai_c" (click)="openThreads()">
-                    <mat-icon class="mainpage-icons">speaker_notes</mat-icon>
-                    <h3 class="pl-16">Threads</h3>
-                </div>
-                <div class="df-ai_c-jc_sb pr-16 sidenav-header">
-                    <div class="pl-16 df-ai_c" (click)="toggleChannelMenu()">
-                        <mat-icon *ngIf="ChannelMenuIsOpen">arrow_drop_down</mat-icon>
-                        <mat-icon *ngIf="!ChannelMenuIsOpen">arrow_right</mat-icon>
-                        <mat-icon class="mainpage-icons">forum</mat-icon>
-                        <h3 class="pl-16">Channels</h3>
-                    </div>
-                    <div>
-                        <mat-icon (click)="openDialogCreateChannel()">add</mat-icon>
-                    </div>
-                </div>
-                <div *ngIf="ChannelMenuIsOpen">
-                    <div *ngFor="let channel of channels, let i = index" class="single-channel pl-16 pb-16 pt-16">
-                        <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }"
-                            (click)="openChannel(channels[i])">
-                            <span class=""># {{ channel['channelName'] }} </span>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="df-ai_c-jc_sb pr-16 sidenav-header">
-                    <div class="pl-16 df-ai_c" (click)="toggleDirectMessagesMenu()">
-                        <mat-icon *ngIf="DirectMessagesMenuIsOpen" fontIcon="arrow_drop_down"></mat-icon>
-                        <mat-icon *ngIf="!DirectMessagesMenuIsOpen" fontIcon="arrow_right"></mat-icon>
-                        <mat-icon class="user-icon">chat</mat-icon>
-                        <h3 class="pl-16">Direct messages</h3>
-                    </div>
-                    <div>
-                        <mat-icon (click)="openDialogCreateChat()">add</mat-icon>
-                    </div>
-                </div>
-
-
-
-                <div *ngIf="DirectMessagesMenuIsOpen">
-                    <div *ngFor="let user of users, let i = index" class="single-chat pl-16 pb-16 pt-16">
-                        <div [ngClass]="{'single-chat' : allChatChannel == ('user' + i) }" (click)="openChat(users[i])">
-                            <div class="df-ai_c gap-8">
-                                <mat-icon>person</mat-icon>
-                                <span>{{ user['userName'] }}</span>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="sidenav-header pl-16 imprint" (click)="openImprint()">
-                    <!-- routerLink="/imprint" -->
-                    <h4>Imprint & Data protection</h4>
+                <div>
+                    <mat-icon (click)="openDialogCreateChannel()">add</mat-icon>
                 </div>
             </div>
+            <div *ngIf="ChannelMenuIsOpen">
+                <div *ngFor="let channel of channels, let i = index" class="single-channel pl-16 pb-16 pt-16">
+                    <div [ngClass]="{'single-channel' : allChatChannel == ('channel' + i) }"
+                        (click)="openChannel(channels[i])">
+                        <span class=""># {{ channel['channelName'] }} </span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="df-ai_c-jc_sb pr-16 sidenav-header">
+                <div class="pl-16 df-ai_c" (click)="toggleDirectMessagesMenu()">
+                    <mat-icon *ngIf="DirectMessagesMenuIsOpen" fontIcon="arrow_drop_down"></mat-icon>
+                    <mat-icon *ngIf="!DirectMessagesMenuIsOpen" fontIcon="arrow_right"></mat-icon>
+                    <mat-icon class="user-icon">chat</mat-icon>
+                    <h3 class="pl-16">Direct messages</h3>
+                </div>
+                <div>
+                    <mat-icon (click)="openDialogCreateChat()">add</mat-icon>
+                </div>
+            </div>
+
+
+
+            <div *ngIf="DirectMessagesMenuIsOpen">
+                <div *ngFor="let user of users, let i = index" class="single-chat pl-16 pb-16 pt-16">
+                    <div [ngClass]="{'single-chat' : allChatChannel == ('user' + i) }" (click)="openChat(users[i])">
+                        <div class="df-ai_c gap-8">
+                            <mat-icon>person</mat-icon>
+                            <span>{{ user['userName'] }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="sidenav-header pl-16 imprint" (click)="openImprint()">
+                <!-- routerLink="/imprint" -->
+                <h4>Imprint & Data protection</h4>
+            </div>
+
         </mat-drawer>
 
         <div class="mat-drawer-sidenav-content pt-16 pl-16" #content>
@@ -109,13 +108,13 @@
                 <app-imprint></app-imprint>
             </div>
             <div>
-                <app-channel [inputFromParent]="forChildChannelName"
+                <app-channel [inputFromParentChannelId]="forChildChannelId" [inputFromParent]="forChildChannelName"
                     [inputFromParentDescriptiont]="forChildChannelDescription"
                     [inputFromParentChatUserName]="forChildChatUserName"
-                    [inputFromParentChannelArray]="allThreadsArr"></app-channel>
+                    [allThreads$]="allThreads$.asObservable()"></app-channel>
             </div>
             <div>
-                <app-chat [inputFromParentChat]="forChildUserName" [inputFromParentChatArray]="allChatsArr">
+                <app-chat [inputFromParentChat]="forChildUserName">
 
 
                 </app-chat>

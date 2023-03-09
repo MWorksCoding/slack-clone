@@ -1,40 +1,41 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../shared/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
 import { DialogCreateChatComponent } from '../dialog-create-chat/dialog-create-chat.component';
-import { AngularFirestore, fromCollectionRef } from '@angular/fire/compat/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { MatMenuModule } from '@angular/material/menu';
 import { DialogUserInfoComponent } from '../dialog-user-info/dialog-user-info.component';
-import { Channel } from 'src/models/channel.class';
-import { ChannelComponent } from '../channel/channel.component';
 import { ActivatedRoute } from '@angular/router';
-import { user } from '@angular/fire/auth';
-import { RouterModule } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Threads } from 'src/models/threads.class';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { FirebaseError } from 'firebase/app';
-import { Observable } from 'rxjs';
+import { UploadServiceService } from '../shared/upload-service.service';
+import { ChannelComponent } from '../channel/channel.component';
+import { BehaviorSubject, Observable, of, Subscriber, Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-mainpage',
   templateUrl: './mainpage.component.html',
   styleUrls: ['./mainpage.component.scss']
 })
-export class MainpageComponent implements OnInit {
+export class MainpageComponent implements OnInit, OnDestroy {
   constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
-    public fireauth: AngularFireAuth, public storage: AngularFireStorage) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+    public fireauth: AngularFireAuth, public storage: AngularFireStorage, public uploadService: UploadServiceService) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
   }
 
 
-  imagePath: any = '';
+  channelSubscription: Subscription | undefined;
+  allThreads$ = new BehaviorSubject<any>(null);
 
+
+  @ViewChild(ChannelComponent) channelComponent: ChannelComponent | undefined; 
+  // get a reference to the channel component
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
 
 
+  forChildChannelId: string = '';
   forChildChannelName: string = '';
   forChildChannelDescription: string = '';
   forChildUserName: string = '';
@@ -56,19 +57,13 @@ export class MainpageComponent implements OnInit {
 
 
 
-  async ngOnInit(): Promise<void> {
-    this.imagePath = this.storage.ref(`users/${this.auth.currentUserId}/profile-picture`);
-    let profilPicture = document.getElementById('profile-picture') as HTMLImageElement;
-    if (profilPicture) {
-      profilPicture.src = this.imagePath.getDownloadURL();
-    }
-    await this.loadChannels();
-    await this.loadUsers();
-    await this.loadThreads();
-    await this.openThreads();
-    await this.loadUserChats();
+  ngOnInit(): void {
+    this.auth.showActualUser();
+    this.loadChannels();
+    this.loadUsers();
+    this.loadThreads();
+    this.openThreads();
 
-    await this.auth.showActualUser();
     //  this.route.params.subscribe((params) => {
     //  console.log(params);
     //  });
@@ -111,14 +106,15 @@ export class MainpageComponent implements OnInit {
       .collection('channels')
       .valueChanges({ idField: 'channelId' })
       .subscribe((channelId: any) => {
-        // console.log('Mainpage: Channel ID is:', channelId);
+        console.log('Mainpage: Channel ID is:', channelId);
         this.channels = channelId;
       });
     ;
   }
 
 
-  async loadThreads() {
+  async loadThreads() { //Frage, was wird hier gemacht ?
+
     await this.firestore
       .collection('channels')
       .get()
@@ -208,6 +204,7 @@ export class MainpageComponent implements OnInit {
       if (currentUser == this.allThreads[j]['userName']) { // current User ('guest') is part of the array allThreads, then
         this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
       }
+      // console.log('Contents of allThreadsArr for Threads:', this.allThreadsArr);
     }
     window.document.getElementById('threads')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
@@ -217,7 +214,13 @@ export class MainpageComponent implements OnInit {
   }
 
 
+
   openChannel(i: any) {
+    if(this.channelSubscription) {
+      this.channelSubscription.unsubscribe();
+    }
+    this.channelComponent?.clearTextarea();
+    this.forChildChannelId = i['channelId'];
     this.forChildChannelName = i['channelName']; // This variable is needed to give it to the child component, determined from html
     // console.log('Chat CHANNEL NAME BASE is:', i['channelName'])
     this.forChildChannelDescription = i['description']; // This variable is needed to give it to the child component, determined from html
@@ -226,10 +229,16 @@ export class MainpageComponent implements OnInit {
       const element = this.allThreads[j];
       // console.log('openChannel() - AllThreads:', this.allThreads[j])
       if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
-        this.allThreadsArr.push(this.allThreads[j]) // ...then push alle j data to the empty array allThreadsArr; data is send to child component
-      }
-      console.log('Contents of allThreadsArr:', this.allThreadsArr);
+        this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
+      } 
     }
+    this.channelSubscription = this.firestore
+    .collection('channels')
+    .doc(this.forChildChannelId)
+    .collection('threads')
+    .valueChanges().subscribe(value => {
+      this.allThreads$.next(value);
+    })
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
@@ -269,26 +278,40 @@ export class MainpageComponent implements OnInit {
   }
 
 
+  /**
+   * opens dialog if user is not logged in as Guest, else info appears for 2 seconds
+   */
   async openDialogUserInfo() {
     const user = await this.fireauth.currentUser;
-    if (!user?.isAnonymous) { //only open dialog if user is registered
+    if (!user?.isAnonymous) {  //only open dialog if user is registered
       const dialogRef = this.dialog.open(DialogUserInfoComponent);
+    }
+    else {
+      document.getElementById('only-for-registered-user')?.classList.remove('d-n');
+      setTimeout(() => {
+        document.getElementById('only-for-registered-user')?.classList.add('d-n');
+      }, 2000);
     }
   }
 
 
+  /**
+   * sign out function in auth service will be called and unsubscribe from observables
+   */
   signOut() {
     this.auth.signOut();
+    this.auth.unsubscribe();
   }
 
+  ngOnDestroy(): void {
+
+  }
 }
 
 function getDocs(subColRef: (val: any) => void) {
   throw new Error('Function not implemented.');
 }
-function switchMap(arg0: (channels: { channelId: any; }) => any): import("rxjs").OperatorFunction<{ channelId: string; }[], unknown> {
-  throw new Error('Function not implemented.');
-}
+
 
 function tap(arg0: (roles: any) => void): import("rxjs").OperatorFunction<unknown, unknown> {
   throw new Error('Function not implemented.');

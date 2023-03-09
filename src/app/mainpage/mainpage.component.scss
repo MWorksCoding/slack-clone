@@ -2,6 +2,39 @@
     height: calc(100vh - 64px);
 }
 
+.only-for-registered-user-info-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-left: 24px;
+    padding-top: 8px;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    padding: 15px !important;
+
+    .img-container {
+        background-color: rgb(255, 163, 0);
+        border-radius: 100%;
+
+        img {
+            height: 22px;
+            width: 26px;
+            padding: 5px;
+            filter: invert(100%);
+        }
+    }
+
+    mat-card-content {
+        padding: 0 !important;
+        font-size: 21px !important;
+    }
+}
+
 mat-drawer-container {
     height: calc(100vh - 64px) !important;
 }
@@ -72,6 +105,10 @@ mat-toolbar {
 .user-name {
     font-size: 18px;
     margin-right: 16px;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .profil-img {
