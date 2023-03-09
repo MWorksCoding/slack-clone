@@ -91,6 +91,7 @@ export class AuthService {
       .doc(`users/${actualUser.uid}`)
       .valueChanges()
       .subscribe((data: any) => {
+        console.log('data', data);
         this.currentUserName = data['userName'];
       });
   }
@@ -192,7 +193,6 @@ export class AuthService {
       async (res) => {
         const firestore = this.firestore.firestore;
         let docRef = firestore.collection('users').doc(res.user?.uid);
-        //  this.firestore.collection('users').doc(res.user?.uid);
         const docSnap = await getDoc(docRef);
         if(docSnap.exists()){
           console.log('Exists', docSnap.data())
@@ -201,13 +201,12 @@ export class AuthService {
           console.log('not exists');
           const data = { userName };
           this.firestore.collection('users').doc(res.user?.uid).set(data);
+          this.uploadService.uploadNewImage(res.user?.uid);
         }
         this.firestore.collection('users').doc(res.user?.uid).valueChanges()
         .subscribe((value: any) => {
           userName = value;
-          console.log('userName', userName);
         })
-        this.uploadService.uploadNewImage(res.user?.uid);
         this.router.navigate(['/mainpage']);
         localStorage.setItem('user', JSON.stringify(res.user));
         this.spinnerService.settLoadingStatus(false);
