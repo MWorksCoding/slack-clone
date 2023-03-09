@@ -41,6 +41,7 @@ export class UploadServiceService {
         snapshot.ref.getDownloadURL()
           .then((downloadURL: string) => {
             this.url$?.next(downloadURL);
+            console.log('url§', downloadURL);
           })
       });
     }
