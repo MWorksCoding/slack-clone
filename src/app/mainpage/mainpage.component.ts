@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild,} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { AuthService } from '../shared/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogCreateChannelComponent } from '../dialog-create-channel/dialog-create-channel.component';
@@ -11,25 +17,42 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { UploadServiceService } from '../shared/upload-service.service';
 import { ChannelComponent } from '../channel/channel.component';
-import { BehaviorSubject, Observable, of, Subscriber, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  of,
+  Subscriber,
+  Subscription,
+} from 'rxjs';
 import { ThreadsComponent } from '../threads/threads.component';
-
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-mainpage',
   templateUrl: './mainpage.component.html',
   styleUrls: ['./mainpage.component.scss'],
   template: `
-        <div class="mainpage">
-            <child></child>
-        </div>
-    `
+    <div class="mainpage">
+      <child></child>
+    </div>
+  `,
 })
 export class MainpageComponent implements OnInit, OnDestroy {
-  constructor(public dialog: MatDialog, public auth: AuthService, private firestore: AngularFirestore, private route: ActivatedRoute,
-    public fireauth: AngularFireAuth, public storage: AngularFireStorage, public uploadService: UploadServiceService) { // Zugriff auf Firestore, Abonnieren in dieser Komponente
+  constructor(
+    public dialog: MatDialog,
+    public auth: AuthService,
+    private firestore: AngularFirestore,
+    private route: ActivatedRoute,
+    public fireauth: AngularFireAuth,
+    public storage: AngularFireStorage,
+    public uploadService: UploadServiceService
+  ) {
+    // Zugriff auf Firestore, Abonnieren in dieser Komponente
     this.forChildChannelName = '';
   }
+
+  
+  readonly searchTerm = new FormControl('', { nonNullable: true });
 
   channelSubscription: Subscription | undefined;
   allThreads$ = new BehaviorSubject<any>(null);
@@ -56,21 +79,22 @@ export class MainpageComponent implements OnInit, OnDestroy {
   allThreads: any[] = [];
   allThreadsArr: any[] = [];
 
-  chatId =  '';
+  chatId = '';
   allChats: any[] = [];
   allChatsArr: any[] = [];
 
-// test user: hotid53611@fenwazi.com ; 12345678
+
+  // test user: hotid53611@fenwazi.com ; 12345678
 
   async ngOnInit(): Promise<void> {
-    await this.auth.showActualUser();
+    this.auth.showActualUser();
     setTimeout(() => {
       console.log('username', this.auth.currentUserName);
     }, 2000);
-    await this.loadChannels();
-    await this.loadUsers();
+    this.loadChannels();
+    this.loadUsers();
     await this.loadThreads();
-    await this.openThreads();
+    this.openThreads();
     //  this.route.params.subscribe((params) => {
     //  console.log(params);
     //  });
@@ -215,8 +239,9 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.changeBGWhite();
   }
 
-  //Change name into openChannelsFromThreads() ! // it is empty 
-  async ngAfterViewInit(): Promise<void> { // subscribe to the postChannelNameEvent, open the choosen channel from threads
+  //Change name into openChannelsFromThreads() ! // it is empty
+  async ngAfterViewInit(): Promise<void> {
+    // subscribe to the postChannelNameEvent, open the choosen channel from threads
 
     this.threadsComponent.postChannelNameEvent.subscribe((channelName) => {
       // set the value of this.forChildChannelName to the value of the channelName emitted from the child component
@@ -226,11 +251,13 @@ export class MainpageComponent implements OnInit, OnDestroy {
       // this.loadThreads();
       // console.log('main component array to compare:', this.allThreads)
       this.allThreadsArr = []; // The array is empty with every click, to take over only the needed data from the choosen channel from the array allThreads
-      for (let j = 0; j < this.allThreads.length; j++) { // loop for array allThreads
+      for (let j = 0; j < this.allThreads.length; j++) {
+        // loop for array allThreads
         const element = this.allThreads[j];
         // console.log('openChannel() - AllThreads:', this.allThreads[j])
-        if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
-          this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
+        if (this.forChildChannelName == this.allThreads[j]['channelName']) {
+          // if the clicked channel is equal to the channelName from the array allThreads ...
+          this.allThreadsArr.push(this.allThreads[j]); // ...then push all j data to the empty array allThreadsArr; data is send to child component
         }
       }
       window.document.getElementById('channel')!.classList.remove('d-n');
@@ -240,7 +267,6 @@ export class MainpageComponent implements OnInit, OnDestroy {
       this.changeBGWhite();
     });
   }
-
 
   openChannel(i: any) {
     if (this.channelSubscription) {
@@ -256,8 +282,9 @@ export class MainpageComponent implements OnInit, OnDestroy {
       // loop for array allThreads
       const element = this.allThreads[j];
       // console.log('openChannel() - AllThreads:', this.allThreads[j])
-      if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
-        this.allThreadsArr.push(this.allThreads[j]) // ...then push all j data to the empty array allThreadsArr; data is send to child component
+      if (this.forChildChannelName == this.allThreads[j]['channelName']) {
+        // if the clicked channel is equal to the channelName from the array allThreads ...
+        this.allThreadsArr.push(this.allThreads[j]); // ...then push all j data to the empty array allThreadsArr; data is send to child component
       }
     }
     this.channelSubscription = this.firestore
@@ -273,7 +300,6 @@ export class MainpageComponent implements OnInit, OnDestroy {
     window.document.getElementById('threads')!.classList.add('d-n');
     window.document.getElementById('chat')!.classList.add('d-n');
     this.changeBGWhite();
-
   }
 
   openChat(i: any) {
@@ -334,10 +360,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.auth.unsubscribe();
   }
 
-  ngOnDestroy(): void {
-
-  }
-
+  ngOnDestroy(): void {}
 }
 
 function getDocs(subColRef: (val: any) => void) {
