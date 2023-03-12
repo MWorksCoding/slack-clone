@@ -26,6 +26,7 @@ import {
 } from 'rxjs';
 import { ThreadsComponent } from '../threads/threads.component';
 import { FormControl } from '@angular/forms';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Component({
   selector: 'app-mainpage',
@@ -51,7 +52,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.forChildChannelName = '';
   }
 
-  
+
   readonly searchTerm = new FormControl('', { nonNullable: true });
 
   channelSubscription: Subscription | undefined;
@@ -62,6 +63,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
   @ViewChild(ThreadsComponent) threadsComponent!: ThreadsComponent;
+
 
   forChildChannelId: string = '';
   forChildChannelName: string = '';
@@ -169,6 +171,32 @@ export class MainpageComponent implements OnInit, OnDestroy {
       });
   }
 
+
+  async loadingForThreads() {
+    await this.firestore.collection('channels').get().subscribe((channels: any) => {
+      channels.forEach(async (channel: { data: () => any; id: string | undefined }) => {
+        const channelData = channel.data();
+        // Query the sub collections of the channel
+        await this.firestore.collection('channels').doc(channel.id).collection('threads').get().subscribe((threads: any) => {
+          threads.forEach(async (thread: { data: () => any }) => {
+            const threadData = thread.data();
+            // Push the thread data into the array
+            await this.allThreads.push({
+              ...channelData,
+              ...threadData,
+              channelId: channel.id,
+            });
+          });
+          console.log('loadingForThreads() Array:', this.allThreads)
+          console.log('loadingForThreads() GESAMT ARRAY:', this.allThreadsArr)
+        });
+      });
+    });
+  }
+
+
+
+
   loadUsers() {
     this.loading = true;
     this.firestore
@@ -239,34 +267,23 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.changeBGWhite();
   }
 
-  //Change name into openChannelsFromThreads() ! // it is empty
+  // this function transforms the name of the clicked name of the threads.component to a number, that is found in the array channels
+  // From here we get the number of the array. The values from the array are handed over 
+  // to the function openChannel(), important for "channelId" and "description"
   async ngAfterViewInit(): Promise<void> {
     // subscribe to the postChannelNameEvent, open the choosen channel from threads
-
-    this.threadsComponent.postChannelNameEvent.subscribe((channelName) => {
+    this.threadsComponent.postChannelNameEvent.subscribe(async (channelName: string) => {
       // set the value of this.forChildChannelName to the value of the channelName emitted from the child component
       this.forChildChannelName = channelName;
-      console.log('Channel Name in Main Component:', channelName);
-      // this.allThreads = [];
-      // this.loadThreads();
-      // console.log('main component array to compare:', this.allThreads)
-      this.allThreadsArr = []; // The array is empty with every click, to take over only the needed data from the choosen channel from the array allThreads
-      for (let j = 0; j < this.allThreads.length; j++) {
-        // loop for array allThreads
-        const element = this.allThreads[j];
-        // console.log('openChannel() - AllThreads:', this.allThreads[j])
-        if (this.forChildChannelName == this.allThreads[j]['channelName']) {
-          // if the clicked channel is equal to the channelName from the array allThreads ...
-          this.allThreadsArr.push(this.allThreads[j]); // ...then push all j data to the empty array allThreadsArr; data is send to child component
-        }
-      }
-      window.document.getElementById('channel')!.classList.remove('d-n');
-      window.document.getElementById('imprint')!.classList.add('d-n');
-      window.document.getElementById('threads')!.classList.add('d-n');
-      window.document.getElementById('chat')!.classList.add('d-n');
-      this.changeBGWhite();
+      // console.log('Channel Name in Main Component:', channelName);
+      // console.log('this.channels:', this.channels);
+      const channelIndex = this.channels.findIndex((channel: { channelName: string }) => channel.channelName === channelName);
+      // console.log('Number for handing over', channelIndex);
+      // console.log('whats inside for handing over?' , this.channels[channelIndex])
+      this.openChannel(this.channels[channelIndex]);
     });
   }
+
 
   openChannel(i: any) {
     if (this.channelSubscription) {
@@ -360,7 +377,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.auth.unsubscribe();
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 }
 
 function getDocs(subColRef: (val: any) => void) {

@@ -85,8 +85,8 @@
 
 
             <div *ngIf="DirectMessagesMenuIsOpen">
-                <div *ngFor="let user of users, let i = index" class="single-chat pl-16 pb-16 pt-16">
-                    <div [ngClass]="{'single-chat' : allChatChannel == ('user' + i) }" (click)="openChat(users[i])">
+                <div *ngFor="let user of users , let i = index" class="single-chat pl-16 pb-16 pt-16">
+                    <div *ngIf="user['userName'] !== this.auth.currentUserName"[ngClass]="{'single-chat' : allChatChannel == ('user' + i) }" (click)="openChat(users[i])">
                         <div class="df-ai_c gap-8">
                             <mat-icon>person</mat-icon>
                             <span>{{ user['userName'] }}</span>

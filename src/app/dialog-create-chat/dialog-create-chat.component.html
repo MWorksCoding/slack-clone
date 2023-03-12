@@ -4,9 +4,11 @@
     <mat-label>Select</mat-label>
     <mat-select>
       <div *ngFor="let user of users, let i = index">
-        <mat-option value="{{ user['userName'] }}" (click)="checkUser((users[i]))">
-          <span class="" > {{ user['userName'] }} </span>
-        </mat-option>
+        <div *ngIf="user['userName'] !== this.auth.currentUserName">
+          <mat-option value="{{ user['userName'] }}" (click)="checkUser(users[i])">
+            <span class=""> {{ user['userName'] }} </span>
+          </mat-option>
+        </div>
       </div>
     </mat-select>
 

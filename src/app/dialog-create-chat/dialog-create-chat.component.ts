@@ -13,7 +13,7 @@ import { ChatUser } from 'src/models/chatuser.class';
 })
 export class DialogCreateChatComponent {
 
-  constructor(public dialogRef: MatDialogRef<DialogCreateChatComponent>, private firestore: AngularFirestore, private auth: AuthService) { }
+  constructor(public dialogRef: MatDialogRef<DialogCreateChatComponent>, private firestore: AngularFirestore, public auth: AuthService) { }
 
 
   loading = false;
@@ -24,6 +24,9 @@ export class DialogCreateChatComponent {
 
   async ngOnInit(): Promise<void> {
     await this.loadUsers();
+    setTimeout(() => {
+      console.log('username create chat', this.auth.currentUserName);
+    }, 3000);
   }
 
 
