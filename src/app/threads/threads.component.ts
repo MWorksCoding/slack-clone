@@ -50,9 +50,6 @@ export class ThreadsComponent {
 
   openPost(thread: any) {
     this.postChannelNameEvent.emit(thread.channelName);
-    // this.postChannelNameEvent.emit(thread.description);
-    console.log('Current channelName:', thread.channelName);
-    // console.log('Current description:', thread.description);
   }
 
 

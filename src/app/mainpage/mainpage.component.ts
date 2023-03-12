@@ -218,7 +218,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
       });
   }
 
-  
+
   openImprint() {
     window.document.getElementById('imprint')!.classList.remove('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
@@ -346,8 +346,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
    */
   async openDialogUserInfo() {
     const user = await this.fireauth.currentUser;
-    if (!user?.isAnonymous) {
-      //only open dialog if user is registered
+    if (!user?.isAnonymous) { //only open dialog if user is registered
       const dialogRef = this.dialog.open(DialogUserInfoComponent);
     } else {
       document
