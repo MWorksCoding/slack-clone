@@ -102,6 +102,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
     //  });
   }
 
+
   toggleChannelMenu() {
     if (this.ChannelMenuIsOpen) {
       this.ChannelMenuIsOpen = false;
@@ -109,6 +110,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
       this.ChannelMenuIsOpen = true;
     }
   }
+
 
   toggleDirectMessagesMenu() {
     if (this.DirectMessagesMenuIsOpen) {
@@ -118,13 +120,16 @@ export class MainpageComponent implements OnInit, OnDestroy {
     }
   }
 
+
   openDialogCreateChannel() {
     this.dialog.open(DialogCreateChannelComponent);
   }
 
+
   openDialogCreateChat() {
     this.dialog.open(DialogCreateChatComponent);
   }
+
 
   loadChannels() {
     this.loading = true;
@@ -137,9 +142,8 @@ export class MainpageComponent implements OnInit, OnDestroy {
       });
   }
 
-  async loadThreads() {
-    //Frage, was wird hier gemacht ?
 
+  async loadThreads() {
     await this.firestore
       .collection('channels')
       .get()
@@ -172,31 +176,6 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
-  async loadingForThreads() {
-    await this.firestore.collection('channels').get().subscribe((channels: any) => {
-      channels.forEach(async (channel: { data: () => any; id: string | undefined }) => {
-        const channelData = channel.data();
-        // Query the sub collections of the channel
-        await this.firestore.collection('channels').doc(channel.id).collection('threads').get().subscribe((threads: any) => {
-          threads.forEach(async (thread: { data: () => any }) => {
-            const threadData = thread.data();
-            // Push the thread data into the array
-            await this.allThreads.push({
-              ...channelData,
-              ...threadData,
-              channelId: channel.id,
-            });
-          });
-          console.log('loadingForThreads() Array:', this.allThreads)
-          console.log('loadingForThreads() GESAMT ARRAY:', this.allThreadsArr)
-        });
-      });
-    });
-  }
-
-
-
-
   loadUsers() {
     this.loading = true;
     this.firestore
@@ -208,8 +187,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
       });
   }
 
-  // *******************************************************************************
-  // *******************************************************************************
+
   async loadUserChats() {
     await this.firestore
       .collection('users')
@@ -240,6 +218,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
       });
   }
 
+  
   openImprint() {
     window.document.getElementById('imprint')!.classList.remove('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
@@ -248,24 +227,28 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.changeBGWhite();
   }
 
+
   openThreads() {
     this.allThreadsArr = []; // The array is empty with every click, to take over only the needed data from the choosen channel from the array allThreads
     let currentUser = 'Guest'; // !!!Change this variable to the current user later!!!
     for (let j = 0; j < this.allThreads.length; j++) {
-      // loop for array allThreads
       const element = this.allThreads[j];
       if (currentUser == this.allThreads[j]['userName']) {
-        // current User ('guest') is part of the array allThreads, then
-        this.allThreadsArr.push(this.allThreads[j]); // ...then push all j data to the empty array allThreadsArr; data is send to child component
+        this.allThreadsArr.push(this.allThreads[j]); 
       }
-      // console.log('Contents of allThreadsArr for Threads:', this.allThreadsArr);
     }
+    this.openThreadsWindow();
+  }
+
+
+  openThreadsWindow() {
     window.document.getElementById('threads')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('channel')!.classList.add('d-n');
     window.document.getElementById('chat')!.classList.add('d-n');
     this.changeBGWhite();
   }
+
 
   // this function transforms the name of the clicked name of the threads.component to a number, that is found in the array channels
   // From here we get the number of the array. The values from the array are handed over 
@@ -292,15 +275,11 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.channelComponent?.clearTextarea();
     this.forChildChannelId = i['channelId'];
     this.forChildChannelName = i['channelName']; // This variable is needed to give it to the child component, determined from html
-    // console.log('Chat CHANNEL NAME BASE is:', i['channelName'])
     this.forChildChannelDescription = i['description']; // This variable is needed to give it to the child component, determined from html
     this.allThreadsArr = []; // The array is empty with every click, to take over only the needed data from the choosen channel from the array allThreads
     for (let j = 0; j < this.allThreads.length; j++) {
-      // loop for array allThreads
       const element = this.allThreads[j];
-      // console.log('openChannel() - AllThreads:', this.allThreads[j])
-      if (this.forChildChannelName == this.allThreads[j]['channelName']) {
-        // if the clicked channel is equal to the channelName from the array allThreads ...
+      if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
         this.allThreadsArr.push(this.allThreads[j]); // ...then push all j data to the empty array allThreadsArr; data is send to child component
       }
     }
@@ -312,12 +291,18 @@ export class MainpageComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         this.allThreads$.next(value);
       });
+    this.openChannelWindow();
+  }
+
+
+  openChannelWindow() {
     window.document.getElementById('channel')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
     window.document.getElementById('chat')!.classList.add('d-n');
     this.changeBGWhite();
   }
+
 
   openChat(i: any) {
     // console.log('User to child-component:', i['userName'])
@@ -334,12 +319,18 @@ export class MainpageComponent implements OnInit, OnDestroy {
       }
       console.log('Contents of allChatsArr:', this.allChatsArr);
     }
+    this.openChatWindow();
+  }
+
+
+  openChatWindow() {
     window.document.getElementById('chat')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('channel')!.classList.add('d-n');
     window.document.getElementById('threads')!.classList.add('d-n');
     this.changeBGGray();
   }
+
 
   changeBGWhite() {
     this.content.nativeElement.style.background = '#FAFAFA';
@@ -348,6 +339,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   changeBGGray() {
     this.content.nativeElement.style.background = '#EEEEEE';
   }
+
 
   /**
    * opens dialog if user is not logged in as Guest, else info appears for 2 seconds
