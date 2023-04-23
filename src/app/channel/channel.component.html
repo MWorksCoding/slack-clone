@@ -20,7 +20,25 @@
                                 </div>
                                 <div class="post">
                                     <p>{{channel.userMessage}}</p>
+                                    <div *ngIf="channel.userMessageDateUpdate && channel.userMessageTimeUpdate" class="post-update">
+                                        Zuletzt bearbeitet am {{channel.userMessageDateUpdate}} um {{channel.userMessageTimeUpdate}} Uhr
+                                      </div>
                                 </div>
+                            </div>
+                            <div *ngIf="auth.currentUserName === channel.userName" class="options">
+                                <mat-icon [matMenuTriggerFor]="menu" #menuTrigger>more_vert</mat-icon>
+                                <mat-menu #menu="matMenu">
+                                    <div mat-menu-item class="dialog-icon-and-button" (click)="openDialogEditMessage(channel)">
+                                    <!-- <div mat-menu-item class="dialog-icon-and-button" (click)="openDialogEditMessage(channel['userMessage'])"> -->
+                                        <mat-icon class="menu-icon" fontIcon="edit"></mat-icon>
+                                        <span>Edit message</span>
+                                    </div>
+                                    <div mat-menu-item class="dialog-icon-and-button" (click)="openDialogDeleteMessage(channel['threadId'])">
+                                        <mat-icon class="menu-icon" fontIcon="delete"></mat-icon>
+                                        <span>Delete message</span>
+                                    </div>
+                                </mat-menu>
+                                <!-- <div (click)="deleteMessage(channel['threadId'])"> --> <!-- Funktion für sofotiges Löschen ohne vorherige Optionen -->
                             </div>
                         </div>
                     </div>

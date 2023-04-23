@@ -210,3 +210,15 @@ mat-drawer {
 .bg-gray {
     background-color: #EEEEEE;
 }
+
+.add-button {
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.direct-messages-for-guest {
+    p {
+        color: #f7c600;
+    }
+}

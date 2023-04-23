@@ -1,17 +1,18 @@
-.chat-container {
-    background-color: #EEEEEE;
-    min-height: calc(100vh - 100px);
-}
+// .chat-container {
+//     background-color: #EEEEEE;
+//     min-height: calc(100vh - 100px);
+// }
 
-.post-container {
+.post-container-box {
     overflow-x: hidden;
     overflow-y: auto;
     margin-bottom: 16px;
-    height: calc(100vh - 359px);
+    height: calc(100vh - 360px);
 }
 
 .posts {
     display: flex;
+    justify-content: space-between;
     margin: 4px;
     margin-bottom: 24px;
     padding: 16px;
@@ -33,8 +34,25 @@
     }
 }
 
-.general-info-line {
+.post-update {
+    font-size: 14px;
+    color: gray;
+}
 
+
+.options{
+    mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        margin: 8px;
+        &:hover {
+            cursor: pointer;
+        }
+    }   
+}
+
+.general-info-line {
     p {
         color: gray;
         margin-left: 8px;
@@ -79,7 +97,6 @@
 
     p {
         margin: 0;
-
         mat-icon {
             font-size: 30px;
             padding: 16px 16px 16px 0;

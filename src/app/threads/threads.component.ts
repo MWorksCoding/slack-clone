@@ -51,7 +51,4 @@ export class ThreadsComponent {
   openPost(thread: any) {
     this.postChannelNameEvent.emit(thread.channelName);
   }
-
-
-
 }

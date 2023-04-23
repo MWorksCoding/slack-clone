@@ -7,6 +7,7 @@
 
 .posts {
     display: flex;
+    justify-content: space-between;
     margin: 4px;
     margin-bottom: 24px;
     padding: 16px;
@@ -28,8 +29,25 @@
     }
 }
 
-.general-info-line {
+.post-update {
+    font-size: 14px;
+    color: gray;
+}
 
+
+.options{
+    mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        margin: 8px;
+        &:hover {
+            cursor: pointer;
+        }
+    }   
+}
+
+.general-info-line {
     p {
         color: gray;
         margin-left: 8px;

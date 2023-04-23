@@ -36,11 +36,14 @@ import { AuthService } from './shared/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { OverlaySpinnerComponent } from './overlay-spinner/overlay-spinner.component';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FirebaseAppModule } from '@angular/fire/app';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
+import { DialogDeleteMessageComponent } from './dialog-delete-message/dialog-delete-message.component';
+import { DialogEditMessageComponent } from './dialog-edit-message/dialog-edit-message.component';
+import { DialogErrorEmptyMessageComponent } from './dialog-error-empty-message/dialog-error-empty-message.component';
 
 
 @NgModule({
@@ -60,7 +63,10 @@ import {MatCardModule} from '@angular/material/card';
     DialogUserInfoComponent,
     ChannelComponent,
     ChatComponent,
-    OverlaySpinnerComponent
+    OverlaySpinnerComponent,
+    DialogDeleteMessageComponent,
+    DialogEditMessageComponent,
+    DialogErrorEmptyMessageComponent
   ],
   imports: [
     BrowserModule,

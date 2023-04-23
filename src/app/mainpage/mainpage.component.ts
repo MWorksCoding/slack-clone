@@ -17,8 +17,10 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { UploadServiceService } from '../shared/upload-service.service';
 import { ChannelComponent } from '../channel/channel.component';
+import { ChatComponent } from '../chat/chat.component';
 import {
   BehaviorSubject,
+  map,
   Observable,
   of,
   Subscriber,
@@ -27,6 +29,7 @@ import {
 import { ThreadsComponent } from '../threads/threads.component';
 import { FormControl } from '@angular/forms';
 import { Pipe, PipeTransform } from '@angular/core';
+import firebase from 'firebase/compat';
 
 @Component({
   selector: 'app-mainpage',
@@ -39,6 +42,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   `,
 })
 export class MainpageComponent implements OnInit, OnDestroy {
+
   constructor(
     public dialog: MatDialog,
     public auth: AuthService,
@@ -57,18 +61,23 @@ export class MainpageComponent implements OnInit, OnDestroy {
 
   channelSubscription: Subscription | undefined;
   allThreads$ = new BehaviorSubject<any>(null);
+  directMessagesSubscription: Subscription | undefined;
+  allDirectMessages$ = new BehaviorSubject<any>(null);
+ 
 
-  @ViewChild(ChannelComponent) channelComponent: ChannelComponent | undefined;
-  // get a reference to the channel component
+  @ViewChild(ChannelComponent) channelComponent: ChannelComponent | undefined; // get a reference to the channel component
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
   @ViewChild('content') content!: ElementRef;
   @ViewChild(ThreadsComponent) threadsComponent!: ThreadsComponent;
+  @ViewChild(ChatComponent) chatComponent: ChatComponent | undefined;
 
 
   forChildChannelId: string = '';
   forChildChannelName: string = '';
   forChildChannelDescription: string = '';
   forChildUserName: string = '';
+
+  forChildChatId: string = '';
 
   loading = false;
   channelId = '';
@@ -85,11 +94,10 @@ export class MainpageComponent implements OnInit, OnDestroy {
   allChats: any[] = [];
   allChatsArr: any[] = [];
 
-
   // test user: hotid53611@fenwazi.com ; 12345678
 
   async ngOnInit(): Promise<void> {
-    this.auth.showActualUser();
+    await this.auth.showActualUser();
     setTimeout(() => {
       console.log('username', this.auth.currentUserName);
     }, 2000);
@@ -151,22 +159,21 @@ export class MainpageComponent implements OnInit, OnDestroy {
         channels.forEach(
           (channel: { data: () => any; id: string | undefined }) => {
             const channelData = channel.data();
-            // Query the sub collections of the channel
-            this.firestore
+            this.firestore // Query the sub collections of the channel
               .collection('channels')
               .doc(channel.id)
               .collection('threads')
               .get()
               .subscribe((threads: any) => {
-                threads.forEach((thread: { data: () => any }) => {
+                threads.forEach((thread: { data: () => any; id: string | undefined }) => {
                   const threadData = thread.data();
-                  // Push the thread data into the array
-                  this.allThreads.push({
+                  this.allThreads.push({ // Push the thread data into the array
                     ...channelData,
                     ...threadData,
                     channelId: channel.id, // DIE JEWEILIGE CHANNEL ID MUSS  MIT INS ARRAY
+                    threadId: thread.id, // DIE JEWEILIGE Thread ID MUSS  MIT INS ARRAY
                   });
-                  // console.log('ALLTHREADS ARE', this.allThreads)
+                  console.log('ALLTHREADS ARE', this.allThreads)
                 });
                 this.openThreads(); // place openThreads here to show it automatically after log in
               });
@@ -234,7 +241,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
     for (let j = 0; j < this.allThreads.length; j++) {
       const element = this.allThreads[j];
       if (currentUser == this.allThreads[j]['userName']) {
-        this.allThreadsArr.push(this.allThreads[j]); 
+        this.allThreadsArr.push(this.allThreads[j]);
       }
     }
     this.openThreadsWindow();
@@ -250,20 +257,25 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
-  // this function transforms the name of the clicked name of the threads.component to a number, that is found in the array channels
-  // From here we get the number of the array. The values from the array are handed over 
-  // to the function openChannel(), important for "channelId" and "description"
+  /**
+  * this function transforms the name of the clicked name of the threads.component / channel.component to a number, that is found in the array channels
+  * From here we get the number of the array. The values from the array are handed over to the function openChannel(), important for "channelId" and "description"
+  */
   async ngAfterViewInit(): Promise<void> {
-    // subscribe to the postChannelNameEvent, open the choosen channel from threads
-    this.threadsComponent.postChannelNameEvent.subscribe(async (channelName: string) => {
-      // set the value of this.forChildChannelName to the value of the channelName emitted from the child component
-      this.forChildChannelName = channelName;
-      // console.log('Channel Name in Main Component:', channelName);
-      // console.log('this.channels:', this.channels);
-      const channelIndex = this.channels.findIndex((channel: { channelName: string }) => channel.channelName === channelName);
-      // console.log('Number for handing over', channelIndex);
-      // console.log('whats inside for handing over?' , this.channels[channelIndex])
+    this.threadsComponent.postChannelNameEvent.subscribe(async (channelName: string) => { // subscribe to the postChannelNameEvent, open the choosen channel from threads /channels
+      this.forChildChannelName = channelName; 
+      const channelIndex = this.channels.findIndex((channel: { channelName: string }) => channel.channelName === channelName); // set the value of this.forChildChannelName to the value of the channelName emitted from the child component
       this.openChannel(this.channels[channelIndex]);
+    });
+    this.channelComponent?.postChannelNameEvent.subscribe(async (inputFromParent: string) => {
+      this.forChildChannelName = inputFromParent;
+      const channelIndex = this.channels.findIndex((channel: { channelName: string }) => channel.channelName === inputFromParent);
+      this.openChannel(this.channels[channelIndex]);
+    });
+    this.chatComponent?.postChannelNameEvent.subscribe(async (inputFromParentChat: string) => {
+      this.forChildChannelName = inputFromParentChat;
+      const chatIndex = this.users.findIndex((chat: { userName: string }) => chat.userName === inputFromParentChat);
+      this.openDirectMessages(this.users[chatIndex]);
     });
   }
 
@@ -276,21 +288,21 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.forChildChannelId = i['channelId'];
     this.forChildChannelName = i['channelName']; // This variable is needed to give it to the child component, determined from html
     this.forChildChannelDescription = i['description']; // This variable is needed to give it to the child component, determined from html
-    this.allThreadsArr = []; // The array is empty with every click, to take over only the needed data from the choosen channel from the array allThreads
-    for (let j = 0; j < this.allThreads.length; j++) {
-      const element = this.allThreads[j];
-      if (this.forChildChannelName == this.allThreads[j]['channelName']) { // if the clicked channel is equal to the channelName from the array allThreads ...
-        this.allThreadsArr.push(this.allThreads[j]); // ...then push all j data to the empty array allThreadsArr; data is send to child component
-      }
-    }
-    this.channelSubscription = this.firestore
-      .collection('channels')
-      .doc(this.forChildChannelId)
-      .collection('threads')
-      .valueChanges()
-      .subscribe((value) => {
-        this.allThreads$.next(value);
+    this.channelSubscription = this.firestore // Get the certain threadID in allThreads$
+    .collection('channels')
+    .doc(this.forChildChannelId)
+    .collection('threads')
+    .get()
+    .subscribe((value) => {
+      const threads: firebase.firestore.DocumentData[] = [];
+      value.forEach(doc => {
+        const thread = doc.data();
+        thread['threadId'] = doc.id;
+        threads.push(thread);
       });
+      this.allThreads$.next(threads);
+    });
+    console.log('what is allThreads$?:', this.allThreads$)
     this.openChannelWindow();
   }
 
@@ -304,26 +316,48 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
-  openChat(i: any) {
-    // console.log('User to child-component:', i['userName'])
-    this.forChildUserName = i['userName'];
-    console.log('Chat User NAME BASE is:', i['userName']); // ok
-    this.allChatsArr = [];
-    for (let j = 0; j < this.allChats.length; j++) {
-      // loop for array allThreads
-      const element = this.allChats[j];
-      console.log('openChat() - AllChats:', this.allChats[j]);
-      if (this.forChildUserName == this.allChats[j]['userName']) {
-        // if the clicked user name is equal to the username from the array allThreads ...
-        this.allChatsArr.push(this.allChats[j]); // ...then push alle j data to the empty array allThreadsArr; data is send to child component
-      }
-      console.log('Contents of allChatsArr:', this.allChatsArr);
+  openDirectMessages(i: any) {
+    if (this.directMessagesSubscription) {
+      this.directMessagesSubscription.unsubscribe();
     }
-    this.openChatWindow();
+    this.chatComponent?.clearTextarea();
+    this.forChildChatId = i['userId'];
+    this.forChildUserName = i['userName'];
+    this.directMessagesSubscription = this.firestore // Get the certain threadID in allThreads$
+    .collection('users')
+    .doc(this.forChildChatId)
+    .collection('messages')
+    .get()
+    .subscribe((value) => {
+      const messages: firebase.firestore.DocumentData[] = [];
+      value.forEach(doc => {
+        const message = doc.data();
+        message['messageId'] = doc.id;
+        messages.push(message);
+      });
+      this.allDirectMessages$.next(messages);
+    });
+    console.log('what is allDirectMessages$?:', this.allDirectMessages$)
+
+    // console.log('User to child-component:', i['userName'])
+    // this.forChildUserName = i['userName'];
+    // console.log('DirectMessages User NAME BASE is:', i['userName']); // ok
+    // this.allChatsArr = [];
+    // for (let j = 0; j < this.allChats.length; j++) {
+    //   // loop for array allThreads
+    //   const element = this.allChats[j];
+    //   console.log('openChat() - AllChats:', this.allChats[j]);
+    //   if (this.forChildUserName == this.allChats[j]['userName']) {
+    //     // if the clicked user name is equal to the username from the array allThreads ...
+    //     this.allChatsArr.push(this.allChats[j]); // ...then push alle j data to the empty array allThreadsArr; data is send to child component
+    //   }
+    //   console.log('Contents of allChatsArr:', this.allChatsArr);
+    // }
+    this.openDirectMessagesWindow();
   }
 
 
-  openChatWindow() {
+  openDirectMessagesWindow() {
     window.document.getElementById('chat')!.classList.remove('d-n');
     window.document.getElementById('imprint')!.classList.add('d-n');
     window.document.getElementById('channel')!.classList.add('d-n');
@@ -334,10 +368,12 @@ export class MainpageComponent implements OnInit, OnDestroy {
 
   changeBGWhite() {
     this.content.nativeElement.style.background = '#FAFAFA';
+    window.document.getElementById('bg-change')!.style.backgroundColor = '#FAFAFA';
   }
 
   changeBGGray() {
     this.content.nativeElement.style.background = '#EEEEEE';
+    window.document.getElementById('bg-change')!.style.backgroundColor = '#EEEEEE';
   }
 
 
@@ -359,6 +395,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
       }, 2000);
     }
   }
+
 
   /**
    * sign out function in auth service will be called and unsubscribe from observables
@@ -384,3 +421,7 @@ function tap(
 function combineLatest(arg0: any) {
   throw new Error('Function not implemented.');
 }
+
+
+
+// to do: Funktionen durchgehen, was kann man weglassen / vereinfachen?

@@ -5,22 +5,38 @@
                 Chat mit {{ inputFromParentChat }}
             </h2>
             <div class="post-container-box">
-                <div class="post-container" >
-                    <div *ngFor="let chat of inputFromParentChatArray; let i = index">
+                <div class="post-container" *ngFor="let chat of allDirectMessages$ | async; let i = index">
+                    <div>
                         <div class="posts">
                             <div>
                                 <div class="general-info-line">
                                     <p><b>Am {{chat.userMessageDate}} um {{chat.userMessageTime}} Uhr</b></p>
                                 </div>
                                 <div class="user-info">
-                                    <p> <mat-icon>person</mat-icon><b>{{chat.userNameOfMessage}}</b></p>
+                                    <p> <mat-icon>person</mat-icon><b>{{chat.userName}}</b></p>
+                                    <p> <mat-icon>person</mat-icon><b>{{chat.messageId}}</b></p>
                                 </div>
                                 <div class="post">
                                     <p>{{chat.userMessage}}</p>
+                                    <div *ngIf="chat.userMessageDateUpdate && chat.userMessageTimeUpdate" class="post-update">
+                                        Zuletzt bearbeitet am {{chat.userMessageDateUpdate}} um {{chat.userMessageTimeUpdate}} Uhr
+                                      </div>
                                 </div>
                             </div>
+                            <div *ngIf="auth.currentUserName === chat.userName" class="options">
+                                <mat-icon [matMenuTriggerFor]="menu" #menuTrigger>more_vert</mat-icon>
+                                <mat-menu #menu="matMenu">
+                                    <div mat-menu-item class="dialog-icon-and-button" (click)="openDialogEditMessage(chat)">
+                                        <mat-icon class="menu-icon" fontIcon="edit"></mat-icon>
+                                        <span>Edit message</span>
+                                    </div>
+                                    <div mat-menu-item class="dialog-icon-and-button" (click)="openDialogDeleteMessage(chat['messageId'])">
+                                        <mat-icon class="menu-icon" fontIcon="delete"></mat-icon>
+                                        <span>Delete message</span>
+                                    </div>
+                                </mat-menu>
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -36,56 +52,12 @@
                     </p>
                 </div>
                 <div class="post-inputfield-box">
-                    <textarea matInput id="post-inputfield" rows="3" cols="80" autocomplete="off"
-                        placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
-                    <mat-icon matSuffix (click)="sendMessageToChannel()">send</mat-icon>
+                    <textarea matInput id="post-inputfield-directmessages" #postTextareaDirectMessages rows="3" cols="80" autocomplete="off"
+                        placeholder="Your message to the {{ inputFromParentChat }} ..." class="post-inputfield"></textarea>
+                    <mat-icon matSuffix (click)="sendMessageToChat()">send</mat-icon>
                 </div>
             </div>
 
         </div>
     </div>
-
-
-
-
-
-    <!-- <div>
-        <h2>
-            Chat mit {{ inputFromParentChat }}
-        </h2>
-    </div>
-
-    <div class="post-container" *ngFor="let chat of inputFromParentChatArray; let i = index">
-        <div>
-            <div class="posts">
-                <div class="general-info-line">
-                    <p><b>Am {{chat.userMessageDate}} um {{chat.userMessageTime}} Uhr</b></p>
-                </div>
-                <div class="user-info">
-                    <p> <mat-icon>person</mat-icon><b>{{chat.userNameOfMessage}}</b></p>
-                </div>
-                <div class="post">
-                    <p>{{chat.userMessage}}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="post-settings-box">
-        <div class="post-settings">
-            <p>
-                <mat-icon matSuffix>format_bold</mat-icon>
-                <mat-icon matSuffix>format_italic</mat-icon>
-                <mat-icon matSuffix>format_underlined</mat-icon>
-                <mat-icon matSuffix>sentiment_satisfied</mat-icon>
-                <mat-icon matSuffix>add_link</mat-icon>
-                <mat-icon matSuffix>attach_file_add</mat-icon>
-            </p>
-        </div>
-        <div class="post-inputfield-box">
-            <textarea matInput id="post-inputfield" rows="3" cols="80" autocomplete="off"
-                placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
-            <mat-icon matSuffix (click)="sendMessageToChannel()">send</mat-icon>
-        </div>
-    </div> -->
-
 </div>
