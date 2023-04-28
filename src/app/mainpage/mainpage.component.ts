@@ -43,6 +43,7 @@ import firebase from 'firebase/compat';
 })
 export class MainpageComponent implements OnInit, OnDestroy {
 
+
   constructor(
     public dialog: MatDialog,
     public auth: AuthService,
@@ -63,7 +64,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   allThreads$ = new BehaviorSubject<any>(null);
   directMessagesSubscription: Subscription | undefined;
   allDirectMessages$ = new BehaviorSubject<any>(null);
- 
+
 
   @ViewChild(ChannelComponent) channelComponent: ChannelComponent | undefined; // get a reference to the channel component
   @ViewChild('menuTrigger') menuTrigger: MatMenuTrigger | undefined;
@@ -263,7 +264,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   */
   async ngAfterViewInit(): Promise<void> {
     this.threadsComponent.postChannelNameEvent.subscribe(async (channelName: string) => { // subscribe to the postChannelNameEvent, open the choosen channel from threads /channels
-      this.forChildChannelName = channelName; 
+      this.forChildChannelName = channelName;
       const channelIndex = this.channels.findIndex((channel: { channelName: string }) => channel.channelName === channelName); // set the value of this.forChildChannelName to the value of the channelName emitted from the child component
       this.openChannel(this.channels[channelIndex]);
     });
@@ -280,7 +281,7 @@ export class MainpageComponent implements OnInit, OnDestroy {
   }
 
 
-  openChannel(i: any) {
+  async openChannel(i: any) {
     if (this.channelSubscription) {
       this.channelSubscription.unsubscribe();
     }
@@ -288,21 +289,27 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.forChildChannelId = i['channelId'];
     this.forChildChannelName = i['channelName']; // This variable is needed to give it to the child component, determined from html
     this.forChildChannelDescription = i['description']; // This variable is needed to give it to the child component, determined from html
-    this.channelSubscription = this.firestore // Get the certain threadID in allThreads$
-    .collection('channels')
-    .doc(this.forChildChannelId)
-    .collection('threads')
-    .get()
-    .subscribe((value) => {
-      const threads: firebase.firestore.DocumentData[] = [];
-      value.forEach(doc => {
-        const thread = doc.data();
-        thread['threadId'] = doc.id;
-        threads.push(thread);
+    this.channelSubscription = await this.firestore // Get the certain threadID in allThreads$
+      .collection('channels')
+      .doc(this.forChildChannelId)
+      .collection('threads')
+      .get()
+      .subscribe((value) => {
+        const threads: firebase.firestore.DocumentData[] = [];
+        value.forEach(doc => {
+          const thread = doc.data();
+          thread['threadId'] = doc.id;
+          threads.push(thread);
+          // Sort the threads by date, the time is missing (userMessageTime)
+          threads.sort((a, b) => {
+            const dateA = new Date(a['userMessageDate'].split('/').reverse().join('-'));
+            const dateB = new Date(b['userMessageDate'].split('/').reverse().join('-'));
+            return dateB.getTime() - dateA.getTime();
+          });
+          // Sort the threads by date, the time is missing (userMessageTime)
+        });
+        this.allThreads$.next(threads);
       });
-      this.allThreads$.next(threads);
-    });
-    console.log('what is allThreads$?:', this.allThreads$)
     this.openChannelWindow();
   }
 
@@ -324,35 +331,26 @@ export class MainpageComponent implements OnInit, OnDestroy {
     this.forChildChatId = i['userId'];
     this.forChildUserName = i['userName'];
     this.directMessagesSubscription = this.firestore // Get the certain threadID in allThreads$
-    .collection('users')
-    .doc(this.forChildChatId)
-    .collection('messages')
-    .get()
-    .subscribe((value) => {
-      const messages: firebase.firestore.DocumentData[] = [];
-      value.forEach(doc => {
-        const message = doc.data();
-        message['messageId'] = doc.id;
-        messages.push(message);
+      .collection('users')
+      .doc(this.forChildChatId)
+      .collection('messages')
+      .get()
+      .subscribe((value) => {
+        const messages: firebase.firestore.DocumentData[] = [];
+        value.forEach(doc => {
+          const message = doc.data();
+          message['messageId'] = doc.id;
+          messages.push(message);
+          // Sort the threads by date, the time is missing (userMessageTime)
+          messages.sort((a, b) => {
+            const dateA = new Date(a['userMessageDate'].split('/').reverse().join('-'));
+            const dateB = new Date(b['userMessageDate'].split('/').reverse().join('-'));
+            return dateB.getTime() - dateA.getTime();
+          });
+          // Sort the threads by date, the time is missing (userMessageTime)
+        });
+        this.allDirectMessages$.next(messages);
       });
-      this.allDirectMessages$.next(messages);
-    });
-    console.log('what is allDirectMessages$?:', this.allDirectMessages$)
-
-    // console.log('User to child-component:', i['userName'])
-    // this.forChildUserName = i['userName'];
-    // console.log('DirectMessages User NAME BASE is:', i['userName']); // ok
-    // this.allChatsArr = [];
-    // for (let j = 0; j < this.allChats.length; j++) {
-    //   // loop for array allThreads
-    //   const element = this.allChats[j];
-    //   console.log('openChat() - AllChats:', this.allChats[j]);
-    //   if (this.forChildUserName == this.allChats[j]['userName']) {
-    //     // if the clicked user name is equal to the username from the array allThreads ...
-    //     this.allChatsArr.push(this.allChats[j]); // ...then push alle j data to the empty array allThreadsArr; data is send to child component
-    //   }
-    //   console.log('Contents of allChatsArr:', this.allChatsArr);
-    // }
     this.openDirectMessagesWindow();
   }
 

@@ -47,17 +47,17 @@
             <div class="post-settings-box">
                 <div class="post-settings">
                     <p>
-                        <mat-icon matSuffix>format_bold</mat-icon>
-                        <mat-icon matSuffix>format_italic</mat-icon>
-                        <mat-icon matSuffix>format_underlined</mat-icon>
-                        <mat-icon matSuffix>sentiment_satisfied</mat-icon>
-                        <mat-icon matSuffix>add_link</mat-icon>
-                        <mat-icon matSuffix>attach_file_add</mat-icon>
+                        <mat-icon class="c-p" matSuffix>format_bold</mat-icon>
+                        <mat-icon class="c-p" matSuffix>format_italic</mat-icon>
+                        <mat-icon class="c-p" matSuffix>format_underlined</mat-icon>
+                        <mat-icon class="c-p" matSuffix>sentiment_satisfied</mat-icon>
+                        <mat-icon class="c-p" matSuffix>add_link</mat-icon>
+                        <mat-icon class="c-p" matSuffix>attach_file_add</mat-icon>
                     </p>
                 </div>
                 <div class="post-inputfield-box">
                     <textarea matInput id="post-inputfield" #postTextarea rows="3" cols="80" autocomplete="off"
-                        placeholder="Your message to the Channel ..." class="post-inputfield"></textarea>
+                        placeholder="Your message to the Channel {{inputFromParent}} ..." class="post-inputfield"></textarea>
                     <mat-icon matSuffix (click)="sendMessageToChannel()">send</mat-icon>
                 </div>
             </div>

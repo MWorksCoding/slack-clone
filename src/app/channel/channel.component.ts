@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../shared/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { Input } from '@angular/core';
-import { async, BehaviorSubject, map, Observable, Subject, Subscription } from 'rxjs';
+import { async, BehaviorSubject, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { DialogDeleteMessageComponent } from '../dialog-delete-message/dialog-delete-message.component';
 import { DialogEditMessageComponent } from '../dialog-edit-message/dialog-edit-message.component';
 import { DialogErrorEmptyMessageComponent } from '../dialog-error-empty-message/dialog-error-empty-message.component';
@@ -18,9 +18,9 @@ export class ChannelComponent {
   componentData: any;
   document: any;
   userMessage: any;
-  sortedThreads$: Observable<any[]> | undefined;
   textInput: HTMLTextAreaElement | undefined;
   threadId!: string;
+  data: any;
 
   constructor(
     public dialog: MatDialog,
@@ -38,21 +38,15 @@ export class ChannelComponent {
   @Input() inputFromParentChatUserName: string = '';
   @Output() postChannelNameEvent = new EventEmitter<string>();
 
-  ngOnInit(): void { // ungelöst: Sortieren der Nachrichten nach Datum
-    this.allThreads$?.pipe(
-      map((threads) => threads.sort((a, b) => {
-        const dateA = new Date(a.userMessageDate);
-        const dateB = new Date(b.userMessageDate);
-        return dateA.getTime() - dateB.getTime();
-      }))
-    );
+
+  ngOnInit(): void {
   }
 
-  
+
   /**
    * Saving the entry to the firestore after clicking the the send-logo 
    */
-  sendMessageToChannel() {
+  async sendMessageToChannel() {
     const element = document.getElementById('post-inputfield') as HTMLTextAreaElement;
     let date = new Date();
     const data = {
@@ -66,7 +60,7 @@ export class ChannelComponent {
       this.dialog.open(DialogErrorEmptyMessageComponent);
     } else {
       this.textInput = element;
-      this.firestore
+      await this.firestore
         .collection('channels')
         .doc(dataWithChannelId.channelId)
         .collection('threads')
@@ -74,14 +68,13 @@ export class ChannelComponent {
       element.value = '';
     }
     this.postChannelNameEvent.emit(this.inputFromParent); // refreshing the page instandly
-    console.log('whats inside of inputFromParent?', this.inputFromParent) // Angular
   }
 
 
   /**
    * delete the choosen message, threadID will be deleted
    */
-  deleteMessage(i: any) {
+  async deleteMessage(i: any) {
     // console.log('What is data?', this.allThreads$);
     console.log('what is i @ function delete chat message?', i)
     let threadRef = this.firestore
@@ -89,7 +82,7 @@ export class ChannelComponent {
       .doc(this.inputFromParentChannelId)
       .collection('threads')
       .doc(i);
-    threadRef.delete()
+    await threadRef.delete()
     this.postChannelNameEvent.emit(this.inputFromParent); // refreshing the page instandly
   }
 
@@ -101,7 +94,7 @@ export class ChannelComponent {
     if (this.postTextarea) this.postTextarea.nativeElement.value = '';
   }
 
-  
+
   /**
    * opens the dialog for edtiting a message, pushes userMessage + threadId into the dialog component at injection
    * if the user push 'Ok' in the dialog, it runs the function sendEditedMessageToChannel() with the parameter (data)
@@ -123,11 +116,12 @@ export class ChannelComponent {
     });
   }
 
+
   /**
    * over the current channelId we get the current threadId. 
    * Here we update the userMessage and create two new fields: userMessageDateUpdate + userMessageTimeUpdate to display, that changes are made.
    */
-  sendEditedMessageToChannel(data: any) {
+  async sendEditedMessageToChannel(data: any) {
     let threadRef = this.firestore
       .collection('channels')
       .doc(this.inputFromParentChannelId)
@@ -136,12 +130,11 @@ export class ChannelComponent {
     let date = new Date();
     let MessageTimeUpdate = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0') + ':' + date.getSeconds().toString().padStart(2, '0');
     let MessageDateUpdate = date.getDate().toString().padStart(2, '0') + '/' + (date.getMonth() + 1).toString().padStart(2, '0') + '/' + date.getFullYear();
-
     if (data.userMessage == '') {
       this.dialog.open(DialogErrorEmptyMessageComponent);
       return;
     } else {
-      threadRef.update({
+      await threadRef.update({
         userMessage: data.userMessage,
         userMessageTimeUpdate: MessageTimeUpdate,
         userMessageDateUpdate: MessageDateUpdate,
@@ -165,6 +158,5 @@ export class ChannelComponent {
       }
     });
   }
-  // ungelöst: Sortieren der Nachrichten nach Datum
-  // Idee: Code verkleinern?
+  // Idea: improve clean coding?
 }
